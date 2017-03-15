@@ -36,6 +36,7 @@ public class TariffSdk {
     public Intent getTariffSdkIntent() {
 
         final Intent intent = new Intent(mContext, CameraActivity.class);
+        intent.putExtra(CameraActivity.BUNDLE_EXTRA_RIGHT_INSTANTIATED, true);
         return intent;
     }
 }
