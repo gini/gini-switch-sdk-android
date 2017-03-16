@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TariffSdk tariffSdk = TariffSdk.getSdkInstance(this);
+        final TariffSdk tariffSdk = new TariffSdk.SdkBuilder(this).createSdk();
 
         findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
