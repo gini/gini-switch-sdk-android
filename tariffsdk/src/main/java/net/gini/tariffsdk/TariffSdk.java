@@ -16,6 +16,10 @@ public class TariffSdk {
 
     private final Context mContext;
 
+    private TariffSdk(final Context context) {
+        mContext = context;
+    }
+
     public static TariffSdk getSdkInstance(@NonNull final Context context) {
         if (mInstance == null) {
             synchronized (TariffSdk.class) {
@@ -26,11 +30,6 @@ public class TariffSdk {
         }
         return mInstance;
     }
-
-    private TariffSdk(final Context context) {
-        mContext = context;
-    }
-
 
     @NonNull
     public Intent getTariffSdkIntent() {
