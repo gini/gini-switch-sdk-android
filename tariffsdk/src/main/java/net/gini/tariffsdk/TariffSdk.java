@@ -1,7 +1,6 @@
 package net.gini.tariffsdk;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,10 +11,6 @@ import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
 public class TariffSdk {
 
     public static int REQUEST_CODE = 666;
-
-    //Application context is fine
-    @SuppressLint("StaticFieldLeak")
-    private static volatile TariffSdk mInstance = null;
 
     private final Context mContext;
 
@@ -32,18 +27,8 @@ public class TariffSdk {
         return new TariffSdkIntentCreator(mContext, mTheme).createIntent();
     }
 
-    private static TariffSdk getSdkInstance(@NonNull final Context context, final int theme) {
-        if (mInstance == null) {
-            synchronized (TariffSdk.class) {
-                if (mInstance == null) {
-                    mInstance = new TariffSdk(context.getApplicationContext(), theme);
-                }
-            }
-        }
-        return mInstance;
-    }
-
     public static class SdkBuilder {
+
         @NonNull
         private final Context mContext;
 
@@ -54,7 +39,7 @@ public class TariffSdk {
         }
 
         public TariffSdk createSdk() {
-            return getSdkInstance(mContext, mTheme);
+            return new TariffSdk(mContext.getApplicationContext(), mTheme);
         }
 
         /**
