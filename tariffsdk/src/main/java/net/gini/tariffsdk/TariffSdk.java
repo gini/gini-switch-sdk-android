@@ -3,6 +3,7 @@ package net.gini.tariffsdk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
@@ -31,7 +32,7 @@ public class TariffSdk {
 
         @NonNull
         private final Context mContext;
-
+        private int mLoadingView = -1;
         private int mTheme = -1;
 
         public SdkBuilder(@NonNull final Context context) {
@@ -40,6 +41,16 @@ public class TariffSdk {
 
         public TariffSdk createSdk() {
             return new TariffSdk(mContext.getApplicationContext(), mTheme);
+        }
+
+        /**
+         * Set a specific loading view which is being shown during the extraction receiving
+         *
+         * @param loadingView the resource id of the view
+         */
+        public SdkBuilder setLoadingView(@LayoutRes final int loadingView) {
+            mLoadingView = loadingView;
+            return this;
         }
 
         /**
