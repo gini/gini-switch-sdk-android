@@ -13,4 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/button_start"
+        android:text="Start Gini Sdk with other Theme"
+        android:id="@+id/button_start_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
