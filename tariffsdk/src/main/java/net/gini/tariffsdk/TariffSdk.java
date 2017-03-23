@@ -11,7 +11,8 @@ import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
 
 /**
  * <p>
- * This class represents the Gini Tariff SDK. To create an instance of it the {@link TariffSdk.SdkBuilder} should be used.
+ * This class represents the Gini Tariff SDK. To create an instance of it the {@link
+ * TariffSdk.SdkBuilder} should be used.
  * </p>
  */
 public class TariffSdk {
@@ -27,12 +28,31 @@ public class TariffSdk {
         mTheme = theme;
     }
 
+    /**
+     * <p>
+     * Use this to get an intent of the Tariff SDK
+     * {@link net.gini.tariffsdk.takepicture.CameraActivity}
+     * activity.
+     * Only use this method to instantiate an intent of this activity, otherwise an exception will
+     * be thrown.
+     * To start the activity the method {@link android.app.Activity#startActivityForResult(Intent,
+     * int)} with the request code from {@link TariffSdk#REQUEST_CODE} has to be used.
+     * </p>
+     *
+     * @return an intent of {@link net.gini.tariffsdk.takepicture.CameraActivity}
+     */
     @NonNull
     public Intent getTariffSdkIntent() {
 
         return new TariffSdkIntentCreator(mContext, mTheme).createIntent();
     }
 
+    /**
+     * <p>
+     * The Tariff SDK Builder class, use this builder to create an instance of the {@link
+     * TariffSdk}.
+     * </p>
+     */
     public static class SdkBuilder {
 
         @NonNull
@@ -47,8 +67,22 @@ public class TariffSdk {
 
         /**
          * <p>
+         * Always show the onboarding nevertheless it already has been shown
+         * </p>
+         *
+         * @param show boolean if onboarding should be shown always
+         * @return the instance of the current builder
+         */
+        public SdkBuilder alwaysShowOnboarding(final boolean show) {
+            mShow = show;
+            return this;
+        }
+
+        /**
+         * <p>
          * Generate a TariffSdk instance from the current builder
          * </p>
+         *
          * @return a TariffSdk instance
          */
         public TariffSdk createSdk() {
@@ -59,7 +93,9 @@ public class TariffSdk {
          * <p>
          * Set a specific loading view which is being shown during the extraction receiving
          * </p>
+         *
          * @param loadingView the resource id of the view
+         * @return the instance of the current builder
          */
         public SdkBuilder setLoadingView(@LayoutRes final int loadingView) {
             mLoadingView = loadingView;
@@ -68,20 +104,11 @@ public class TariffSdk {
 
         /**
          * <p>
-         * Always show the onboarding nevertheless it already has been shown
-         * </p>
-         * @param show boolean if onboarding should be shown always
-         */
-        public SdkBuilder alwaysShowOnboarding(final boolean show) {
-            mShow = show;
-            return this;
-        }
-
-        /**
-         * <p>
          * Set a specific theme for the SDK Activities, if not set the default app theme is used
          * </p>
+         *
          * @param theme the resource id of the theme
+         * @return the instance of the current builder
          */
         public SdkBuilder setTheme(@StyleRes final int theme) {
             mTheme = theme;
