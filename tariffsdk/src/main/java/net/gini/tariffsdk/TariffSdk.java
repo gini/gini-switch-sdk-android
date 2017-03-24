@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
+import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
 
 /**
@@ -18,14 +19,17 @@ import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
 public class TariffSdk {
 
     public static int REQUEST_CODE = 666;
+    private final AuthenticationService mAuthenticationService;
 
     private final Context mContext;
 
     private final int mTheme;
 
-    private TariffSdk(final Context context, final int theme) {
+    private TariffSdk(final Context context, final int theme, final String clientId,
+            final String clientPw) {
         mContext = context;
         mTheme = theme;
+        mAuthenticationService = AuthenticationService.getInstance(context, clientId, clientPw);
     }
 
     /**
@@ -56,13 +60,20 @@ public class TariffSdk {
     public static class SdkBuilder {
 
         @NonNull
+        private final String mClientId;
+        @NonNull
+        private final String mClientPw;
+        @NonNull
         private final Context mContext;
         private int mLoadingView = -1;
         private boolean mShow = false;
         private int mTheme = -1;
 
-        public SdkBuilder(@NonNull final Context context) {
-            mContext = context;
+        public SdkBuilder(@NonNull final Context context, @NonNull final String clientId,
+                @NonNull final String clientPw) {
+            mContext = assertNotNull(context);
+            mClientId = assertNotNull(clientId);
+            mClientPw = assertNotNull(clientPw);
         }
 
         /**
@@ -86,7 +97,7 @@ public class TariffSdk {
          * @return a TariffSdk instance
          */
         public TariffSdk createSdk() {
-            return new TariffSdk(mContext.getApplicationContext(), mTheme);
+            return new TariffSdk(mContext.getApplicationContext(), mTheme, mClientId, mClientPw);
         }
 
         /**
@@ -113,6 +124,13 @@ public class TariffSdk {
         public SdkBuilder setTheme(@StyleRes final int theme) {
             mTheme = theme;
             return this;
+        }
+
+        private static <T> T assertNotNull(T parameter) {
+            if (parameter == null) {
+                throw new IllegalArgumentException("Parameter cannot be null");
+            }
+            return parameter;
         }
     }
 }
