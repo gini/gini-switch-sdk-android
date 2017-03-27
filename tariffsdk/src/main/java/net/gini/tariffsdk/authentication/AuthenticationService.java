@@ -3,10 +3,12 @@ package net.gini.tariffsdk.authentication;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
+import android.util.Log;
+
+import net.gini.tariffsdk.network.AuthenticationApi;
+import net.gini.tariffsdk.network.AuthenticationApiImpl;
 
 public class AuthenticationService {
 
@@ -20,13 +22,27 @@ public class AuthenticationService {
             final String clientPw) {
 
         mContext = context;
-        new RequestToken().execute(new Pair<>(clientId, clientPw));
 
+        AuthenticationApi api = new AuthenticationApiImpl();
+        api.requestSessionToken(clientId, clientPw, new AuthenticationApi.NetworkCallback<SessionToken>() {
+            @Override
+            public void onSuccess(final SessionToken sessionToken) {
+                Log.d("HELLO", sessionToken.getToken());
+                mSessionToken = sessionToken;
+            }
+
+            @Override
+            public void onError(final Exception e) {
+                Log.e("OH NOES", e.getLocalizedMessage());
+            }
+        });
     }
 
-    public static AuthenticationService getInstance(@NonNull final Context context, @NonNull final String clientId, @NonNull final String clientPw) {
+    public static AuthenticationService getInstance(@NonNull final Context context,
+            @NonNull final String clientId, @NonNull final String clientPw) {
         if (mInstance == null) {
-            mInstance = new AuthenticationService(context.getApplicationContext(), clientId, clientPw);
+            mInstance = new AuthenticationService(context.getApplicationContext(), clientId,
+                    clientPw);
         }
         return mInstance;
     }
@@ -36,18 +52,4 @@ public class AuthenticationService {
         return mSessionToken;
     }
 
-    private static class RequestToken extends AsyncTask<Pair<String, String>, Void, SessionToken> {
-
-        @SafeVarargs
-        @Override
-        protected final SessionToken doInBackground(final Pair<String, String>... pairs) {
-            //TODO network call for requesting the token
-            return new SessionToken("session token from: " + pairs[0].first + " " +  pairs[0].second);
-        }
-
-        @Override
-        protected void onPostExecute(final SessionToken sessionToken) {
-            mSessionToken = sessionToken;
-        }
-    }
 }

@@ -33,4 +33,5 @@ ext {
 
     supportLibraryVersion = '25.2.0'
     junitVersion = '4.12'
+    okhttpVersion = '3.6.0'
 }
