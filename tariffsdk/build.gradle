@@ -39,6 +39,9 @@ dependencies {
     testCompile "com.squareup.okhttp3:mockwebserver:$rootProject.ext.okhttpVersion"
     testCompile 'org.json:json:20140107'
     testCompile 'net.jodah:concurrentunit:0.4.2'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
 
 task generateJavadoc(type: Javadoc) {
