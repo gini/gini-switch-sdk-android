@@ -5,10 +5,6 @@ def versionMinor = 0
 def versionPatch = 0
 def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
 
-configurations {
-    stageCompile
-}
-
 android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -22,8 +18,6 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        buildConfigField "String", "api_endpoint", '"https://tariff.i.gini.net/"'
 
     }
     buildTypes {
@@ -43,6 +37,8 @@ dependencies {
 
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "com.squareup.okhttp3:mockwebserver:$rootProject.ext.okhttpVersion"
+    testCompile 'org.json:json:20140107'
+    testCompile 'net.jodah:concurrentunit:0.4.2'
 }
 
 task generateJavadoc(type: Javadoc) {

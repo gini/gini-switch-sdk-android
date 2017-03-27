@@ -102,6 +102,9 @@ public class TariffSdk {
          * @return a TariffSdk instance
          */
         public TariffSdk createSdk() {
+            if (mOkHttpClient == null) {
+                mOkHttpClient = new OkHttpClient();
+            }
             return new TariffSdk(mContext.getApplicationContext(), mTheme, mClientId, mClientPw,
                     mOkHttpClient);
         }
@@ -128,8 +131,8 @@ public class TariffSdk {
          * @param okHttpClient the created okHttpClient
          * @return the instance of the current builder
          */
-        public SdkBuilder setOkHttpClient(final OkHttpClient okHttpClient) {
-            mOkHttpClient = okHttpClient;
+        public SdkBuilder setOkHttpClient(@NonNull OkHttpClient okHttpClient) {
+            mOkHttpClient = assertNotNull(okHttpClient);
             return this;
         }
 
