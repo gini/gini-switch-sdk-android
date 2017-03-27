@@ -6,6 +6,9 @@ import android.support.annotation.VisibleForTesting;
 
 import net.gini.tariffsdk.authentication.SessionToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -51,9 +54,16 @@ public class AuthenticationApiImpl implements AuthenticationApi {
 
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
-                //TODO
-                String body = response.body().string();
-                SessionToken sessionToken = new SessionToken(body);
+
+                String token = "";
+                try {
+                    JSONObject obj = new JSONObject(response.body().string());
+                    token = obj.getString("token");
+                } catch (JSONException e) {
+                    callback.onError(e);
+                }
+
+                SessionToken sessionToken = new SessionToken(token);
 
                 callback.onSuccess(sessionToken);
             }
