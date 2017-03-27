@@ -2,6 +2,7 @@ package net.gini.tariffsdk.network;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import net.gini.tariffsdk.authentication.SessionToken;
 
@@ -18,10 +19,13 @@ public class AuthenticationApiImpl implements AuthenticationApi {
 
     private final OkHttpClient mHttpClient;
 
+    @VisibleForTesting
+    String mUrl = "http://user.stage.gini.net/oauth/token?grant_type=password";
+
     public AuthenticationApiImpl() {
 
         mHttpClient = new OkHttpClient.Builder()
-        .build();
+                .build();
     }
 
     @Override
@@ -34,7 +38,7 @@ public class AuthenticationApiImpl implements AuthenticationApi {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://user.stage.gini.net/oauth/token?grant_type=password")
+                .url(mUrl)
                 .addHeader("Accept", "application/json")
                 .post(bodyType)
                 .build();
