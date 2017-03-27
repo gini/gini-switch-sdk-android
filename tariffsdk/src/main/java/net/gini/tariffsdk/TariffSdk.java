@@ -10,6 +10,8 @@ import android.support.annotation.StyleRes;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
 
+import okhttp3.OkHttpClient;
+
 /**
  * <p>
  * This class represents the Gini Tariff SDK. To create an instance of it the {@link
@@ -22,14 +24,16 @@ public class TariffSdk {
     private final AuthenticationService mAuthenticationService;
 
     private final Context mContext;
-
+    private final OkHttpClient mOkHttpClient;
     private final int mTheme;
 
     private TariffSdk(final Context context, final int theme, final String clientId,
-            final String clientPw) {
+            final String clientPw, final OkHttpClient okHttpClient) {
         mContext = context;
         mTheme = theme;
-        mAuthenticationService = AuthenticationService.getInstance(context, clientId, clientPw);
+        mOkHttpClient = okHttpClient;
+        mAuthenticationService = AuthenticationService.getInstance(context, clientId, clientPw,
+                okHttpClient);
     }
 
     /**
@@ -66,6 +70,7 @@ public class TariffSdk {
         @NonNull
         private final Context mContext;
         private int mLoadingView = -1;
+        private OkHttpClient mOkHttpClient;
         private boolean mShow = false;
         private int mTheme = -1;
 
@@ -97,7 +102,8 @@ public class TariffSdk {
          * @return a TariffSdk instance
          */
         public TariffSdk createSdk() {
-            return new TariffSdk(mContext.getApplicationContext(), mTheme, mClientId, mClientPw);
+            return new TariffSdk(mContext.getApplicationContext(), mTheme, mClientId, mClientPw,
+                    mOkHttpClient);
         }
 
         /**
@@ -110,6 +116,20 @@ public class TariffSdk {
          */
         public SdkBuilder setLoadingView(@LayoutRes final int loadingView) {
             mLoadingView = loadingView;
+            return this;
+        }
+
+        /**
+         * <p>
+         * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
+         * singleton.
+         * </p>
+         *
+         * @param okHttpClient the created okHttpClient
+         * @return the instance of the current builder
+         */
+        public SdkBuilder setOkHttpClient(final OkHttpClient okHttpClient) {
+            mOkHttpClient = okHttpClient;
             return this;
         }
 
