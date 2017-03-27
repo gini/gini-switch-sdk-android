@@ -5,6 +5,10 @@ def versionMinor = 0
 def versionPatch = 0
 def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
 
+configurations {
+    stageCompile
+}
+
 android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -18,6 +22,8 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "api_endpoint", '"https://tariff.i.gini.net/"'
 
     }
     buildTypes {
@@ -33,7 +39,8 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     testCompile "junit:junit:$rootProject.ext.junitVersion"
-    compile 'com.android.support:support-v4:25.2.0'
+
+    compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
 }
 
 task generateJavadoc(type: Javadoc) {
