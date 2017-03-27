@@ -10,6 +10,8 @@ import android.util.Log;
 import net.gini.tariffsdk.network.AuthenticationApi;
 import net.gini.tariffsdk.network.AuthenticationApiImpl;
 
+import okhttp3.OkHttpClient;
+
 public class AuthenticationService {
 
     //Application context is fine
@@ -17,33 +19,38 @@ public class AuthenticationService {
     private static AuthenticationService mInstance = null;
     private static SessionToken mSessionToken = null;
     private final Context mContext;
+    private final OkHttpClient mOkHttpClient;
 
     private AuthenticationService(final Context context, final String clientId,
-            final String clientPw) {
+            final String clientPw, final OkHttpClient okHttpClient) {
 
         mContext = context;
+        mOkHttpClient = okHttpClient;
 
-        AuthenticationApi api = new AuthenticationApiImpl();
-        api.requestSessionToken(clientId, clientPw, new AuthenticationApi.NetworkCallback<SessionToken>() {
-            @Override
-            public void onSuccess(final SessionToken sessionToken) {
-                Log.d("HELLO", sessionToken.getToken());
-                mSessionToken = sessionToken;
-            }
+        AuthenticationApi api = new AuthenticationApiImpl(mOkHttpClient);
+        api.requestSessionToken(clientId, clientPw,
+                new AuthenticationApi.NetworkCallback<SessionToken>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        Log.e("OH NOES", e.getLocalizedMessage());
+                    }
 
-            @Override
-            public void onError(final Exception e) {
-                Log.e("OH NOES", e.getLocalizedMessage());
-            }
-        });
+                    @Override
+                    public void onSuccess(final SessionToken sessionToken) {
+                        Log.d("HELLO", sessionToken.getToken());
+                        mSessionToken = sessionToken;
+                    }
+                });
     }
 
     public static AuthenticationService getInstance(@NonNull final Context context,
-            @NonNull final String clientId, @NonNull final String clientPw) {
+            @NonNull final String clientId, @NonNull final String clientPw,
+            final OkHttpClient okHttpClient) {
         if (mInstance == null) {
             mInstance = new AuthenticationService(context.getApplicationContext(), clientId,
-                    clientPw);
+                    clientPw, okHttpClient);
         }
+
         return mInstance;
     }
 

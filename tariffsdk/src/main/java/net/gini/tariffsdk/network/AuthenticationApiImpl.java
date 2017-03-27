@@ -22,9 +22,9 @@ public class AuthenticationApiImpl implements AuthenticationApi {
     @VisibleForTesting
     String mUrl = "http://user.stage.gini.net/oauth/token?grant_type=password";
 
-    public AuthenticationApiImpl() {
+    public AuthenticationApiImpl(final OkHttpClient okHttpClient) {
 
-        mHttpClient = new OkHttpClient.Builder()
+        mHttpClient = okHttpClient.newBuilder()
                 .build();
     }
 

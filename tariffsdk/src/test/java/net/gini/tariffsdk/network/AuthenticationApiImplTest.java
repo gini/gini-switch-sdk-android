@@ -9,12 +9,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
 public class AuthenticationApiImplTest {
 
+    private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
 
     @Test
@@ -22,7 +24,7 @@ public class AuthenticationApiImplTest {
 
         mServer.enqueue(new MockResponse().setBody("requestBody_clientId"));
         final String url = mServer.url("/post").toString();
-        AuthenticationApiImpl impl = new AuthenticationApiImpl();
+        AuthenticationApiImpl impl = new AuthenticationApiImpl(mOkHttpClient);
         impl.mUrl = url;
 
         impl.requestSessionToken("userId", "userPw",
@@ -47,7 +49,7 @@ public class AuthenticationApiImplTest {
 
         mServer.enqueue(new MockResponse().setBody("requestBody_clientPassword"));
         final String url = mServer.url("/post").toString();
-        AuthenticationApiImpl impl = new AuthenticationApiImpl();
+        AuthenticationApiImpl impl = new AuthenticationApiImpl(mOkHttpClient);
         impl.mUrl = url;
 
         impl.requestSessionToken("userId", "userPw",
@@ -72,7 +74,7 @@ public class AuthenticationApiImplTest {
 
         mServer.enqueue(new MockResponse().setBody("requestHeader_Accept"));
         final String url = mServer.url("/post").toString();
-        AuthenticationApiImpl impl = new AuthenticationApiImpl();
+        AuthenticationApiImpl impl = new AuthenticationApiImpl(mOkHttpClient);
         impl.mUrl = url;
 
         impl.requestSessionToken("userId", "userPw",
@@ -96,7 +98,7 @@ public class AuthenticationApiImplTest {
 
         mServer.enqueue(new MockResponse().setBody("requestHeader_ContentType"));
         final String url = mServer.url("/post").toString();
-        AuthenticationApiImpl impl = new AuthenticationApiImpl();
+        AuthenticationApiImpl impl = new AuthenticationApiImpl(mOkHttpClient);
         impl.mUrl = url;
 
         impl.requestSessionToken("userId", "userPw",
