@@ -27,8 +27,7 @@ public class AuthenticationApiImpl implements AuthenticationApi {
 
     public AuthenticationApiImpl(final OkHttpClient okHttpClient) {
 
-        mHttpClient = okHttpClient.newBuilder()
-                .build();
+        mHttpClient = okHttpClient;
     }
 
     @Override

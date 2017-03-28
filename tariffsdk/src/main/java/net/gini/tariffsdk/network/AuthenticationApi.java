@@ -10,10 +10,4 @@ public interface AuthenticationApi {
     void requestSessionToken(@NonNull final String clientId, @NonNull final String clientPw,
             @NonNull final NetworkCallback<SessionToken> callback);
 
-    interface NetworkCallback<T> {
-
-        void onError(Exception e);
-
-        void onSuccess(T t);
-    }
 }

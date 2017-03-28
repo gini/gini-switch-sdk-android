@@ -9,6 +9,7 @@ import android.util.Log;
 
 import net.gini.tariffsdk.network.AuthenticationApi;
 import net.gini.tariffsdk.network.AuthenticationApiImpl;
+import net.gini.tariffsdk.network.NetworkCallback;
 
 import okhttp3.OkHttpClient;
 
@@ -29,7 +30,7 @@ public class AuthenticationService {
 
         AuthenticationApi api = new AuthenticationApiImpl(mOkHttpClient);
         api.requestSessionToken(clientId, clientPw,
-                new AuthenticationApi.NetworkCallback<SessionToken>() {
+                new NetworkCallback<SessionToken>() {
                     @Override
                     public void onError(final Exception e) {
                         Log.e("OH NOES", e.getLocalizedMessage());
