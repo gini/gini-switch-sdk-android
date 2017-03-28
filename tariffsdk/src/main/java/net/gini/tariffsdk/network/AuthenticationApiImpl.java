@@ -4,6 +4,7 @@ package net.gini.tariffsdk.network;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.network.interceptors.AuthenticationInterceptor;
@@ -25,23 +26,12 @@ public class AuthenticationApiImpl implements AuthenticationApi {
     private final OkHttpClient mHttpClient;
 
     @VisibleForTesting
-    String mUrl = "http://user.stage.gini.net/oauth/token?grant_type=password";
+    String mUrl = BuildConfig.BASE_URL + Constants.AUTHENTICATE_USER;
 
     public AuthenticationApiImpl(@NonNull final ClientCredentials clientCredentials,
             final OkHttpClient okHttpClient) {
 
         mHttpClient = okHttpClient.newBuilder()
-//                .authenticator(new Authenticator() {
-//                    @Override
-//                    public Request authenticate(final Route route, final Response response)
-//                            throws IOException {
-//                        final String credential = Credentials.basic(clientCredentials.getClientId(),
-//                                clientCredentials.getClientSecret());
-//                        return response.request().newBuilder()
-//                                .header("Authorization", credential)
-//                                .build();
-//                    }
-//                })
                 .addInterceptor(new AuthenticationInterceptor(clientCredentials))
                 .build();
     }

@@ -1,7 +1,6 @@
 package net.gini.tariffsdk.network.interceptors;
 
 
-import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.network.Constants;
 
@@ -17,23 +16,16 @@ public class AuthenticationInterceptor implements Interceptor {
     private final ClientCredentials mClientCredentials;
 
     public AuthenticationInterceptor(final ClientCredentials clientCredentials) {
-
         mClientCredentials = clientCredentials;
     }
 
     @Override
     public Response intercept(final Chain chain) throws IOException {
-        Request originalRequest = chain.request();
-        Request authorizedRequest = null;
-        String url = originalRequest.url().toString();
-        if (url.contains(BuildConfig.BASE_URL)) {
-            authorizedRequest = authorizeWithBasic(originalRequest);
-        }
-        if (authorizedRequest != null) {
-            return chain.proceed(authorizedRequest);
-        } else {
-            return chain.proceed(originalRequest);
-        }
+        final Request originalRequest = chain.request();
+        final Request authorizedRequest = authorizeWithBasic(originalRequest);
+
+        return chain.proceed(authorizedRequest);
+
     }
 
     private Request authorizeWithBasic(Request originalRequest) {
