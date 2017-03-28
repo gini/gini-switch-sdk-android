@@ -1,11 +1,8 @@
 package net.gini.tariffsdk.network.interceptors;
 
 
-import android.support.annotation.NonNull;
-
 import net.gini.tariffsdk.BuildConfig;
-import net.gini.tariffsdk.authentication.AuthenticationService;
-import net.gini.tariffsdk.authentication.SessionToken;
+import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.network.Constants;
 
 import java.io.IOException;
@@ -17,17 +14,11 @@ import okhttp3.Response;
 
 public class AuthenticationInterceptor implements Interceptor {
 
-    private final AuthenticationService mAuthenticationService;
-    @NonNull
-    private final String mClientId;
-    @NonNull
-    private final String mClientSecret;
+    private final ClientCredentials mClientCredentials;
 
-    public AuthenticationInterceptor(@NonNull final AuthenticationService authenticationService,
-            @NonNull final String clientId, @NonNull final String clientSecret) {
-        mAuthenticationService = authenticationService;
-        mClientId = clientId;
-        mClientSecret = clientSecret;
+    public AuthenticationInterceptor(final ClientCredentials clientCredentials) {
+
+        mClientCredentials = clientCredentials;
     }
 
     @Override
@@ -36,12 +27,7 @@ public class AuthenticationInterceptor implements Interceptor {
         Request authorizedRequest = null;
         String url = originalRequest.url().toString();
         if (url.contains(BuildConfig.BASE_URL)) {
-            if (url.contains(Constants.AUTHENTICATE_CLIENT) || url.contains(
-                    Constants.AUTHENTICATE_USER)) {
-                authorizedRequest = authorizeWithBasic(originalRequest);
-            } else {
-                authorizedRequest = authorizeWithToken(originalRequest);
-            }
+            authorizedRequest = authorizeWithBasic(originalRequest);
         }
         if (authorizedRequest != null) {
             return chain.proceed(authorizedRequest);
@@ -50,22 +36,11 @@ public class AuthenticationInterceptor implements Interceptor {
         }
     }
 
-
     private Request authorizeWithBasic(Request originalRequest) {
         return originalRequest.newBuilder()
                 .header(Constants.HEADER_NAME_AUTHORIZATION,
-                        Credentials.basic(mClientId, mClientSecret))
-                .build();
-    }
-
-    private Request authorizeWithToken(Request originalRequest) {
-        SessionToken accessToken = AuthenticationService.getSessionToken();
-        if (accessToken != null) {
-            return originalRequest.newBuilder()
-                    .header(Constants.HEADER_NAME_AUTHORIZATION, "BEARER " + accessToken.getToken())
-                    .build();
-        }
-        return null;
+                        Credentials.basic(mClientCredentials.getClientId(),
+                                mClientCredentials.getClientSecret())).build();
     }
 
 }
