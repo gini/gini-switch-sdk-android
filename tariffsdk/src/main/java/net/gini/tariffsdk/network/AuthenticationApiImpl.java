@@ -7,7 +7,7 @@ import android.support.annotation.VisibleForTesting;
 import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
-import net.gini.tariffsdk.network.interceptors.AuthenticationInterceptor;
+import net.gini.tariffsdk.authentication.models.UserCredentials;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +15,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.FormBody;
+import okhttp3.Credentials;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -23,29 +24,64 @@ import okhttp3.Response;
 
 public class AuthenticationApiImpl implements AuthenticationApi {
 
+    @NonNull
+    private final ClientCredentials mClientCredentials;
     private final OkHttpClient mHttpClient;
 
     @VisibleForTesting
-    String mUrl = BuildConfig.BASE_URL + Constants.AUTHENTICATE_USER;
+    String mUrl = BuildConfig.USER_API_URL + Constants.AUTHENTICATE_USER;
 
     public AuthenticationApiImpl(@NonNull final ClientCredentials clientCredentials,
             final OkHttpClient okHttpClient) {
+        mClientCredentials = clientCredentials;
 
-        mHttpClient = okHttpClient.newBuilder()
-                .addInterceptor(new AuthenticationInterceptor(clientCredentials))
-                .build();
+        mHttpClient = okHttpClient;
     }
 
     @Override
-    public void requestSessionToken(@NonNull final NetworkCallback<AccessToken> callback) {
+    public void createUser(@NonNull final UserCredentials userCredentials,
+            @NonNull final AccessToken accessToken, @NonNull final NetworkCallback<Void> callback) {
 
-        final RequestBody bodyType = new FormBody.Builder()
-                .build();
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("email", userCredentials.getEmail());
+            jsonObject.put("password", userCredentials.getPassword());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                jsonObject.toString());
 
         Request request = new Request.Builder()
                 .url(mUrl)
                 .addHeader("Accept", "application/json")
-                .post(bodyType)
+                .addHeader("Authorization", "BEARER " + accessToken.getToken())
+                .post(body)
+                .build();
+
+        mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                callback.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
+
+        Request request = new Request.Builder()
+                .url(mUrl)
+                .addHeader("Accept", "application/json")
+                .addHeader(Constants.HEADER_NAME_AUTHORIZATION,
+                        Credentials.basic(mClientCredentials.getClientId(),
+                                mClientCredentials.getClientSecret()))
                 .build();
 
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
@@ -71,8 +107,6 @@ public class AuthenticationApiImpl implements AuthenticationApi {
                 } catch (JSONException e) {
                     callback.onError(e);
                 }
-
-
             }
         });
     }
