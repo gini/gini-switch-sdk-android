@@ -56,8 +56,8 @@ public class AuthenticationApiImpl implements AuthenticationApi {
 
         final Request request = new Request.Builder()
                 .url(mUrl)
-                .addHeader("Accept", "application/json")
                 .addHeader("Authorization", "BEARER " + accessToken.getToken())
+                .addHeader("Accept", "application/json")
                 .post(body)
                 .build();
 

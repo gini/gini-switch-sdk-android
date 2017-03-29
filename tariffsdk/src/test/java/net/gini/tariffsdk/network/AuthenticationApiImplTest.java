@@ -1,7 +1,6 @@
 package net.gini.tariffsdk.network;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.accounts.NetworkErrorException;
@@ -32,8 +31,13 @@ public class AuthenticationApiImplTest {
     @Mock
     AccessToken mMockAccessToken;
     @Mock
+    NetworkCallback<AccessToken> mMockAccessTokenNetworkCallback;
+    @Mock
+    ClientCredentials mMockClientCredentials;
+    @Mock
     UserCredentials mMockUserCredentials;
-    private MockResponse mMockResponse = new MockResponse().setBody("mock response");
+    @Mock
+    NetworkCallback<Void> mMockVoidNetworkCallback;
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
     private Waiter mWaiter;
@@ -41,19 +45,10 @@ public class AuthenticationApiImplTest {
     @Test
     public void createUser_shouldBePostMethod()
             throws InterruptedException, TimeoutException {
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
 
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
-                new NetworkCallback<Void>() {
-                    @Override
-                    public void onError(final Exception e) {
-                    }
-
-                    @Override
-                    public void onSuccess(final Void aVoid) {
-                    }
-                });
+                mMockVoidNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("POST", request.getMethod());
@@ -63,18 +58,9 @@ public class AuthenticationApiImplTest {
     @Test
     public void createUser_shouldContainAnAcceptHeader() throws InterruptedException {
 
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
-                new NetworkCallback<Void>() {
-                    @Override
-                    public void onError(final Exception e) {
-                    }
-
-                    @Override
-                    public void onSuccess(final Void aVoid) {
-                    }
-                });
+                mMockVoidNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("application/json", request.getHeader("Accept"));
@@ -84,15 +70,13 @@ public class AuthenticationApiImplTest {
     public void createUser_shouldContainClientEmailData()
             throws InterruptedException, JSONException {
 
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
 
         final String email = "our_awesome@client.net";
         when(mMockUserCredentials.getEmail()).thenReturn(email);
 
-        @SuppressWarnings("unchecked")
-        final NetworkCallback<Void> callBack = mock(NetworkCallback.class);
-        authenticationApi.createUser(mMockUserCredentials, mMockAccessToken, callBack);
+        authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
+                mMockVoidNetworkCallback);
 
         final RecordedRequest request = mServer.takeRequest();
         final String requestEmail = new JSONObject(request.getBody().readUtf8()).getString("email");
@@ -103,22 +87,13 @@ public class AuthenticationApiImplTest {
     public void createUser_shouldContainClientPasswordsData()
             throws InterruptedException, JSONException {
 
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
 
         final String password = "super_secret_test_password";
         when(mMockUserCredentials.getPassword()).thenReturn(password);
 
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
-                new NetworkCallback<Void>() {
-                    @Override
-                    public void onError(final Exception e) {
-                    }
-
-                    @Override
-                    public void onSuccess(final Void aVoid) {
-                    }
-                });
+                mMockVoidNetworkCallback);
 
         final RecordedRequest request = mServer.takeRequest();
         final String requestPassword = new JSONObject(request.getBody().readUtf8()).getString(
@@ -129,42 +104,24 @@ public class AuthenticationApiImplTest {
     @Test
     public void createUser_shouldContainContentTypeHeader() throws InterruptedException {
 
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
-                new NetworkCallback<Void>() {
-                    @Override
-                    public void onError(final Exception e) {
-                    }
-
-                    @Override
-                    public void onSuccess(final Void aVoid) {
-                    }
-                });
+                mMockVoidNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
-        assertEquals("application/application/json", request.getHeader("Content-Type"));
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
     }
 
     @Test
     public void createUser_shouldContainTheAccessTokenAsAuthorization()
             throws InterruptedException {
 
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
         final String accessToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
 
         when(mMockAccessToken.getToken()).thenReturn(accessToken);
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
-                new NetworkCallback<Void>() {
-                    @Override
-                    public void onError(final Exception e) {
-                    }
-
-                    @Override
-                    public void onSuccess(final Void aVoid) {
-                    }
-                });
+                mMockVoidNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + accessToken, request.getHeader("Authorization"));
@@ -175,8 +132,7 @@ public class AuthenticationApiImplTest {
             throws InterruptedException, JSONException, TimeoutException {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
 
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
                 new NetworkCallback<Void>() {
@@ -188,6 +144,8 @@ public class AuthenticationApiImplTest {
 
                     @Override
                     public void onSuccess(final Void aVoid) {
+                        mWaiter.fail();
+                        mWaiter.resume();
                     }
                 });
 
@@ -200,13 +158,15 @@ public class AuthenticationApiImplTest {
 
         MockResponse mJSONMockResponse = new MockResponse().setBody("{\"email\":\"some_user"
                 + "@example.com\",\"password:\"supersecret\"}");
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mJSONMockResponse);
+        mServer.enqueue(mJSONMockResponse);
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
 
         authenticationApi.createUser(mMockUserCredentials, mMockAccessToken,
                 new NetworkCallback<Void>() {
                     @Override
                     public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
                     }
 
                     @Override
@@ -226,12 +186,13 @@ public class AuthenticationApiImplTest {
         final MockResponse mockResponse = new MockResponse().setBody(
                 "{\"access_token\":\"1eb7ca49-d99f-40cb-b86d-8dd689ca2345\","
                         + "\"token_type\":\"bearer\",\"expires_in\":43199,\"scope\":\"read\"}");
-        final AuthenticationApiImpl impl = getAuthenticationApi(mServer,
-                mOkHttpClient, mockResponse);
+        mServer.enqueue(mockResponse);
+        final AuthenticationApiImpl impl = getAuthenticationApi(mOkHttpClient);
         impl.requestClientToken(new NetworkCallback<AccessToken>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
+                mWaiter.resume();
             }
 
             @Override
@@ -242,7 +203,6 @@ public class AuthenticationApiImplTest {
             }
         });
 
-        mServer.takeRequest();
         mWaiter.await();
     }
 
@@ -250,10 +210,8 @@ public class AuthenticationApiImplTest {
     public void requestClientToken_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
 
-        final MockResponse mockResponse = new MockResponse().setBody("requestHeader_Accept");
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mockResponse);
-        authenticationApi.requestClientToken(getNoopCallback());
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+        authenticationApi.requestClientToken(mMockAccessTokenNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
@@ -262,10 +220,8 @@ public class AuthenticationApiImplTest {
     @Test
     public void requestClientToken_shouldContainAnAcceptHeader() throws InterruptedException {
 
-        final MockResponse mockResponse = new MockResponse().setBody("requestHeader_Accept");
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mockResponse);
-        authenticationApi.requestClientToken(getNoopCallback());
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+        authenticationApi.requestClientToken(mMockAccessTokenNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("application/json", request.getHeader("Accept"));
@@ -274,25 +230,11 @@ public class AuthenticationApiImplTest {
     @Test
     public void requestClientToken_shouldContainBasicAuthorization() throws InterruptedException {
 
-        final MockResponse mockResponse = new MockResponse().setBody("requestHeader_Accept");
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mockResponse);
-        authenticationApi.requestClientToken(getNoopCallback());
+        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+        authenticationApi.requestClientToken(mMockAccessTokenNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0", request.getHeader("Authorization"));
-    }
-
-    @Test
-    public void requestClientToken_shouldContainContentTypeHeader() throws InterruptedException {
-
-        final MockResponse mockResponse = new MockResponse().setBody("requestHeader_ContentType");
-        final AuthenticationApiImpl authenticationApi = getAuthenticationApi(mServer, mOkHttpClient,
-                mockResponse);
-        authenticationApi.requestClientToken(getNoopCallback());
-
-        RecordedRequest request = mServer.takeRequest();
-        assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
     }
 
     @Before
@@ -308,6 +250,9 @@ public class AuthenticationApiImplTest {
         when(mMockUserCredentials.getEmail()).thenReturn("user@email.com");
         when(mMockUserCredentials.getPassword()).thenReturn("password");
 
+        when(mMockClientCredentials.getClientId()).thenReturn("clientId");
+        when(mMockClientCredentials.getClientSecret()).thenReturn("clientSecret");
+
     }
 
     @After
@@ -316,27 +261,11 @@ public class AuthenticationApiImplTest {
     }
 
     @NonNull
-    private static AuthenticationApiImpl getAuthenticationApi(final MockWebServer server,
-            final OkHttpClient okHttpClient, final MockResponse requestHeader_accept) {
-        server.enqueue(requestHeader_accept);
-        final String url = server.url("/post").toString();
+    private AuthenticationApiImpl getAuthenticationApi(final OkHttpClient okHttpClient) {
+        final String url = mServer.url("/post").toString();
         final AuthenticationApiImpl authenticationApi = new AuthenticationApiImpl(
-                new ClientCredentials("clientId", "clientSecret"), okHttpClient);
+                mMockClientCredentials, okHttpClient);
         authenticationApi.mUrl = url;
         return authenticationApi;
     }
-
-    @NonNull
-    private NetworkCallback<AccessToken> getNoopCallback() {
-        return new NetworkCallback<AccessToken>() {
-            @Override
-            public void onError(final Exception e) {
-            }
-
-            @Override
-            public void onSuccess(final AccessToken accessToken) {
-            }
-        };
-    }
-
 }
