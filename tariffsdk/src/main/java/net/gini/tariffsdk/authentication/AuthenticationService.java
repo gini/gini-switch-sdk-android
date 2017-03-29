@@ -9,8 +9,8 @@ import android.util.Log;
 
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
-import net.gini.tariffsdk.network.AuthenticationApi;
-import net.gini.tariffsdk.network.AuthenticationApiImpl;
+import net.gini.tariffsdk.network.UserApi;
+import net.gini.tariffsdk.network.UserApiImpl;
 import net.gini.tariffsdk.network.NetworkCallback;
 
 import okhttp3.OkHttpClient;
@@ -29,7 +29,7 @@ public class AuthenticationService {
         mContext = context;
         mOkHttpClient = okHttpClient;
 
-        AuthenticationApi api = new AuthenticationApiImpl(clientCredentials, mOkHttpClient);
+        UserApi api = new UserApiImpl(clientCredentials, mOkHttpClient);
         api.requestClientToken(new NetworkCallback<AccessToken>() {
                     @Override
                     public void onError(final Exception e) {

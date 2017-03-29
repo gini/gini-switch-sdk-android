@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
 
-public interface AuthenticationApi {
+public interface UserApi {
 
     void createUser(@NonNull final UserCredentials userCredentials,
             @NonNull final AccessToken accessToken, @NonNull final NetworkCallback<Void> callback);
