@@ -1,6 +1,8 @@
 package net.gini.tariffsdk.network;
 
 
+import static net.gini.tariffsdk.network.Constants.AUTHENTICATE_CLIENT;
+
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -16,7 +18,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Credentials;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,7 +34,7 @@ public class UserApiImpl implements UserApi {
     private final OkHttpClient mHttpClient;
 
     @VisibleForTesting
-    String mUrl = BuildConfig.USER_API_URL + Constants.AUTHENTICATE_USER;
+    String mUrl = BuildConfig.USER_API_URL + AUTHENTICATE_CLIENT;
 
     public UserApiImpl(@NonNull final ClientCredentials clientCredentials,
             final OkHttpClient okHttpClient) {
@@ -68,10 +72,40 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
+    public void requestUserToken(@NonNull final UserCredentials userCredentials,
+            @NonNull final NetworkCallback<AccessToken> callback) {
+        final RequestBody requestBody = new FormBody.Builder()
+                .add("username", userCredentials.getEmail())
+                .add("password", userCredentials.getPassword())
+                .build();
+        final Request request = createPostRequest(requestBody);
+        mHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject obj = new JSONObject(response.body().string());
+                        final AccessToken accessToken = getAccessToken(obj);
+                        callback.onSuccess(accessToken);
+                    } catch (JSONException e) {
+                        callback.onError(e);
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        });
+    }
+
+    @Override
     public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
 
         final Request request = createGetRequest();
-
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
@@ -127,9 +161,18 @@ public class UserApiImpl implements UserApi {
                 .build();
     }
 
+    private Request createPostRequest(final RequestBody body) {
+        return new Request.Builder()
+                .url(mUrl)
+                .addHeader("Accept", "application/json")
+                .post(body)
+                .build();
+    }
+
     @NonNull
     private AccessToken getAccessToken(final JSONObject jsonObject) throws JSONException {
         final int expiresIn = jsonObject.getInt("expires_in");
+        //TODO validate if scope is needed
         final String scope = jsonObject.getString("scope");
         final String token = jsonObject.getString("access_token");
         final String type = jsonObject.getString("token_type");
