@@ -1,7 +1,6 @@
 package net.gini.tariffsdk.network.interceptors;
 
 
-import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.network.Constants;
@@ -19,9 +18,9 @@ public class TokenInterceptor implements Interceptor {
         Request originalRequest = chain.request();
         Request authorizedRequest = null;
         String url = originalRequest.url().toString();
-        if (url.contains(BuildConfig.BASE_URL)) {
+//        if (url.contains(BuildConfig.BASE_URL)) {
             authorizedRequest = authorizeWithToken(originalRequest);
-        }
+//        }
         if (authorizedRequest != null) {
             return chain.proceed(authorizedRequest);
         } else {

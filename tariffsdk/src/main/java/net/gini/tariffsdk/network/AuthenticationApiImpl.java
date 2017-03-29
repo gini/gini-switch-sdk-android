@@ -1,6 +1,7 @@
 package net.gini.tariffsdk.network;
 
 
+import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
@@ -53,7 +54,7 @@ public class AuthenticationApiImpl implements AuthenticationApi {
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
                 jsonObject.toString());
 
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 .url(mUrl)
                 .addHeader("Accept", "application/json")
                 .addHeader("Authorization", "BEARER " + accessToken.getToken())
@@ -68,7 +69,11 @@ public class AuthenticationApiImpl implements AuthenticationApi {
 
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
-                callback.onSuccess(null);
+                if (response.isSuccessful()) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
             }
         });
     }

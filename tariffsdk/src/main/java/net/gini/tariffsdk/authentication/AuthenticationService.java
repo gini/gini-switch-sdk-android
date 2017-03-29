@@ -30,7 +30,7 @@ public class AuthenticationService {
         mOkHttpClient = okHttpClient;
 
         AuthenticationApi api = new AuthenticationApiImpl(clientCredentials, mOkHttpClient);
-        api.requestSessionToken(                new NetworkCallback<AccessToken>() {
+        api.requestClientToken(new NetworkCallback<AccessToken>() {
                     @Override
                     public void onError(final Exception e) {
                         Log.e("OH NOES", e.getLocalizedMessage());

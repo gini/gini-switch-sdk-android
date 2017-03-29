@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.user;
+package net.gini.tariffsdk.authentication.user;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
+
+import net.gini.tariffsdk.authentication.models.UserCredentials;
 
 import org.junit.Before;
 import org.junit.Test;
