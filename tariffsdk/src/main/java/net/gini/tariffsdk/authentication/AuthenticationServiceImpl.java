@@ -21,16 +21,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private static AuthenticationServiceImpl mInstance = null;
     private static AccessToken sAccessToken = null;
     private final UserApiImpl mApi;
+    private final UserManager mUserManager;
     private final Context mContext;
     private final OkHttpClient mOkHttpClient;
 
-    private AuthenticationServiceImpl(final Context context, final @NonNull ClientCredentials clientCredentials, final OkHttpClient okHttpClient) {
+    private AuthenticationServiceImpl(final Context context, final @NonNull ClientCredentials clientCredentials, final OkHttpClient okHttpClient, final UserManager userManager) {
 
         mContext = context;
         mOkHttpClient = okHttpClient;
 
         mApi = new UserApiImpl(clientCredentials, mOkHttpClient);
 
+        mUserManager = userManager;
     }
 
 
@@ -40,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //if yes, request token
         //if no create user and then request token
 
-        if(UserManager.userCredentialsExist(mContext)) {
+        if(mUserManager.userCredentialsExist()) {
             requestUserToken(callback);
         } else {
             mApi.requestClientToken(new NetworkCallback<AccessToken>() {
@@ -51,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 @Override
                 public void onSuccess(final AccessToken accessToken) {
-                    UserCredentials userCredentials = UserManager.getUserCredentials(mContext);
+                    UserCredentials userCredentials = mUserManager.getUserCredentials();
                     createUser(accessToken, userCredentials);
                 }
 
@@ -74,7 +76,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void requestUserToken(final @NonNull NetworkCallback<Void> callback) {
-        mApi.requestUserToken(UserManager.getUserCredentials(mContext),
+        mApi.requestUserToken(mUserManager.getUserCredentials(),
                 new NetworkCallback<AccessToken>() {
                     @Override
                     public void onError(final Exception e) {

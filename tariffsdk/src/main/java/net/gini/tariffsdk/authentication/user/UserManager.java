@@ -6,6 +6,8 @@ import static android.content.Context.MODE_PRIVATE;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import net.gini.tariffsdk.authentication.models.UserCredentials;
@@ -14,44 +16,64 @@ import java.util.UUID;
 
 public class UserManager {
 
-    private UserManager() {
+    //TODO
+    private String mDomain = "tariff-gini.net";
+    private SharedPreferences mSharedPreferences;
 
+    public UserManager(@NonNull final Context context, @Nullable String domain) {
+        mSharedPreferences = context.getSharedPreferences(USER_SHARE_PREFERENCES, MODE_PRIVATE);
+        if(domain != null) {
+            mDomain = domain;
+        }
     }
 
     @VisibleForTesting
-    static final String USER_KEY_ID = "USER_KEY_ID";
+    static final String USER_KEY_EMAIL = "USER_KEY_EMAIL";
+
+    static final String USER_KEY_PASSWORD = "USER_KEY_PASSWORD";
 
     @VisibleForTesting
     static final String USER_SHARE_PREFERENCES = "USER_SHARE_PREFERENCES";
 
-    public static UserCredentials getUserCredentials(final Context context) {
-        SharedPreferences sharedPreferences = getSharedPreferences(context);
-        String userId;
-        if(userCredentialsExist(context)) {
-            userId = sharedPreferences.getString(USER_KEY_ID, "");
+    public UserCredentials getUserCredentials() {
+        if(userCredentialsExist()) {
+            return getCredentialsFromSharePreferences();
         } else {
-            userId = generateUserId();
-            storeUserId(context, userId);
+            final String email = generateEmail(mDomain);
+            final String password = generatePassword();
+            final UserCredentials userCredentials = new UserCredentials(email, password);
+
+            storeUserCredentials(userCredentials);
+
+            return userCredentials;
         }
-        //TODO
-        return new UserCredentials(userId, "TODO");
+    }
+
+    private UserCredentials getCredentialsFromSharePreferences() {
+        final String email = mSharedPreferences.getString(USER_KEY_EMAIL, "");
+        final String password = mSharedPreferences.getString(USER_KEY_PASSWORD, "");
+        return new UserCredentials(email, password);
     }
 
     @SuppressLint("ApplySharedPref")
-    private static void storeUserId(Context context, final String userId) {
-        getSharedPreferences(context).edit().putString(USER_KEY_ID, userId).commit();
+    private void storeUserCredentials(UserCredentials userCredentials) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(USER_KEY_EMAIL, userCredentials.getEmail());
+        editor.putString(USER_KEY_PASSWORD, userCredentials.getPassword());
+
+        editor.commit();
     }
 
-    private static String generateUserId() {
+    private String generateEmail(@NonNull final String domain) {
+        return UUID.randomUUID().toString() + "@" + domain;
+    }
+
+    private String generatePassword() {
         return UUID.randomUUID().toString();
     }
 
-    private static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(USER_SHARE_PREFERENCES, MODE_PRIVATE);
-    }
-
-    public static boolean userCredentialsExist(Context context) {
-        return getSharedPreferences(context).contains(USER_KEY_ID);
+    public boolean userCredentialsExist() {
+        return mSharedPreferences.contains(USER_KEY_EMAIL) && mSharedPreferences.contains(USER_KEY_PASSWORD);
     }
 
 }

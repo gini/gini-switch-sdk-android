@@ -7,7 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
-import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
+import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
 
 import okhttp3.OkHttpClient;
@@ -21,7 +21,7 @@ import okhttp3.OkHttpClient;
 public class TariffSdk {
 
     public static int REQUEST_CODE = 666;
-    private final AuthenticationServiceImpl mAuthenticationService;
+    private AuthenticationService mAuthenticationService;
 
     private final Context mContext;
     private final OkHttpClient mOkHttpClient;
@@ -32,8 +32,8 @@ public class TariffSdk {
         mContext = context;
         mTheme = theme;
         mOkHttpClient = okHttpClient;
-        mAuthenticationService = AuthenticationServiceImpl.getInstance(context, clientId, clientPw,
-                okHttpClient);
+//        mAuthenticationService = AuthenticationServiceImpl.getInstance(context, clientId, clientPw,
+//                okHttpClient, new );
     }
 
     /**
