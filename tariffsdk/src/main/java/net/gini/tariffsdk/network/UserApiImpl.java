@@ -173,7 +173,7 @@ public class UserApiImpl implements UserApi {
     private AccessToken getAccessToken(final JSONObject jsonObject) throws JSONException {
         final int expiresIn = jsonObject.getInt("expires_in");
         //TODO validate if scope is needed
-        final String scope = jsonObject.getString("scope");
+        final String scope = jsonObject.optString("scope");
         final String token = jsonObject.getString("access_token");
         final String type = jsonObject.getString("token_type");
         return new AccessToken(expiresIn, scope, token, type);

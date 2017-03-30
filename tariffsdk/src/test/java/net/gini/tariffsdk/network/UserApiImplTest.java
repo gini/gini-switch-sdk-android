@@ -54,7 +54,6 @@ public class UserApiImplTest {
         assertEquals("POST", request.getMethod());
     }
 
-
     @Test
     public void createUser_shouldContainAnAcceptHeader() throws InterruptedException {
 
@@ -128,7 +127,7 @@ public class UserApiImplTest {
     }
 
     @Test
-    public void createUser_wasSuccessfulShouldCallOnError()
+    public void createUser_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
@@ -235,6 +234,102 @@ public class UserApiImplTest {
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0", request.getHeader("Authorization"));
+    }
+
+    @Test
+    public void requestUserToken_shouldBePostMethod()
+            throws InterruptedException, TimeoutException {
+        final UserApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+
+        authenticationApi.requestUserToken(mMockUserCredentials, mMockAccessTokenNetworkCallback);
+
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("POST", request.getMethod());
+    }
+
+    @Test
+    public void requestUserToken_shouldContainAnAcceptHeader() throws InterruptedException {
+
+        final UserApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+        authenticationApi.requestUserToken(mMockUserCredentials, mMockAccessTokenNetworkCallback);
+
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("application/json", request.getHeader("Accept"));
+    }
+
+    @Test
+    public void requestUserToken_shouldContainUserCredentials()
+            throws InterruptedException, JSONException {
+
+        final UserApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+
+        final String email = "our_awesome@client.net";
+        final String password = "super_secret_test_password";
+        when(mMockUserCredentials.getEmail()).thenReturn(email);
+        when(mMockUserCredentials.getPassword()).thenReturn(password);
+
+        authenticationApi.requestUserToken(mMockUserCredentials, mMockAccessTokenNetworkCallback);
+
+        final RecordedRequest request = mServer.takeRequest();
+        final String response = request.getBody().readUtf8();
+        assertEquals("username=our_awesome%40client.net&password=super_secret_test_password",
+                response);
+    }
+
+    @Test
+    public void requestUserToken_wasNotSuccessfulShouldCallOnError()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        mServer.enqueue(new MockResponse().setResponseCode(500));
+        final UserApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+
+        authenticationApi.requestUserToken(mMockUserCredentials,
+                new NetworkCallback<AccessToken>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final AccessToken accessToken) {
+                        mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
+    @Test
+    public void requestUserToken_wasSuccessfulShouldCallOnSuccessWithAnAccessToken()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        final String accessTokenString = "6c470ffa-abf1-41aa-b866-cd3be0ee84f4";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                "{\"access_token\":\"" + accessTokenString
+                        + "\",\"token_type\":\"bearer\",\"expires_in\":3599}");
+
+
+        mServer.enqueue(mJSONMockResponse);
+        final UserApiImpl authenticationApi = getAuthenticationApi(mOkHttpClient);
+
+        authenticationApi.requestUserToken(mMockUserCredentials,
+                new NetworkCallback<AccessToken>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final AccessToken accessToken) {
+                        mWaiter.assertEquals(accessTokenString, accessToken.getToken());
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
     }
 
     @Before
