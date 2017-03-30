@@ -2,6 +2,8 @@ package net.gini.tariffsdk.network;
 
 
 import static net.gini.tariffsdk.network.Constants.AUTHENTICATE_CLIENT;
+import static net.gini.tariffsdk.network.Constants.AUTHENTICATE_USER;
+import static net.gini.tariffsdk.network.Constants.CREATE_USER;
 
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
@@ -34,7 +36,7 @@ public class UserApiImpl implements UserApi {
     private final OkHttpClient mHttpClient;
 
     @VisibleForTesting
-    String mUrl = BuildConfig.USER_API_URL + AUTHENTICATE_CLIENT;
+    String mBaseUrl = BuildConfig.USER_API_URL;
 
     public UserApiImpl(@NonNull final ClientCredentials clientCredentials,
             final OkHttpClient okHttpClient) {
@@ -52,7 +54,8 @@ public class UserApiImpl implements UserApi {
                 MediaType.parse("application/json; charset=utf-8"),
                 credentialsJson);
 
-        final Request request = createPostRequest(accessToken, body);
+        final String url = mBaseUrl + CREATE_USER;
+        final Request request = createPostRequest(accessToken, body, url);
 
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
@@ -78,7 +81,10 @@ public class UserApiImpl implements UserApi {
                 .add("username", userCredentials.getEmail())
                 .add("password", userCredentials.getPassword())
                 .build();
-        final Request request = createPostRequest(requestBody);
+
+        final String url = mBaseUrl + AUTHENTICATE_USER;
+        final Request request = createPostRequest(requestBody, url);
+
         mHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
@@ -105,7 +111,8 @@ public class UserApiImpl implements UserApi {
     @Override
     public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
 
-        final Request request = createGetRequest();
+        final String url = mBaseUrl + AUTHENTICATE_CLIENT;
+        final Request request = createGetRequest(url);
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
@@ -141,9 +148,9 @@ public class UserApiImpl implements UserApi {
         return jsonObject.toString();
     }
 
-    private Request createGetRequest() {
+    private Request createGetRequest(final String url) {
         return new Request.Builder()
-                .url(mUrl)
+                .url(url)
                 .addHeader("Accept", "application/json")
                 .addHeader(Constants.HEADER_NAME_AUTHORIZATION,
                         Credentials.basic(mClientCredentials.getClientId(),
@@ -152,18 +159,18 @@ public class UserApiImpl implements UserApi {
     }
 
     private Request createPostRequest(final @NonNull AccessToken accessToken,
-            final RequestBody body) {
+            final RequestBody body, final String url) {
         return new Request.Builder()
-                .url(mUrl)
+                .url(url)
                 .addHeader("Authorization", "BEARER " + accessToken.getToken())
                 .addHeader("Accept", "application/json")
                 .post(body)
                 .build();
     }
 
-    private Request createPostRequest(final RequestBody body) {
+    private Request createPostRequest(final RequestBody body, final String url) {
         return new Request.Builder()
-                .url(mUrl)
+                .url(url)
                 .addHeader("Accept", "application/json")
                 .post(body)
                 .build();

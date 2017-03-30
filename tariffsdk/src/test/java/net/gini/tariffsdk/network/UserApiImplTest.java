@@ -357,10 +357,10 @@ public class UserApiImplTest {
 
     @NonNull
     private UserApiImpl getAuthenticationApi(final OkHttpClient okHttpClient) {
-        final String url = mServer.url("/post").toString();
+        final String url = mServer.url("/").toString();
         final UserApiImpl authenticationApi = new UserApiImpl(
                 mMockClientCredentials, okHttpClient);
-        authenticationApi.mUrl = url;
+        authenticationApi.mBaseUrl = url;
         return authenticationApi;
     }
 }

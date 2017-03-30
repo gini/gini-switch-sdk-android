@@ -6,5 +6,7 @@ public interface Constants {
 
     String AUTHENTICATE_USER = "/oauth/token?grant_type=password";
 
+    String CREATE_USER = "/api/users";
+
     String HEADER_NAME_AUTHORIZATION = "Authorization";
 }
