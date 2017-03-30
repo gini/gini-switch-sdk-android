@@ -50,7 +50,7 @@ public class UserManager {
         return context.getSharedPreferences(USER_SHARE_PREFERENCES, MODE_PRIVATE);
     }
 
-    private static boolean userCredentialsExist(Context context) {
+    public static boolean userCredentialsExist(Context context) {
         return getSharedPreferences(context).contains(USER_KEY_ID);
     }
 
