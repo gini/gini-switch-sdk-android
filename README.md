@@ -12,4 +12,4 @@ This is the repository of the Android SDK of the Tariff Cell.
 [Gini Android Style](https://wiki.i.gini.net/display/DEV/Android+Code+Style+Guidelines)
 
 ### Third party libraries
-none so far :tada:
+[okHttp](http://square.github.io/okhttp/)
