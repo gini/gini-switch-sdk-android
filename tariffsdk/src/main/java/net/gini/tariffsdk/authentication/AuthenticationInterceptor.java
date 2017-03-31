@@ -1,6 +1,8 @@
 package net.gini.tariffsdk.authentication;
 
 
+import net.gini.tariffsdk.authentication.models.AccessToken;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -19,7 +21,12 @@ public class AuthenticationInterceptor implements Interceptor {
     public Response intercept(final Chain chain) throws IOException {
         final Request.Builder requestBuilder = chain.request().newBuilder();
 
-        requestBuilder.addHeader("Authorization", "BEARER: " + mAuthenticationService.getUserToken());
+        AccessToken userToken = mAuthenticationService.getUserToken();
+        if (userToken != null) {
+            requestBuilder.addHeader("Authorization", "BEARER " + userToken.getToken());
+        } else {
+            throw new IOException("TODO");
+        }
         return chain.proceed(requestBuilder.build());
     }
 }

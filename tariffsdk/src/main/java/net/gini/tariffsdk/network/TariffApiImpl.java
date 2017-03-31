@@ -1,12 +1,17 @@
 package net.gini.tariffsdk.network;
 
 
+import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.AuthenticationInterceptor;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.configuration.models.Configuration;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -18,16 +23,15 @@ import okhttp3.Response;
 
 class TariffApiImpl implements TariffApi {
 
-    private final String mTariffApiUrl = BuildConfig.TARIFF_API_URL;
-
     private final OkHttpClient mOkHttpClient;
-    private final AuthenticationService mAuthenticationService;
+    @VisibleForTesting
+    String mTariffApiUrl = BuildConfig.TARIFF_API_URL;
 
-    TariffApiImpl(final OkHttpClient okHttpClient, final AuthenticationService authenticationService) {
+    TariffApiImpl(final OkHttpClient okHttpClient,
+            final AuthenticationService authenticationService) {
         mOkHttpClient = okHttpClient.newBuilder()
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
                 .build();
-        mAuthenticationService = authenticationService;
     }
 
     @Override
@@ -42,8 +46,17 @@ class TariffApiImpl implements TariffApi {
 
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
-                final Configuration configuration = new Configuration();
-                callback.onSuccess(configuration);
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject object = new JSONObject(response.body().string());
+                        final Configuration configuration = getConfigurationFromJson(object);
+                        callback.onSuccess(configuration);
+                    } catch (JSONException e) {
+                        callback.onError(e);
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
             }
         });
     }
@@ -51,7 +64,12 @@ class TariffApiImpl implements TariffApi {
     private Request createGetRequest(final String url) {
         return new Request.Builder()
                 .url(url)
-                .addHeader("Accept", "application/json")
                 .build();
+    }
+
+    private Configuration getConfigurationFromJson(final JSONObject object) throws JSONException {
+
+        long resolution = object.getLong("resolution");
+        return new Configuration(resolution);
     }
 }
