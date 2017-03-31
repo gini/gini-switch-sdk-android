@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.network.NetworkCallback;
 
+import java.io.IOException;
+
 public interface AuthenticationService {
 
     void init(@NonNull final NetworkCallback<Void> callback);
@@ -15,4 +17,6 @@ public interface AuthenticationService {
     AccessToken getUserToken();
 
     void requestNewUserToken(@NonNull final NetworkCallback<AccessToken> callback);
+
+    AccessToken requestNewUserToken() throws IOException;
 }

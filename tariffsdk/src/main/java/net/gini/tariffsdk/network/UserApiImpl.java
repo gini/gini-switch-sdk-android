@@ -75,6 +75,35 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
+    public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
+
+        final String url = mBaseUrl + AUTHENTICATE_CLIENT;
+        final Request request = createGetRequest(url);
+        mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response)
+                    throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject obj = new JSONObject(response.body().string());
+                        final AccessToken accessToken = getAccessToken(obj);
+                        callback.onSuccess(accessToken);
+                    } catch (JSONException e) {
+                        callback.onError(e);
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        });
+    }
+
+    @Override
     public void requestUserToken(@NonNull final UserCredentials userCredentials,
             @NonNull final NetworkCallback<AccessToken> callback) {
         final RequestBody requestBody = new FormBody.Builder()
@@ -109,31 +138,27 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
-    public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
+    public AccessToken requestUserTokenSync(@NonNull final UserCredentials userCredentials)
+            throws IOException {
 
-        final String url = mBaseUrl + AUTHENTICATE_CLIENT;
-        final Request request = createGetRequest(url);
-        mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
-            }
+        final RequestBody requestBody = new FormBody.Builder()
+                .add("username", userCredentials.getEmail())
+                .add("password", userCredentials.getPassword())
+                .build();
 
-            @Override
-            public void onResponse(final Call call, final Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        final JSONObject obj = new JSONObject(response.body().string());
-                        final AccessToken accessToken = getAccessToken(obj);
-                        callback.onSuccess(accessToken);
-                    } catch (JSONException e) {
-                        callback.onError(e);
-                    }
-                } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
-                }
+        final String url = mBaseUrl + AUTHENTICATE_USER;
+        final Request request = createPostRequest(requestBody, url);
+
+        final Response response = mHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            final JSONObject obj;
+            try {
+                obj = new JSONObject(response.body().string());
+                return getAccessToken(obj);
+            } catch (JSONException ignored) {
             }
-        });
+        }
+        throw new IOException();
     }
 
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {

@@ -8,6 +8,7 @@ import android.support.annotation.VisibleForTesting;
 import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.AuthenticationInterceptor;
 import net.gini.tariffsdk.authentication.AuthenticationService;
+import net.gini.tariffsdk.authentication.BearerAuthenticator;
 import net.gini.tariffsdk.configuration.models.Configuration;
 
 import org.json.JSONException;
@@ -30,6 +31,7 @@ class TariffApiImpl implements TariffApi {
     TariffApiImpl(final OkHttpClient okHttpClient,
             final AuthenticationService authenticationService) {
         mOkHttpClient = okHttpClient.newBuilder()
+                .authenticator(new BearerAuthenticator(authenticationService))
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
                 .build();
     }

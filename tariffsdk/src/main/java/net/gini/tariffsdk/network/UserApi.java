@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
 
+import java.io.IOException;
+
 public interface UserApi {
 
     void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback);
@@ -15,5 +17,7 @@ public interface UserApi {
 
 
     void requestUserToken(@NonNull UserCredentials userCredentials, @NonNull final NetworkCallback<AccessToken> callback);
+
+    AccessToken requestUserTokenSync(@NonNull UserCredentials userCredentials) throws IOException;
 
 }
