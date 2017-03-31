@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.remoteconfig;
+package net.gini.tariffsdk.configuration;
 
 
 import net.gini.tariffsdk.network.NetworkCallback;

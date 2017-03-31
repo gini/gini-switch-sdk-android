@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.remoteconfig;
+package net.gini.tariffsdk.configuration;
 
 
 public class RemoteValues {
