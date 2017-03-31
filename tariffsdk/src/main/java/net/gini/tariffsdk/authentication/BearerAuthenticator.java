@@ -21,12 +21,25 @@ public class BearerAuthenticator implements Authenticator {
     @Override
     public Request authenticate(final Route route, final Response response) throws IOException {
 
-        Request.Builder builder = response.request().newBuilder().removeHeader("Authorization");
+        if (responseCount(response) >= 3) {
+            return null;
+        }
+
+        Request.Builder builder = response.request().newBuilder();
+        builder.removeHeader("Authorization");
 
         final AccessToken token = mAuthenticationService.requestNewUserToken();
 
         return builder
                 .addHeader("Authorization", "BEARER " + token.getToken())
                 .build();
+    }
+
+    private int responseCount(Response response) {
+        int result = 1;
+        while ((response = response.priorResponse()) != null) {
+            result++;
+        }
+        return result;
     }
 }
