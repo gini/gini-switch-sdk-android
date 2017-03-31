@@ -4,7 +4,7 @@ import static junit.framework.Assert.assertEquals;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +26,8 @@ public class AuthenticationServiceImplTest {
 
     @Captor
     ArgumentCaptor<AccessToken> mAccessTokenCaptor;
+    @Captor
+    ArgumentCaptor<Exception> mExceptionCaptor;
     @Mock
     NetworkCallback<AccessToken> mMockAccessTokenNetworkCallback;
     @Mock
@@ -67,13 +69,12 @@ public class AuthenticationServiceImplTest {
     @Test
     public void initSecondTime_ShouldRequestClientToken() throws Exception {
 
-
         when(mMockUserManager.userCredentialsExist()).thenReturn(false);
 
         AuthenticationServiceImpl authenticationService = new AuthenticationServiceImpl(
                 mMockUserApi, mMockUserManager);
 
-        AccessToken accessToken = new AccessToken(0, "", "", "");
+        AccessToken accessToken = mock(AccessToken.class);
         authenticationService.requestNewUserToken(mMockAccessTokenNetworkCallback);
 
 
@@ -102,37 +103,38 @@ public class AuthenticationServiceImplTest {
 
         mNetworkCallbackCaptor.getValue().onSuccess(any(AccessToken.class));
 
-        verify(mMockVoidNetworkCallback).onSuccess(any(Void.class));
+        verify(mMockVoidNetworkCallback).onSuccess(null);
 
     }
 
     @Test
     public void requestNewUserToken_FailedShouldCallOnError() throws Exception {
 
-        when(mMockUserManager.userCredentialsExist()).thenReturn(false);
-
         AuthenticationServiceImpl authenticationService = new AuthenticationServiceImpl(
                 mMockUserApi, mMockUserManager);
 
+        Exception exception = mock(Exception.class);
         authenticationService.requestNewUserToken(mMockAccessTokenNetworkCallback);
+
 
         verify(mMockUserApi).requestUserToken(eq(mMockUserCredentials),
                 mNetworkCallbackCaptor.capture());
 
-        mNetworkCallbackCaptor.getValue().onError(any(Exception.class));
-        verify(mMockAccessTokenNetworkCallback, only()).onError(any(Exception.class));
+        mNetworkCallbackCaptor.getValue().onError(exception);
+
+        verify(mMockAccessTokenNetworkCallback).onError(mExceptionCaptor.capture());
+
+        Exception capturedException = mExceptionCaptor.getValue();
+        assertEquals(exception, capturedException);
     }
 
     @Test
     public void requestNewUserToken_SuccessShouldGetAccessToken() throws Exception {
 
-
-        when(mMockUserManager.userCredentialsExist()).thenReturn(false);
-
         AuthenticationServiceImpl authenticationService = new AuthenticationServiceImpl(
                 mMockUserApi, mMockUserManager);
 
-        AccessToken accessToken = new AccessToken(0, "", "", "");
+        AccessToken accessToken = mock(AccessToken.class);
         authenticationService.requestNewUserToken(mMockAccessTokenNetworkCallback);
 
 
@@ -150,13 +152,10 @@ public class AuthenticationServiceImplTest {
     @Test
     public void requestNewUserToken_SuccessShouldSToreAccessToken() throws Exception {
 
-
-        when(mMockUserManager.userCredentialsExist()).thenReturn(false);
-
         AuthenticationServiceImpl authenticationService = new AuthenticationServiceImpl(
                 mMockUserApi, mMockUserManager);
 
-        AccessToken accessToken = new AccessToken(0, "", "", "");
+        AccessToken accessToken = mock(AccessToken.class);
         authenticationService.requestNewUserToken(mMockAccessTokenNetworkCallback);
 
 
