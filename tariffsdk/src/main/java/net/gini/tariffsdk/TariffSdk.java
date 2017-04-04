@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
 import net.gini.tariffsdk.authentication.AuthenticationService;
-import net.gini.tariffsdk.takepicture.TariffSdkIntentCreator;
+import net.gini.tariffsdk.takepicture.TariffSdkIntentFactory;
 
 import okhttp3.OkHttpClient;
 
@@ -52,7 +52,7 @@ public class TariffSdk {
     @NonNull
     public Intent getTariffSdkIntent() {
 
-        return new TariffSdkIntentCreator(mContext, mTheme).createIntent();
+        return new TariffSdkIntentFactory(mContext, mTheme).createIntent();
     }
 
     /**
