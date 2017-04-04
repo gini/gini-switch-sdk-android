@@ -3,10 +3,10 @@ package net.gini.tariffsdk.authentication.models;
 
 public class AccessToken {
 
-    private int mExpiresIn;
-    private String mScope;
-    private String mToken;
-    private String mType;
+    private final int mExpiresIn;
+    private final String mScope;
+    private final String mToken;
+    private final String mType;
 
     public AccessToken(final int expiresIn, final String scope,
             final String token, final String type) {

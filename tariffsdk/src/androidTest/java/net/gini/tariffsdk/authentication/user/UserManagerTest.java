@@ -1,8 +1,10 @@
 package net.gini.tariffsdk.authentication.user;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -60,8 +62,7 @@ public class UserManagerTest {
         final String customDomain = "custom-doma.in";
         final UserManager userManager = new UserManager(mContext, customDomain);
         UserCredentials userCredentials = userManager.getUserCredentials();
-        String domain = userCredentials.getEmail().split("@")[1];
-        assertEquals(customDomain, domain);
+        assertThat(userCredentials.getEmail(), endsWith("@" + customDomain));
     }
 
     @Test
