@@ -33,4 +33,11 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     testCompile "junit:junit:$rootProject.ext.junitVersion"
+    compile 'com.android.support:support-v4:25.2.0'
+}
+
+task generateJavadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator)) + configurations.compile
+    failOnError false
 }

@@ -11,5 +11,5 @@ This is the repository of the Android SDK of the Tariff Cell.
 ### Style Guide
 [Gini Android Style](https://wiki.i.gini.net/display/DEV/Android+Code+Style+Guidelines)
 
-### Third part libraries
+### Third party libraries
 none so far :tada:
