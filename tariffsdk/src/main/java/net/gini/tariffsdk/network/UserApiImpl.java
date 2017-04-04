@@ -142,7 +142,8 @@ public class UserApiImpl implements UserApi {
             jsonObject.put("email", userCredentials.getEmail());
             jsonObject.put("password", userCredentials.getPassword());
         } catch (JSONException e) {
-            e.printStackTrace();
+            //TODO log this
+            throw new RuntimeException(e);
         }
 
         return jsonObject.toString();
