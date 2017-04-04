@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(mUserManager.userCredentialsExist()) {
             requestUserToken(callback);
         } else {
-            final UserCredentials userCredentials = mUserManager.getUserCredentials();
+            final UserCredentials userCredentials = mUserManager.getOrCreateUserCredentials();
 
             mUserApi.requestClientToken(new NetworkCallback<AccessToken>() {
                 @Override
@@ -68,7 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void requestNewUserToken(@NonNull final NetworkCallback<AccessToken> callback) {
-        mUserApi.requestUserToken(mUserManager.getUserCredentials(),
+        mUserApi.requestUserToken(mUserManager.getOrCreateUserCredentials(),
                 new NetworkCallback<AccessToken>() {
                     @Override
                     public void onError(final Exception e) {
@@ -85,7 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     private void requestUserToken(final @NonNull NetworkCallback<Void> callback) {
-        mUserApi.requestUserToken(mUserManager.getUserCredentials(),
+        mUserApi.requestUserToken(mUserManager.getOrCreateUserCredentials(),
                 new NetworkCallback<AccessToken>() {
                     @Override
                     public void onError(final Exception e) {

@@ -51,7 +51,7 @@ public class AuthenticationServiceImplTest {
                 mMockUserApi, mMockUserManager);
 
         authenticationService.init(mMockVoidNetworkCallback);
-        verify(mMockUserManager).getUserCredentials();
+        verify(mMockUserManager).getOrCreateUserCredentials();
     }
 
     @Test
@@ -173,7 +173,7 @@ public class AuthenticationServiceImplTest {
 
         when(mMockUserCredentials.getEmail()).thenReturn("user@email.com");
         when(mMockUserCredentials.getPassword()).thenReturn("password");
-        when(mMockUserManager.getUserCredentials()).thenReturn(mMockUserCredentials);
+        when(mMockUserManager.getOrCreateUserCredentials()).thenReturn(mMockUserCredentials);
     }
 
 }

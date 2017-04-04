@@ -25,6 +25,28 @@ public class UserManagerTest {
 
     private UserManager mDefaultDomainUserManager;
 
+    @Test
+    @SmallTest
+    public void credentialsStored_inSharedPreferences() {
+        SharedPreferences sharedPreferences = getUserManagerSharedPreferences();
+        assertFalse(sharedPreferences.contains(UserManager.USER_KEY_PASSWORD));
+        assertFalse(sharedPreferences.contains(UserManager.USER_KEY_EMAIL));
+
+        mDefaultDomainUserManager.getOrCreateUserCredentials();
+        assertTrue(sharedPreferences.contains(UserManager.USER_KEY_PASSWORD));
+        assertTrue(sharedPreferences.contains(UserManager.USER_KEY_EMAIL));
+    }
+
+    @Test
+    @SmallTest
+    public void customDomain_shouldBeUsed() {
+
+        final String customDomain = "custom-doma.in";
+        final UserManager userManager = new UserManager(mContext, customDomain);
+        UserCredentials userCredentials = userManager.getOrCreateUserCredentials();
+        assertThat(userCredentials.getEmail(), endsWith("@" + customDomain));
+    }
+
     @Before
     public void setUp() throws Exception {
         mContext = InstrumentationRegistry.getTargetContext();
@@ -37,42 +59,12 @@ public class UserManagerTest {
     @Test
     @SmallTest
     public void storedCredentials_areNotOverwritten() {
-        final UserCredentials userCredentials = mDefaultDomainUserManager.getUserCredentials();
-        final UserCredentials userCredentials2 = mDefaultDomainUserManager.getUserCredentials();
+        final UserCredentials userCredentials =
+                mDefaultDomainUserManager.getOrCreateUserCredentials();
+        final UserCredentials userCredentials2 =
+                mDefaultDomainUserManager.getOrCreateUserCredentials();
 
         assertEquals(userCredentials, userCredentials2);
-    }
-
-    @Test
-    @SmallTest
-    public void credentialsStored_inSharedPreferences() {
-        SharedPreferences sharedPreferences = getUserManagerSharedPreferences();
-        assertFalse(sharedPreferences.contains(UserManager.USER_KEY_PASSWORD));
-        assertFalse(sharedPreferences.contains(UserManager.USER_KEY_EMAIL));
-
-        mDefaultDomainUserManager.getUserCredentials();
-        assertTrue(sharedPreferences.contains(UserManager.USER_KEY_PASSWORD));
-        assertTrue(sharedPreferences.contains(UserManager.USER_KEY_EMAIL));
-    }
-
-    @Test
-    @SmallTest
-    public void customDomain_shouldBeUsed() {
-
-        final String customDomain = "custom-doma.in";
-        final UserManager userManager = new UserManager(mContext, customDomain);
-        UserCredentials userCredentials = userManager.getUserCredentials();
-        assertThat(userCredentials.getEmail(), endsWith("@" + customDomain));
-    }
-
-    @Test
-    @SmallTest
-    public void defaultDomain_shouldBeUsed() {
-
-        final UserManager userManager = new UserManager(mContext, null);
-        UserCredentials userCredentials = userManager.getUserCredentials();
-        String domain = userCredentials.getEmail().split("@")[1];
-        assertEquals("tariff-gini.net", domain);
     }
 
     private SharedPreferences getUserManagerSharedPreferences() {

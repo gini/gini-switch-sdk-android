@@ -187,8 +187,8 @@ public class UserApiImplTest {
 
             @Override
             public void onSuccess(final AccessToken accessToken) {
-                mWaiter.assertEquals(accessToken.getToken(),
-                        "1eb7ca49-d99f-40cb-b86d-8dd689ca2345");
+                mWaiter.assertEquals("1eb7ca49-d99f-40cb-b86d-8dd689ca2345",
+                        accessToken.getToken());
                 mWaiter.resume();
             }
         });
@@ -345,10 +345,9 @@ public class UserApiImplTest {
 
     @NonNull
     private UserApiImpl getAuthenticationApi(final OkHttpClient okHttpClient) {
-        final String url = mServer.url("/").toString();
         final UserApiImpl authenticationApi = new UserApiImpl(
                 mMockClientCredentials, okHttpClient);
-        authenticationApi.mBaseUrl = url;
+        authenticationApi.mBaseUrl = mServer.url("/");
         return authenticationApi;
     }
 }
