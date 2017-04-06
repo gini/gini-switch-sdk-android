@@ -5,9 +5,16 @@ public class Configuration {
 
     private final long mResolution;
 
-    public Configuration(final long resolution) {
+    private final int mFlashMode;
+
+    public Configuration(final long resolution, final int flashMode) {
 
         mResolution = resolution;
+        mFlashMode = flashMode;
+    }
+
+    public int getFlashMode() {
+        return mFlashMode;
     }
 
     public long getResolution() {

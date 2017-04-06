@@ -1,45 +1,55 @@
 package net.gini.tariffsdk.configuration;
 
 
+import android.support.annotation.VisibleForTesting;
+
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
 public class RemoteConfigManager {
-    //1. Define version - hardcoded
 
-    //2. Request remote values
-
-    //3. Save them
-
-    //4. Provide them
-
+    private Configuration mConfiguration;
+    private RemoteConfigStore mRemoteConfigStore;
     private TariffApi mTariffApi;
 
-    private RemoteConfigStore mRemoteConfigStore;
-
-    public RemoteConfigManager(final TariffApi tariffApi,            final RemoteConfigStore remoteConfigStore) {
+    public RemoteConfigManager(final TariffApi tariffApi,
+            final RemoteConfigStore remoteConfigStore) {
         mTariffApi = tariffApi;
         mRemoteConfigStore = remoteConfigStore;
     }
 
+    public Configuration getConfiguration() {
+        return mConfiguration;
+    }
 
-
-
-    private void requestRemoteConfig() {
+    @VisibleForTesting
+    void requestRemoteConfig() {
         mTariffApi.requestConfiguration(new NetworkCallback<Configuration>() {
             @Override
             public void onError(final Exception e) {
-
+                //TODO
             }
 
             @Override
             public void onSuccess(final Configuration configuration) {
-
+                mConfiguration = configuration;
+                persistConfiguration(mConfiguration);
             }
         });
     }
 
+    private Configuration getConfigurationFromPreferences() {
+        final int flashMode = mRemoteConfigStore.getFlashMode();
+        final long cameraResolution = mRemoteConfigStore.getMaximalCameraResolution();
+        return new Configuration(cameraResolution, flashMode);
+    }
+
+    private void persistConfiguration(final Configuration configuration) {
+        mRemoteConfigStore.storeMaximalCameraResolution(configuration.getResolution());
+        mRemoteConfigStore.storeUseFlash(configuration.getFlashMode());
+        //TODO maybe persist timestamp
+    }
 
     private boolean shouldRequestRemoteConfig() {
         //TODO check timestamp or so

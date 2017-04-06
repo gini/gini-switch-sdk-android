@@ -72,6 +72,7 @@ class TariffApiImpl implements TariffApi {
     private Configuration getConfigurationFromJson(final JSONObject object) throws JSONException {
 
         long resolution = object.getLong("resolution");
-        return new Configuration(resolution);
+        final int flashMode = object.getInt("flashmode");
+        return new Configuration(resolution, flashMode);
     }
 }
