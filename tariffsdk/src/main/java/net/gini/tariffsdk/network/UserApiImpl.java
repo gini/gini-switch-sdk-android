@@ -28,20 +28,24 @@ import okhttp3.Response;
 
 public class UserApiImpl implements UserApi {
 
-    private static final String AUTHENTICATE_CLIENT = "oauth/token?grant_type=client_credentials";
-    private static final String AUTHENTICATE_USER = "oauth/token?grant_type=password";
-    private static final String CREATE_USER = "api/users";
     private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
+    private final HttpUrl mBaseUrl;
     @NonNull
     private final ClientCredentials mClientCredentials;
     private final OkHttpClient mHttpClient;
-    @VisibleForTesting
-    HttpUrl mBaseUrl = HttpUrl.parse(BuildConfig.USER_API_URL);
 
     public UserApiImpl(@NonNull final ClientCredentials clientCredentials,
             final OkHttpClient okHttpClient) {
-        mClientCredentials = clientCredentials;
+        this(clientCredentials, okHttpClient, HttpUrl.parse(BuildConfig.USER_API_URL));
+    }
+
+    @VisibleForTesting
+    UserApiImpl(@NonNull final ClientCredentials mockClientCredentials,
+            final OkHttpClient okHttpClient, final HttpUrl url) {
+
+        mClientCredentials = mockClientCredentials;
         mHttpClient = okHttpClient;
+        mBaseUrl = url;
     }
 
     @Override
@@ -54,7 +58,10 @@ public class UserApiImpl implements UserApi {
                 MediaType.parse("application/json; charset=utf-8"),
                 credentialsJson);
 
-        final HttpUrl url = mBaseUrl.newBuilder().addPathSegment(CREATE_USER).build();
+        final HttpUrl url = mBaseUrl.newBuilder()
+                .addPathSegment("api")
+                .addPathSegment("users")
+                .build();
         final Request request = createPostRequest(accessToken, body, url);
 
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
@@ -76,8 +83,8 @@ public class UserApiImpl implements UserApi {
 
     @Override
     public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
+        final HttpUrl url = createTokenUrl("client_credentials");
 
-        final HttpUrl url = mBaseUrl.newBuilder().addPathSegment(AUTHENTICATE_CLIENT).build();
         final Request request = createGetRequest(url);
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
@@ -110,7 +117,8 @@ public class UserApiImpl implements UserApi {
                 .add("password", userCredentials.getPassword())
                 .build();
 
-        final HttpUrl url = mBaseUrl.newBuilder().addPathSegment(AUTHENTICATE_USER).build();
+        final HttpUrl url = createTokenUrl("password");
+
         final Request request = createPostRequest(requestBody, url);
 
         mHttpClient.newCall(request).enqueue(new Callback() {
@@ -134,6 +142,15 @@ public class UserApiImpl implements UserApi {
                 }
             }
         });
+    }
+
+    @NonNull
+    private HttpUrl createTokenUrl(final String value) {
+        return mBaseUrl.newBuilder()
+                .addPathSegment("oauth")
+                .addPathSegment("token")
+                .addQueryParameter("grant_type", value)
+                .build();
     }
 
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {

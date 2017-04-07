@@ -345,9 +345,7 @@ public class UserApiImplTest {
 
     @NonNull
     private UserApiImpl getAuthenticationApi(final OkHttpClient okHttpClient) {
-        final UserApiImpl authenticationApi = new UserApiImpl(
-                mMockClientCredentials, okHttpClient);
-        authenticationApi.mBaseUrl = mServer.url("/");
-        return authenticationApi;
+        return new UserApiImpl(
+                mMockClientCredentials, okHttpClient, mServer.url("/"));
     }
 }
