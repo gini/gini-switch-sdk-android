@@ -1,10 +1,6 @@
 package net.gini.tariffsdk.network;
 
 
-import static net.gini.tariffsdk.network.Constants.AUTHENTICATE_CLIENT;
-import static net.gini.tariffsdk.network.Constants.AUTHENTICATE_USER;
-import static net.gini.tariffsdk.network.Constants.CREATE_USER;
-
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -23,6 +19,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Credentials;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -31,17 +28,24 @@ import okhttp3.Response;
 
 public class UserApiImpl implements UserApi {
 
+    private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
+    private final HttpUrl mBaseUrl;
     @NonNull
     private final ClientCredentials mClientCredentials;
     private final OkHttpClient mHttpClient;
 
-    @VisibleForTesting
-    String mBaseUrl = BuildConfig.USER_API_URL;
-
     public UserApiImpl(@NonNull final ClientCredentials clientCredentials,
             final OkHttpClient okHttpClient) {
-        mClientCredentials = clientCredentials;
+        this(clientCredentials, okHttpClient, HttpUrl.parse(BuildConfig.USER_API_URL));
+    }
+
+    @VisibleForTesting
+    UserApiImpl(@NonNull final ClientCredentials mockClientCredentials,
+            final OkHttpClient okHttpClient, final HttpUrl url) {
+
+        mClientCredentials = mockClientCredentials;
         mHttpClient = okHttpClient;
+        mBaseUrl = url;
     }
 
     @Override
@@ -54,7 +58,10 @@ public class UserApiImpl implements UserApi {
                 MediaType.parse("application/json; charset=utf-8"),
                 credentialsJson);
 
-        final String url = mBaseUrl + CREATE_USER;
+        final HttpUrl url = mBaseUrl.newBuilder()
+                .addPathSegment("api")
+                .addPathSegment("users")
+                .build();
         final Request request = createPostRequest(accessToken, body, url);
 
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
@@ -76,8 +83,8 @@ public class UserApiImpl implements UserApi {
 
     @Override
     public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
+        final HttpUrl url = createTokenUrl("client_credentials");
 
-        final String url = mBaseUrl + AUTHENTICATE_CLIENT;
         final Request request = createGetRequest(url);
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
@@ -111,7 +118,8 @@ public class UserApiImpl implements UserApi {
                 .add("password", userCredentials.getPassword())
                 .build();
 
-        final String url = mBaseUrl + AUTHENTICATE_USER;
+        final HttpUrl url = createTokenUrl("password");
+
         final Request request = createPostRequest(requestBody, url);
 
         mHttpClient.newCall(request).enqueue(new Callback() {
@@ -161,30 +169,40 @@ public class UserApiImpl implements UserApi {
         throw new IOException();
     }
 
+    @NonNull
+    private HttpUrl createTokenUrl(final String value) {
+        return mBaseUrl.newBuilder()
+                .addPathSegment("oauth")
+                .addPathSegment("token")
+                .addQueryParameter("grant_type", value)
+                .build();
+    }
+
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {
         final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", userCredentials.getEmail());
             jsonObject.put("password", userCredentials.getPassword());
         } catch (JSONException e) {
-            e.printStackTrace();
+            //TODO log this
+            throw new RuntimeException(e);
         }
 
         return jsonObject.toString();
     }
 
-    private Request createGetRequest(final String url) {
+    private Request createGetRequest(final HttpUrl url) {
         return new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/json")
-                .addHeader(Constants.HEADER_NAME_AUTHORIZATION,
+                .addHeader(HEADER_NAME_AUTHORIZATION,
                         Credentials.basic(mClientCredentials.getClientId(),
                                 mClientCredentials.getClientSecret()))
                 .build();
     }
 
     private Request createPostRequest(final @NonNull AccessToken accessToken,
-            final RequestBody body, final String url) {
+            final RequestBody body, final HttpUrl url) {
         return new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "BEARER " + accessToken.getToken())
@@ -193,7 +211,7 @@ public class UserApiImpl implements UserApi {
                 .build();
     }
 
-    private Request createPostRequest(final RequestBody body, final String url) {
+    private Request createPostRequest(final RequestBody body, final HttpUrl url) {
         return new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/json")

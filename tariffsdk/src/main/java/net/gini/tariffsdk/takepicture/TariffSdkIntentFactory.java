@@ -4,7 +4,7 @@ package net.gini.tariffsdk.takepicture;
 import android.content.Context;
 import android.content.Intent;
 
-final public class TariffSdkIntentCreator {
+final public class TariffSdkIntentFactory {
 
     static final String BUNDLE_EXTRA_RIGHT_INSTANTIATED = "BUNDLE_EXTRA_RIGHT_INSTANTIATED";
     static final String BUNDLE_EXTRA_THEME = "BUNDLE_EXTRA_THEME";
@@ -13,7 +13,7 @@ final public class TariffSdkIntentCreator {
 
     private final int mTheme;
 
-    public TariffSdkIntentCreator(final Context context, final int theme) {
+    public TariffSdkIntentFactory(final Context context, final int theme) {
         mContext = context;
         mTheme = theme;
     }

@@ -7,10 +7,7 @@ import net.gini.tariffsdk.R;
 
 final public class CameraActivity extends AppCompatActivity {
 
-    private static final String BUNDLE_EXTRA_RIGHT_INSTANTIATED =
-            TariffSdkIntentCreator.BUNDLE_EXTRA_RIGHT_INSTANTIATED;
-
-    private static final String  BUNDLE_EXTRA_THEME = TariffSdkIntentCreator.BUNDLE_EXTRA_THEME;
+    private static final int NOT_SET = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +19,8 @@ final public class CameraActivity extends AppCompatActivity {
     }
 
     private void applySettings() {
-        final int theme = getIntent().getIntExtra(BUNDLE_EXTRA_THEME, -1);
-        if(theme != -1) {
+        final int theme = getIntent().getIntExtra(TariffSdkIntentFactory.BUNDLE_EXTRA_THEME, NOT_SET);
+        if(theme != NOT_SET) {
             setTheme(theme);
         }
     }
@@ -34,7 +31,7 @@ final public class CameraActivity extends AppCompatActivity {
             throw new RuntimeException("WRONG!");
         }
         if (getIntent().getExtras() == null || !getIntent().getBooleanExtra(
-                BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
+                TariffSdkIntentFactory.BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
             //TODO
             throw new RuntimeException("WRONG!");
         }
