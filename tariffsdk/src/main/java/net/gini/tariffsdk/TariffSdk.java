@@ -7,7 +7,10 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
+import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.takepicture.TariffSdkIntentFactory;
+
+import okhttp3.OkHttpClient;
 
 /**
  * <p>
@@ -18,14 +21,17 @@ import net.gini.tariffsdk.takepicture.TariffSdkIntentFactory;
 public class TariffSdk {
 
     public static int REQUEST_CODE = 666;
+    private AuthenticationService mAuthenticationService;
 
     private final Context mContext;
-
+    private final OkHttpClient mOkHttpClient;
     private final int mTheme;
 
-    private TariffSdk(final Context context, final int theme) {
+    private TariffSdk(final Context context, final int theme, final String clientId,
+            final String clientPw, final OkHttpClient okHttpClient) {
         mContext = context;
         mTheme = theme;
+        mOkHttpClient = okHttpClient;
     }
 
     /**
@@ -56,13 +62,21 @@ public class TariffSdk {
     public static class SdkBuilder {
 
         @NonNull
+        private final String mClientId;
+        @NonNull
+        private final String mClientPw;
+        @NonNull
         private final Context mContext;
         private int mLoadingView = -1;
+        private OkHttpClient mOkHttpClient;
         private boolean mShow = false;
         private int mTheme = -1;
 
-        public SdkBuilder(@NonNull final Context context) {
-            mContext = context;
+        public SdkBuilder(@NonNull final Context context, @NonNull final String clientId,
+                @NonNull final String clientPw) {
+            mContext = assertNotNull(context);
+            mClientId = assertNotNull(clientId);
+            mClientPw = assertNotNull(clientPw);
         }
 
         /**
@@ -86,7 +100,11 @@ public class TariffSdk {
          * @return a TariffSdk instance
          */
         public TariffSdk createSdk() {
-            return new TariffSdk(mContext.getApplicationContext(), mTheme);
+            if (mOkHttpClient == null) {
+                mOkHttpClient = new OkHttpClient();
+            }
+            return new TariffSdk(mContext.getApplicationContext(), mTheme, mClientId, mClientPw,
+                    mOkHttpClient);
         }
 
         /**
@@ -104,6 +122,20 @@ public class TariffSdk {
 
         /**
          * <p>
+         * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
+         * singleton.
+         * </p>
+         *
+         * @param okHttpClient the created okHttpClient
+         * @return the instance of the current builder
+         */
+        public SdkBuilder setOkHttpClient(@NonNull OkHttpClient okHttpClient) {
+            mOkHttpClient = assertNotNull(okHttpClient);
+            return this;
+        }
+
+        /**
+         * <p>
          * Set a specific theme for the SDK Activities, if not set the default app theme is used
          * </p>
          *
@@ -113,6 +145,13 @@ public class TariffSdk {
         public SdkBuilder setTheme(@StyleRes final int theme) {
             mTheme = theme;
             return this;
+        }
+
+        private static <T> T assertNotNull(T parameter) {
+            if (parameter == null) {
+                throw new IllegalArgumentException("Parameter cannot be null");
+            }
+            return parameter;
         }
     }
 }

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TariffSdk tariffSdk = new TariffSdk.SdkBuilder(this).createSdk();
+        final TariffSdk tariffSdk = new TariffSdk.SdkBuilder(this, "clientId", "clientPw").createSdk();
 
         findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final TariffSdk tariffSdkWithExtraTheme = new TariffSdk.SdkBuilder(this).setTheme(
+        final TariffSdk tariffSdkWithExtraTheme = new TariffSdk.SdkBuilder(this, "clientId", "clientPw").setTheme(
                 R.style.SpecialTheme).createSdk();
 
         findViewById(R.id.button_start_theme).setOnClickListener(new View.OnClickListener() {
