@@ -32,8 +32,6 @@ public class TariffSdk {
         mContext = context;
         mTheme = theme;
         mOkHttpClient = okHttpClient;
-//        mAuthenticationService = AuthenticationServiceImpl.getInstance(context, clientId, clientPw,
-//                okHttpClient, new );
     }
 
     /**
