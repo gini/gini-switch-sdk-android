@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -25,11 +26,17 @@ import okhttp3.Response;
 class TariffApiImpl implements TariffApi {
 
     private final OkHttpClient mOkHttpClient;
-    @VisibleForTesting
-    String mTariffApiUrl = BuildConfig.TARIFF_API_URL;
+    private final HttpUrl mTariffApiUrl;
 
     TariffApiImpl(final OkHttpClient okHttpClient,
             final AuthenticationService authenticationService) {
+        this(okHttpClient, authenticationService, HttpUrl.parse(BuildConfig.TARIFF_API_URL));
+    }
+
+    @VisibleForTesting
+    TariffApiImpl(final OkHttpClient okHttpClient,
+            final AuthenticationService authenticationService, final HttpUrl url) {
+        mTariffApiUrl = url;
         mOkHttpClient = okHttpClient.newBuilder()
                 .authenticator(new BearerAuthenticator(authenticationService))
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
@@ -38,7 +45,9 @@ class TariffApiImpl implements TariffApi {
 
     @Override
     public void requestConfiguration(@NonNull final NetworkCallback<Configuration> callback) {
-        final String url = mTariffApiUrl + "/TODO";
+        final HttpUrl url = mTariffApiUrl.newBuilder()
+                .addEncodedPathSegment("TODO")
+                .build();
         final Request request = createGetRequest(url);
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -63,7 +72,7 @@ class TariffApiImpl implements TariffApi {
         });
     }
 
-    private Request createGetRequest(final String url) {
+    private Request createGetRequest(final HttpUrl url) {
         return new Request.Builder()
                 .url(url)
                 .build();
@@ -71,8 +80,8 @@ class TariffApiImpl implements TariffApi {
 
     private Configuration getConfigurationFromJson(final JSONObject object) throws JSONException {
 
-        long resolution = object.getLong("resolution");
-        final int flashMode = object.getInt("flashmode");
+        long resolution = object.optLong("resolution");
+        final int flashMode = object.optInt("flashmode");
         return new Configuration(resolution, flashMode);
     }
 }

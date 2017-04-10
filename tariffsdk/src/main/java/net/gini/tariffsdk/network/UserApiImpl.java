@@ -154,7 +154,7 @@ public class UserApiImpl implements UserApi {
                 .add("password", userCredentials.getPassword())
                 .build();
 
-        final String url = mBaseUrl + AUTHENTICATE_USER;
+        final HttpUrl url = createTokenUrl("password");
         final Request request = createPostRequest(requestBody, url);
 
         final Response response = mHttpClient.newCall(request).execute();

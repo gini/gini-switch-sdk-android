@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.concurrent.TimeoutException;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -34,7 +35,7 @@ public class TariffApiImplTest {
     private AccessToken mMockAccessToken;
     @Mock
     private AuthenticationService mMockAuthenticationService;
-    private String mMockUrl;
+    private HttpUrl mMockUrl;
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
     private Waiter mWaiter;
@@ -47,9 +48,7 @@ public class TariffApiImplTest {
         final MockResponse mockResponse = new MockResponse().setBody(
                 "{\"resolution\":" + resolution + "}");
         mServer.enqueue(mockResponse);
-        final TariffApiImpl tariffApi = new TariffApiImpl(mOkHttpClient,
-                mMockAuthenticationService);
-        tariffApi.mTariffApiUrl = mMockUrl;
+        final TariffApiImpl tariffApi = new TariffApiImpl(mOkHttpClient,                mMockAuthenticationService, mMockUrl);
 
         tariffApi.requestConfiguration(new NetworkCallback<Configuration>() {
             @Override
@@ -72,8 +71,7 @@ public class TariffApiImplTest {
             throws InterruptedException, TimeoutException {
 
         final TariffApiImpl tariffApi = new TariffApiImpl(mOkHttpClient,
-                mMockAuthenticationService);
-        tariffApi.mTariffApiUrl = mMockUrl;
+                mMockAuthenticationService, mMockUrl);
 
         tariffApi.requestConfiguration(mMockConfigurationNetworkCallback);
 
@@ -85,8 +83,7 @@ public class TariffApiImplTest {
     public void requestConfiguration_shouldContainAnAuthorizationHeader()
             throws InterruptedException {
         final TariffApiImpl tariffApi = new TariffApiImpl(mOkHttpClient,
-                mMockAuthenticationService);
-        tariffApi.mTariffApiUrl = mMockUrl;
+                mMockAuthenticationService, mMockUrl);
 
         tariffApi.requestConfiguration(mMockConfigurationNetworkCallback);
 
@@ -101,8 +98,7 @@ public class TariffApiImplTest {
             throws InterruptedException {
 
         final TariffApiImpl tariffApi = new TariffApiImpl(mOkHttpClient,
-                mMockAuthenticationService);
-        tariffApi.mTariffApiUrl = mMockUrl;
+                mMockAuthenticationService, mMockUrl);
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
 
@@ -118,8 +114,7 @@ public class TariffApiImplTest {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
         final TariffApiImpl tariffApi = new TariffApiImpl(mOkHttpClient,
-                mMockAuthenticationService);
-        tariffApi.mTariffApiUrl = mMockUrl;
+                mMockAuthenticationService, mMockUrl);
 
         tariffApi.requestConfiguration(new NetworkCallback<Configuration>() {
             @Override
@@ -141,7 +136,7 @@ public class TariffApiImplTest {
     public void setUp() throws Exception {
         mServer = new MockWebServer();
         mServer.start();
-        mMockUrl = mServer.url("/").toString();
+        mMockUrl = mServer.url("/");
         mWaiter = new Waiter();
 
         MockitoAnnotations.initMocks(this);

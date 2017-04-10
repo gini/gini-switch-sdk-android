@@ -9,8 +9,6 @@ import net.gini.tariffsdk.authentication.user.UserManager;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.UserApi;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -90,7 +88,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AccessToken requestNewUserToken() throws IOException {
 
-        return mUserApi.requestUserTokenSync(mUserManager.getUserCredentials());
+        return mUserApi.requestUserTokenSync(mUserManager.getOrCreateUserCredentials());
     }
 
 
