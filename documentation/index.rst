@@ -15,4 +15,5 @@ Table of contents
    :maxdepth: 2
 
    pages/integration
+   pages/configuration
    pages/usage
