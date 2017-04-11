@@ -6,14 +6,12 @@
 Welcome to Gini Tariff SDK's documentation!
 ===========================================
 
-Contents:
+This is the documentation of the Gini Tariff SDK.
+
+Table of contents
+-----------------
 
 .. toctree::
    :maxdepth: 2
 
-
-
-Indices and tables
-==================
-
-* :ref:`search`
+   pages/integration
