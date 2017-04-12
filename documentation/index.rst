@@ -6,7 +6,8 @@
 Welcome to Gini Tariff SDK's documentation!
 ===========================================
 
-This is the documentation of the Gini Tariff SDK.
+This is the documentation of the Gini Tariff SDK. The SDK is being developed at the moment therefore some parts in this documentation will change in the near future.
+
 
 Table of contents
 -----------------

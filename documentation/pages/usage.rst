@@ -30,3 +30,16 @@ The extractions are provided inside the ``Extractions`` class and can be receive
 
   if(resultCode == TariffSdk.RESULT_EXTRACTIONS_RECEIVED)
     final Extractions extractions = TariffSdk.getExtractions();
+
+
+Feedback
+========
+
+In order to improve our extraction rate Gini needs as much feedback as it can get. Therefore we encourage users of the SDK to provide feedback to us. Feedback is not just for false extractions also right once should be provided as it.
+Providig feedback can be done with the TariffSDK method ``provideFeedback``, this is a fire and forget call and the SDK will take care of handling it.
+
+.. code-block:: java
+
+  final Feedback feedback = new Feedback();
+  feedback.add(todo);
+  tariffSdkInstance.provideFeedback(feedback);

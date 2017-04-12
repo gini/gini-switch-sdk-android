@@ -37,7 +37,7 @@ Integrating the SDK
 ===================
 
 To integrate the SDK into your code, simple use the provided ``TariffSdk.SdkBuilder`` to generate a TariffSdk instance.
-Hereby a Context, your client id, your client secret and your domain is needed(An IllegalArgumentException is thrown if one of these parameters is null).
+Hereby a Context, your client id, your client secret and your domain is needed(For more information about those parameters and how to configure the SDK see the chapter: :ref:`Configuration`)
 
 .. code-block:: java
 

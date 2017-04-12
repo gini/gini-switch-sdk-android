@@ -20,7 +20,9 @@ There are four parameters that have to be provided during the constructor call o
 #. Your client secret
 #. Your domain
 
-All of them have to be provided and are needed by the SDK to work correctly.
+
+.. note:: All of the above parameters have to be provided and are needed by the SDK to work correctly. An **IllegalArgumentException** is thrown if one of them is null.
+
 All other configurations that can be set using the builder are optional and are explained in detail in the next section.
 
 Optional Configurations
