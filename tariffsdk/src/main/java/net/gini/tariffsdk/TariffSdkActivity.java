@@ -3,6 +3,8 @@ package net.gini.tariffsdk;
 import android.content.Intent;
 import android.os.Bundle;
 
+import net.gini.tariffsdk.takepictures.TakePictureActivity;
+
 final public class TariffSdkActivity extends TariffSdkBaseActivity {
 
     private static final int REQUEST_CODE = 1;
@@ -11,14 +13,26 @@ final public class TariffSdkActivity extends TariffSdkBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkForCorrectUsage();
 
         if(showOnboarding()) {
 
             //TODO show onboarding
         } else {
-            final TariffSdkIntentFactory tariffSdkIntentFactory = new TariffSdkIntentFactory(this, getThemeResourceId());
-            final Intent intent = tariffSdkIntentFactory.createTakePictureIntent();
+            final Intent intent = TakePictureActivity.newIntent(this, getThemeResourceId());
             startActivityForResult(intent, REQUEST_CODE);
+        }
+    }
+
+    private void checkForCorrectUsage() {
+        if (getCallingActivity() == null) {
+            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
+        }
+        if (getIntent().getExtras() == null || !getIntent().getBooleanExtra(
+                TariffSdkIntentFactory.BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
+            throw new IllegalArgumentException(
+                    "Do not create this Intent by yourself, use the provided TariffSdk"
+                            + ".getTariffSdkIntent() method for it!");
         }
     }
 

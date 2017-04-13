@@ -13,4 +13,5 @@ class TakePicturePresenter implements TakePictureContract.Presenter {
         mView = view;
         mDocumentService = documentService;
     }
+
 }

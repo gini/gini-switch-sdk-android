@@ -2,16 +2,16 @@ package net.gini.tariffsdk.takepictures;
 
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import net.gini.tariffsdk.R;
-
-import java.util.List;
+import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
 
 public class TakePictureView extends LinearLayout implements TakePictureContract.View {
 
@@ -31,6 +31,14 @@ public class TakePictureView extends LinearLayout implements TakePictureContract
         setOrientation(VERTICAL);
 
         mTakePictureButton = (ImageButton) view.findViewById(R.id.button_take_picture);
+        mTakePictureButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
+                Intent intent = ReviewPictureActivity.newIntent(context);
+                context.startActivity(intent);
+            }
+        });
 
     }
 

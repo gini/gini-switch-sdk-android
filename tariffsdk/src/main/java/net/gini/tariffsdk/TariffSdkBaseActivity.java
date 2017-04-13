@@ -8,16 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 public class TariffSdkBaseActivity extends AppCompatActivity {
 
     private static final int NOT_SET = -1;
+    protected static String BUNDLE_EXTRA_THEME = "BUNDLE_EXTRA_THEME";
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkForCorrectUsage();
         applySettings();
     }
 
     protected int getThemeResourceId() {
-        return getIntent().getIntExtra(TariffSdkIntentFactory.BUNDLE_EXTRA_THEME, NOT_SET);
+        return getIntent().getIntExtra(TariffSdkBaseActivity.BUNDLE_EXTRA_THEME, NOT_SET);
     }
 
     private void applySettings() {
@@ -27,15 +27,4 @@ public class TariffSdkBaseActivity extends AppCompatActivity {
         }
     }
 
-    private void checkForCorrectUsage() {
-        if (getCallingActivity() == null) {
-            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
-        }
-        if (getIntent().getExtras() == null || !getIntent().getBooleanExtra(
-                TariffSdkIntentFactory.BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
-            throw new IllegalArgumentException(
-                    "Do not create this Intent by yourself, use the provided TariffSdk"
-                            + ".getTariffSdkIntent() method for it!");
-        }
-    }
 }
