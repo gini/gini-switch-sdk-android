@@ -1,10 +1,10 @@
-package net.gini.tariffsdk.takepicture;
+package net.gini.tariffsdk;
 
 
 import android.content.Context;
 import android.content.Intent;
 
-final public class TariffSdkIntentFactory {
+final class TariffSdkIntentFactory {
 
     static final String BUNDLE_EXTRA_RIGHT_INSTANTIATED = "BUNDLE_EXTRA_RIGHT_INSTANTIATED";
     static final String BUNDLE_EXTRA_THEME = "BUNDLE_EXTRA_THEME";
@@ -13,13 +13,13 @@ final public class TariffSdkIntentFactory {
 
     private final int mTheme;
 
-    public TariffSdkIntentFactory(final Context context, final int theme) {
+    TariffSdkIntentFactory(final Context context, final int theme) {
         mContext = context;
         mTheme = theme;
     }
 
-    public Intent createIntent() {
-        Intent intent = new Intent(mContext, CameraActivity.class);
+    Intent createIntent() {
+        final Intent intent = new Intent(mContext, TariffSdkActivity.class);
         intent.putExtra(BUNDLE_EXTRA_RIGHT_INSTANTIATED, true);
         intent.putExtra(BUNDLE_EXTRA_THEME, mTheme);
         return intent;

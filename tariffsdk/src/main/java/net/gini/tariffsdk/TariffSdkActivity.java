@@ -1,11 +1,10 @@
-package net.gini.tariffsdk.takepicture;
+package net.gini.tariffsdk;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
-import net.gini.tariffsdk.R;
-
-final public class CameraActivity extends AppCompatActivity {
+final public class TariffSdkActivity extends AppCompatActivity {
 
     private static final int NOT_SET = -1;
 
@@ -15,12 +14,18 @@ final public class CameraActivity extends AppCompatActivity {
         checkForCorrectUsage();
         applySettings();
 
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_tariff_sdk);
+
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 
     private void applySettings() {
-        final int theme = getIntent().getIntExtra(TariffSdkIntentFactory.BUNDLE_EXTRA_THEME, NOT_SET);
-        if(theme != NOT_SET) {
+        final int theme = getIntent().getIntExtra(TariffSdkIntentFactory.BUNDLE_EXTRA_THEME,
+                NOT_SET);
+        if (theme != NOT_SET) {
             setTheme(theme);
         }
     }

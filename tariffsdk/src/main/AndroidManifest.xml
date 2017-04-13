@@ -6,7 +6,7 @@
 
     <application>
         <activity
-            android:name=".takepicture.CameraActivity"
+            android:name=".TariffSdkActivity"
             android:taskAffinity="net.gini.tariffsdk" />
     </application>
 

@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
 import net.gini.tariffsdk.authentication.AuthenticationService;
-import net.gini.tariffsdk.takepicture.TariffSdkIntentFactory;
 
 import okhttp3.OkHttpClient;
 
@@ -37,7 +36,7 @@ public class TariffSdk {
     /**
      * <p>
      * Use this to get an intent of the Tariff SDK
-     * {@link net.gini.tariffsdk.takepicture.CameraActivity}
+     * {@link TariffSdkActivity}
      * activity.
      * Only use this method to instantiate an intent of this activity, otherwise an exception will
      * be thrown.
@@ -45,7 +44,7 @@ public class TariffSdk {
      * int)} with the request code from {@link TariffSdk#REQUEST_CODE} has to be used.
      * </p>
      *
-     * @return an intent of {@link net.gini.tariffsdk.takepicture.CameraActivity}
+     * @return an intent of {@link TariffSdkActivity}
      */
     @NonNull
     public Intent getTariffSdkIntent() {
