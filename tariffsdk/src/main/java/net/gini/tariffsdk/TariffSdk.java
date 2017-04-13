@@ -49,7 +49,7 @@ public class TariffSdk {
     @NonNull
     public Intent getTariffSdkIntent() {
 
-        return new TariffSdkIntentFactory(mContext, mTheme).createIntent();
+        return new TariffSdkIntentFactory(mContext, mTheme).createTariffSdkIntent();
     }
 
     /**
