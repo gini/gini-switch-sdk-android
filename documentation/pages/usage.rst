@@ -8,7 +8,7 @@ Usage
 Usage of the SDK
 ================
 
-The only class that should be used to interact with the SDK is the ``TariffSdk`` and it's created instance from the chapter before(:ref:`Configuration`).
+The only class that should be used to interact with the SDK is the ``TariffSdk`` and its created instance from the chapter before(:ref:`Configuration`).
 To start the SDK a method to get a configured Activity is provided by in the ``TariffSdk`` class.
 
 .. code-block:: java

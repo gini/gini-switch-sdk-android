@@ -5,7 +5,7 @@ Integration
 ===========
 
 
-Add SDK to your project
+Add the SDK to your project
 =======================
 
 The gini sdk is provided as an aar archive. To integrate it into your project copy the aar archive file into your projects ``libs`` folder.
@@ -30,7 +30,7 @@ Next step is to add the SDK to your applications ``build.gradle`` file with:
     …
   }
 
-During the time of development of version 1.0 this is the only way we provide the SDK, later we will push it to an artifactory and adjust this document.
+During the time of development of version 1.0 this is the only way we provide the SDK, later we will push it to an maven repository and adjust this document.
 
 
 Integrating the SDK
