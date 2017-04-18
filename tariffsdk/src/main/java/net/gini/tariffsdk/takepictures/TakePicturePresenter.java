@@ -12,6 +12,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter {
 
         mView = view;
         mDocumentService = documentService;
+        //TODO check permissions
+        mView.initCamera();
     }
 
 }

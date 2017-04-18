@@ -25,11 +25,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <net.gini.tariffsdk.camera.GiniCameraPreview
+            android:id="@+id/camera_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/button_take_picture"
-            android:src="@android:drawable/ic_menu_report_image" />
+            android:layout_above="@+id/button_take_picture"/>
 
         <ImageButton
             android:id="@+id/button_take_picture"

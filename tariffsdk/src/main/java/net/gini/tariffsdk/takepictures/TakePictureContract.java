@@ -10,5 +10,7 @@ interface TakePictureContract {
     interface View {
 
         void setPresenter(TakePictureContract.Presenter presenter);
+
+        void initCamera();
     }
 }

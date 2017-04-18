@@ -6,17 +6,23 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.gini.tariffsdk.R;
+import net.gini.tariffsdk.camera.Camera1;
+import net.gini.tariffsdk.camera.GiniCamera;
+import net.gini.tariffsdk.camera.GiniCameraPreview;
 import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
 
-public class TakePictureView extends LinearLayout implements TakePictureContract.View {
+class TakePictureView extends LinearLayout implements TakePictureContract.View {
 
-    private final ImageButton mTakePictureButton;
+    private GiniCamera mCamera;
+    private GiniCameraPreview mCameraPreview;
     private TakePictureContract.Presenter mPresenter;
+    private ImageButton mTakePictureButton;
 
     public TakePictureView(final Context context) {
         this(context, null);
@@ -40,6 +46,34 @@ public class TakePictureView extends LinearLayout implements TakePictureContract
             }
         });
 
+        mCameraPreview = (GiniCameraPreview) view.findViewById(R.id.camera_preview);
+
+
+    }
+
+    @Override
+    public void initCamera() {
+        final WindowManager windowManager =
+                (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        mCamera = new Camera1(mCameraPreview);
+        mCamera.setPreviewOrientation(GiniCamera.Orientation.PORTRAIT,
+                windowManager.getDefaultDisplay().getRotation());
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(mCamera != null) {
+            mCamera.start();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if(mCamera != null) {
+            mCamera.stop();
+        }
     }
 
     @Override
