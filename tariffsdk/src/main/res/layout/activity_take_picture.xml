@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="net.gini.tariffsdk.TariffSdkActivity">
 
-    <net.gini.tariffsdk.takepictures.TakePictureView
-        android:id="@+id/take_picture_view"
+    <LinearLayout
+        android:id="@+id/image_overview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="96dp"
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:src="@android:drawable/ic_popup_sync" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <SurfaceView
+            android:id="@+id/camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/button_take_picture"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/button_take_picture"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:src="@android:drawable/ic_menu_camera" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
