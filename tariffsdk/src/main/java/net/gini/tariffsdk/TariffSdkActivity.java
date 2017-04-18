@@ -22,6 +22,7 @@ final public class TariffSdkActivity extends TariffSdkBaseActivity {
             final Intent intent = TakePictureActivity.newIntent(this, getThemeResourceId());
             startActivityForResult(intent, REQUEST_CODE);
         }
+        finish();
     }
 
     private void checkForCorrectUsage() {

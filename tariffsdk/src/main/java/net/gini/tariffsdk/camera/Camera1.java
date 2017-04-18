@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +38,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
     @NonNull
     private Orientation mOrientation = Orientation.DEFAULT;
 
-    public Camera1(@NonNull final GiniCameraPreview cameraPreview) {
+    public Camera1(@NonNull final SurfaceView cameraPreview) {
 
         mHolder = cameraPreview.getHolder();
     }

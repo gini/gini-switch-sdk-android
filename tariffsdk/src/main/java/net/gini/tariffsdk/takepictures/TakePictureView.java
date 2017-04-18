@@ -3,8 +3,10 @@ package net.gini.tariffsdk.takepictures;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -14,15 +16,14 @@ import android.widget.Toast;
 import net.gini.tariffsdk.R;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
-import net.gini.tariffsdk.camera.GiniCameraPreview;
 import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
 
 class TakePictureView extends LinearLayout implements TakePictureContract.View {
 
     private GiniCamera mCamera;
-    private GiniCameraPreview mCameraPreview;
+    private final SurfaceView mCameraPreview;
     private TakePictureContract.Presenter mPresenter;
-    private ImageButton mTakePictureButton;
+    private final ImageButton mTakePictureButton;
 
     public TakePictureView(final Context context) {
         this(context, null);
@@ -41,12 +42,12 @@ class TakePictureView extends LinearLayout implements TakePictureContract.View {
             @Override
             public void onClick(final View view) {
                 Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
-                Intent intent = ReviewPictureActivity.newIntent(context);
+                Intent intent = ReviewPictureActivity.newIntent(context, Uri.EMPTY);
                 context.startActivity(intent);
             }
         });
 
-        mCameraPreview = (GiniCameraPreview) view.findViewById(R.id.camera_preview);
+        mCameraPreview = (SurfaceView) view.findViewById(R.id.camera_preview);
 
 
     }
