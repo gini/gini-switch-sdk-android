@@ -38,6 +38,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private SurfaceView mCameraPreview;
     private RecyclerView mImageRecyclerView;
     private TakePictureContract.Presenter mPresenter;
+    private ImageButton mTakePictureButton;
 
     @Override
     public void cameraPermissionsDenied() {
@@ -48,12 +49,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean cameraPermissionsGranted() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void openImageReview(@NonNull final Uri uri) {
-        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, uri);
-        startActivity(intent);
     }
 
     @Override
@@ -87,13 +82,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         }
 
         final DocumentService documentService = DocumentServiceImpl.getInstance(this);
-        final TakePicturePresenter presenter = new TakePicturePresenter(this, documentService);
-        setPresenter(presenter);
+        mPresenter = new TakePicturePresenter(this, documentService);
 
-        final ImageButton takePictureButton = (ImageButton) findViewById(R.id.button_take_picture);
-        takePictureButton.setOnClickListener(new View.OnClickListener() {
+        mTakePictureButton = (ImageButton) findViewById(R.id.button_take_picture);
+        mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                mTakePictureButton.setEnabled(false);
                 mCamera.takePicture(new GiniCamera.JpegCallback() {
                     @Override
                     public void onPictureTaken(@NonNull final byte[] data)
@@ -147,6 +142,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         if (cameraPermissionsGranted() && mCamera != null) {
             mCamera.start();
             mCameraPreview.setVisibility(View.VISIBLE);
+            mTakePictureButton.setEnabled(true);
         }
     }
 
@@ -163,6 +159,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void openImageReview(@NonNull final Uri uri) {
+        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, uri);
+        startActivity(intent);
+    }
+
+    @Override
     public void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 PERMISSIONS_REQUEST_CAMERA);
@@ -171,11 +173,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void setImages(@NonNull final SimpleArrayMap<Uri, Boolean> imageList) {
         mAdapter.setImages(imageList);
-    }
-
-    @Override
-    public void setPresenter(final TakePictureContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 
     public static Intent newIntent(final Context context,

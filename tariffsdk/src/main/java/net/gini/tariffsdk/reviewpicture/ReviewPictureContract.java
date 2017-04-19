@@ -3,8 +3,6 @@ package net.gini.tariffsdk.reviewpicture;
 
 import android.net.Uri;
 
-import net.gini.tariffsdk.base.BaseView;
-
 interface ReviewPictureContract {
     interface Presenter {
         void discardImage();
@@ -13,7 +11,7 @@ interface ReviewPictureContract {
 
     }
 
-    interface View extends BaseView<ReviewPictureContract.Presenter> {
+    interface View {
 
         void finishReview();
 

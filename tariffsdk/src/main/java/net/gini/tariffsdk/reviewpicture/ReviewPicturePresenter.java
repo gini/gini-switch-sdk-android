@@ -10,18 +10,30 @@ import java.io.IOException;
 
 class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
 
-    private final ReviewPictureContract.View mView;
     private final DocumentService mDocumentService;
     private final Uri mImageUri;
+    private final ReviewPictureContract.View mView;
 
-    ReviewPicturePresenter(final ReviewPictureContract.View view, DocumentService documentService, Uri imageUri) {
+    ReviewPicturePresenter(final ReviewPictureContract.View view, DocumentService documentService,
+            Uri imageUri) {
         mView = view;
         mDocumentService = documentService;
         mImageUri = imageUri;
-        mView.setPresenter(this);
         mView.setImage(imageUri);
         final float rotation = getRequiredRotationDegrees(mImageUri);
         mView.setRotation(rotation);
+    }
+
+    @Override
+    public void discardImage() {
+        mDocumentService.deleteImage(mImageUri);
+        mView.finishReview();
+    }
+
+    @Override
+    public void keepImage() {
+        mDocumentService.keepImage(mImageUri);
+        mView.finishReview();
     }
 
     private float getRequiredRotationDegrees(final Uri imageUri) {
@@ -44,18 +56,6 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
         }
 
         return 0;
-    }
-
-    @Override
-    public void discardImage() {
-        mDocumentService.deleteImage(mImageUri);
-        mView.finishReview();
-    }
-
-    @Override
-    public void keepImage() {
-        mDocumentService.keepImage(mImageUri);
-        mView.finishReview();
     }
 
 }

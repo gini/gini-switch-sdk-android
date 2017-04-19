@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
-import net.gini.tariffsdk.base.BaseView;
-
 interface TakePictureContract {
 
     interface Presenter {
@@ -24,7 +22,7 @@ interface TakePictureContract {
 
     }
 
-    interface View extends BaseView<Presenter> {
+    interface View {
 
         void cameraPermissionsDenied();
 
