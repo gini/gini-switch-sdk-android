@@ -10,6 +10,7 @@ interface ReviewPictureContract {
         void discardImage();
 
         void keepImage();
+
     }
 
     interface View extends BaseView<ReviewPictureContract.Presenter> {
@@ -17,5 +18,7 @@ interface ReviewPictureContract {
         void finishReview();
 
         void setImage(final Uri uri);
+
+        void setRotation(final float degrees);
     }
 }

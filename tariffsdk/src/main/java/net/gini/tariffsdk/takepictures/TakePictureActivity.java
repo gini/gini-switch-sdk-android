@@ -16,12 +16,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import net.gini.tariffsdk.R;
 import net.gini.tariffsdk.TariffSdkBaseActivity;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
+import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.documentservice.DocumentService;
 import net.gini.tariffsdk.documentservice.DocumentServiceImpl;
 import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
@@ -43,6 +43,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean cameraPermissionsGranted() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void imageProcessed(@NonNull final Uri uri) {
+        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, uri);
+                startActivity(intent);
     }
 
     @Override
@@ -73,10 +79,17 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Toast.makeText(TakePictureActivity.this, "Click", Toast.LENGTH_SHORT).show();
-                Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this,
-                        Uri.EMPTY);
-                startActivity(intent);
+                mCamera.takePicture(new GiniCamera.JpegCallback() {
+                    @Override
+                    public void onPictureTaken(@NonNull final byte[] data)
+                            throws GiniCameraException {
+                        mPresenter.onPictureTaken(data, TakePictureActivity.this);
+                    }
+                });
+//                Toast.makeText(TakePictureActivity.this, "Click", Toast.LENGTH_SHORT).show();
+//                Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this,
+//                        Uri.EMPTY);
+//                startActivity(intent);
             }
         });
 

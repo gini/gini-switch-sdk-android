@@ -6,11 +6,20 @@
     tools:parentTag="RelativeLayout">
 
 
-    <ImageView
-        android:id="@+id/image_preview"
+    <FrameLayout
+        android:clipChildren="false"
+        android:id="@+id/image_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@android:drawable/ic_menu_camera" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/image_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_menu_camera" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

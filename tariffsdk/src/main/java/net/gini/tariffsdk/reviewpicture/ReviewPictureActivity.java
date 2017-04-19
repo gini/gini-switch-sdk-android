@@ -44,5 +44,4 @@ public class ReviewPictureActivity extends TariffSdkBaseActivity {
         intent.putExtra(BUNDLE_EXTRA_IMAGE_URI, imageUri);
         return intent;
     }
-
 }

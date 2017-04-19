@@ -2,6 +2,7 @@ package net.gini.tariffsdk.takepictures;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import net.gini.tariffsdk.base.BaseView;
@@ -25,6 +26,8 @@ interface TakePictureContract {
         void cameraPermissionsDenied();
 
         boolean cameraPermissionsGranted();
+
+        void imageProcessed(@NonNull final Uri uri);
 
         void initCamera();
 
