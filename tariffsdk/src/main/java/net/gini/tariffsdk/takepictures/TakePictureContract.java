@@ -20,6 +20,8 @@ interface TakePictureContract {
 
         void start();
 
+        void stop();
+
     }
 
     interface View extends BaseView<Presenter> {
@@ -28,7 +30,9 @@ interface TakePictureContract {
 
         boolean cameraPermissionsGranted();
 
-        void imageProcessed(@NonNull final Uri uri);
+        void openImageReview(@NonNull final Uri uri);
+
+        void imageSuccessfullyProcessed(@NonNull final Uri imageUri);
 
         void initCamera();
 

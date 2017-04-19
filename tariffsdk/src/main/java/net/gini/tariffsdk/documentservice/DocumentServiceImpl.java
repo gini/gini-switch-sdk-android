@@ -16,7 +16,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 public class DocumentServiceImpl implements DocumentService {
 
@@ -29,6 +31,7 @@ public class DocumentServiceImpl implements DocumentService {
     private DocumentServiceImpl(final Context context) {
         mContext = context.getApplicationContext();
         mImageList = new SimpleArrayMap<>();
+        mDocumentListeners = new HashSet<>();
     }
 
     @Override
@@ -39,7 +42,25 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void keepImage(final Uri imageUri) {
         //TODO
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    //Artificial delay for mocking, later we process correct
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                notifyListeners(imageUri);
+            }
+        }).start();
+
         mImageList.put(imageUri, true);
+    }
+
+    private void notifyListeners(final Uri imageUri) {
+        for (DocumentListener documentListener : mDocumentListeners) {
+            documentListener.onDocumentProcessed(imageUri);
+        }
     }
 
     @Override
@@ -67,6 +88,18 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public SimpleArrayMap<Uri, Boolean> getImageList() {
         return mImageList;
+    }
+
+    private final Set<DocumentListener> mDocumentListeners;
+
+    @Override
+    public void addDocumentListener(@NonNull final DocumentListener listener) {
+        mDocumentListeners.add(listener);
+    }
+
+    @Override
+    public void removeDocumentListener(@NonNull final DocumentListener listener) {
+        mDocumentListeners.remove(listener);
     }
 
     private String getNewRotation(String orientation) {

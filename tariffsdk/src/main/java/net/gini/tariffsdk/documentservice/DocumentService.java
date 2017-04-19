@@ -16,4 +16,12 @@ public interface DocumentService {
     Uri saveImage(@NonNull final byte[] data, File directory);
 
     SimpleArrayMap<Uri, Boolean> getImageList();
+
+    void addDocumentListener(@NonNull DocumentListener listener);
+
+    void removeDocumentListener(@NonNull DocumentListener listener);
+
+    interface DocumentListener {
+        void onDocumentProcessed(final Uri uri);
+    }
 }

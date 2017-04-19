@@ -31,7 +31,6 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        //TODO
         final Uri uri = mImageMap.keyAt(position);
         final boolean processing = mImageMap.get(uri);
         holder.mImageView.setImageURI(uri);
@@ -39,6 +38,12 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder>{
 
         float degrees = getRequiredRotationDegrees(uri);
         holder.mImageView.setRotation(degrees);
+    }
+
+    void hideLoadingForImage(final Uri imageUri) {
+        mImageMap.put(imageUri, false);
+        final int position = mImageMap.indexOfKey(imageUri);
+        notifyItemChanged(position);
     }
 
     void setImages(SimpleArrayMap<Uri, Boolean> images) {

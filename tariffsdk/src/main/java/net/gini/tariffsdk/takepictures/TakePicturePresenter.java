@@ -11,7 +11,8 @@ import net.gini.tariffsdk.documentservice.DocumentService;
 
 import java.io.File;
 
-class TakePicturePresenter implements TakePictureContract.Presenter {
+class TakePicturePresenter implements TakePictureContract.Presenter,
+        DocumentService.DocumentListener {
 
     private final DocumentService mDocumentService;
     private final TakePictureContract.View mView;
@@ -29,7 +30,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter {
     public void onPictureTaken(@NonNull final byte[] data, @NonNull final Context context) {
         final File directory = context.getDir("tariffsdk", Context.MODE_PRIVATE);
         final Uri uri = mDocumentService.saveImage(data, directory);
-        mView.imageProcessed(uri);
+        mView.openImageReview(uri);
     }
 
     @Override
@@ -49,7 +50,18 @@ class TakePicturePresenter implements TakePictureContract.Presenter {
         } else {
             mView.initCamera();
             setImagesInList();
+            mDocumentService.addDocumentListener(this);
         }
+    }
+
+    @Override
+    public void stop() {
+        mDocumentService.removeDocumentListener(this);
+    }
+
+    @Override
+    public void onDocumentProcessed(final Uri uri) {
+        mView.imageSuccessfullyProcessed(uri);
     }
 
     private void setImagesInList() {

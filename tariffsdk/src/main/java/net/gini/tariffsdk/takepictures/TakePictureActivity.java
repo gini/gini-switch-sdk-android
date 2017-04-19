@@ -51,9 +51,20 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void imageProcessed(@NonNull final Uri uri) {
+    public void openImageReview(@NonNull final Uri uri) {
         Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, uri);
         startActivity(intent);
+    }
+
+    @Override
+    public void imageSuccessfullyProcessed(@NonNull final Uri imageUri) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.hideLoadingForImage(imageUri);
+
+            }
+        });
     }
 
     @Override
@@ -142,11 +153,16 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.stop();
+    }
+
+    @Override
     public void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 PERMISSIONS_REQUEST_CAMERA);
     }
-
 
     @Override
     public void setImages(@NonNull final SimpleArrayMap<Uri, Boolean> imageList) {
