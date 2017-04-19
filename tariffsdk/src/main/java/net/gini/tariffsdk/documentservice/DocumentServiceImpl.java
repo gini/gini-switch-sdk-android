@@ -25,7 +25,7 @@ public class DocumentServiceImpl implements DocumentService {
     private static DocumentService mInstance;
 
     private final Context mContext;
-
+    private final Set<DocumentListener> mDocumentListeners;
     private final SimpleArrayMap<Uri, Boolean> mImageList;
 
     private DocumentServiceImpl(final Context context) {
@@ -35,8 +35,19 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public void addDocumentListener(@NonNull final DocumentListener listener) {
+        mDocumentListeners.add(listener);
+    }
+
+    @Override
     public void deleteImage(final Uri imageUri) {
         new File(imageUri.getPath()).delete();
+        mImageList.remove(imageUri);
+    }
+
+    @Override
+    public SimpleArrayMap<Uri, Boolean> getImageList() {
+        return mImageList;
     }
 
     @Override
@@ -50,17 +61,16 @@ public class DocumentServiceImpl implements DocumentService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                notifyListeners(imageUri);
+                imageSuccessfullyProcessed(imageUri);
             }
         }).start();
 
         mImageList.put(imageUri, true);
     }
 
-    private void notifyListeners(final Uri imageUri) {
-        for (DocumentListener documentListener : mDocumentListeners) {
-            documentListener.onDocumentProcessed(imageUri);
-        }
+    @Override
+    public void removeDocumentListener(@NonNull final DocumentListener listener) {
+        mDocumentListeners.remove(listener);
     }
 
     @Override
@@ -85,21 +95,11 @@ public class DocumentServiceImpl implements DocumentService {
         return Uri.EMPTY;
     }
 
-    @Override
-    public SimpleArrayMap<Uri, Boolean> getImageList() {
-        return mImageList;
-    }
-
-    private final Set<DocumentListener> mDocumentListeners;
-
-    @Override
-    public void addDocumentListener(@NonNull final DocumentListener listener) {
-        mDocumentListeners.add(listener);
-    }
-
-    @Override
-    public void removeDocumentListener(@NonNull final DocumentListener listener) {
-        mDocumentListeners.remove(listener);
+    public static DocumentService getInstance(final Context context) {
+        if (mInstance == null) {
+            mInstance = new DocumentServiceImpl(context);
+        }
+        return mInstance;
     }
 
     private String getNewRotation(String orientation) {
@@ -115,10 +115,14 @@ public class DocumentServiceImpl implements DocumentService {
         return orientation;
     }
 
-    public static DocumentService getInstance(final Context context) {
-        if (mInstance == null) {
-            mInstance = new DocumentServiceImpl(context);
+    private void imageSuccessfullyProcessed(final Uri imageUri) {
+        mImageList.put(imageUri, false);
+        notifyListeners(imageUri);
+    }
+
+    private void notifyListeners(final Uri imageUri) {
+        for (DocumentListener documentListener : mDocumentListeners) {
+            documentListener.onDocumentProcessed(imageUri);
         }
-        return mInstance;
     }
 }

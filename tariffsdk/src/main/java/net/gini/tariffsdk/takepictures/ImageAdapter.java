@@ -15,11 +15,18 @@ import net.gini.tariffsdk.R;
 
 import java.io.IOException;
 
-class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder>{
+class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
+
+    private final Listener mListener;
+
+    interface Listener{
+        void onImageClicked(Uri uri);
+    }
 
     private final SimpleArrayMap<Uri, Boolean> mImageMap;
 
-    ImageAdapter() {
+    ImageAdapter(Listener listener) {
+        mListener = listener;
         mImageMap = new SimpleArrayMap<>();
     }
 
@@ -38,6 +45,12 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder>{
 
         float degrees = getRequiredRotationDegrees(uri);
         holder.mImageView.setRotation(degrees);
+        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                mListener.onImageClicked(uri);
+            }
+        });
     }
 
     void hideLoadingForImage(final Uri imageUri) {

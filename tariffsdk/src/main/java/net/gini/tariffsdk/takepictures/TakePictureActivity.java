@@ -62,7 +62,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             @Override
             public void run() {
                 mAdapter.hideLoadingForImage(imageUri);
-
             }
         });
     }
@@ -110,7 +109,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
         mImageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mAdapter = new ImageAdapter();
+        mAdapter = new ImageAdapter(new ImageAdapter.Listener() {
+            @Override
+            public void onImageClicked(final Uri uri) {
+                openImageReview(uri);
+            }
+        });
         mImageRecyclerView.setAdapter(mAdapter);
     }
 
