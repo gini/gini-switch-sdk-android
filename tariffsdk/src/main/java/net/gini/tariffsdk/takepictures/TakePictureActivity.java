@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import net.gini.tariffsdk.R;
 import net.gini.tariffsdk.TariffSdkBaseActivity;
@@ -36,8 +37,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
-    private RecyclerView mImageRecyclerView;
     private TakePictureContract.Presenter mPresenter;
+    private ProgressBar mProgressBar;
     private ImageButton mTakePictureButton;
 
     @Override
@@ -84,10 +85,14 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         final DocumentService documentService = DocumentServiceImpl.getInstance(this);
         mPresenter = new TakePicturePresenter(this, documentService);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        mProgressBar.setVisibility(View.GONE);
+
         mTakePictureButton = (ImageButton) findViewById(R.id.button_take_picture);
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                mProgressBar.setVisibility(View.VISIBLE);
                 mTakePictureButton.setEnabled(false);
                 mCamera.takePicture(new GiniCamera.JpegCallback() {
                     @Override
@@ -101,8 +106,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
 
-        mImageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
-        mImageRecyclerView.setLayoutManager(
+
+        final RecyclerView imageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
+        imageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(new ImageAdapter.Listener() {
             @Override
@@ -110,7 +116,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 openImageReview(uri);
             }
         });
-        mImageRecyclerView.setAdapter(mAdapter);
+        imageRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -143,6 +149,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             mCamera.start();
             mCameraPreview.setVisibility(View.VISIBLE);
             mTakePictureButton.setEnabled(true);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 

@@ -27,6 +27,13 @@
             android:layout_above="@+id/button_take_picture"
             android:visibility="invisible" />
 
+        <ProgressBar
+            android:background="#80ffffff"
+            android:id="@+id/progress_bar"
+            android:padding="128dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <ImageButton
             android:id="@+id/button_take_picture"
             android:layout_width="48dp"
