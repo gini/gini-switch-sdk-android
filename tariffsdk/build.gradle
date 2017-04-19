@@ -36,6 +36,7 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:exifinterface:$rootProject.ext.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
 
     compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
 

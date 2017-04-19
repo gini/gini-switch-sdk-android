@@ -4,6 +4,7 @@ package net.gini.tariffsdk.takepictures;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.util.SimpleArrayMap;
 
 import net.gini.tariffsdk.base.BaseView;
 
@@ -32,5 +33,7 @@ interface TakePictureContract {
         void initCamera();
 
         void requestPermissions();
+
+        void setImages(@NonNull final SimpleArrayMap<Uri, Boolean> imageList);
     }
 }

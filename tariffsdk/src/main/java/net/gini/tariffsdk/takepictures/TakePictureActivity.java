@@ -11,7 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,8 +33,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
+    private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
+    private RecyclerView mImageRecyclerView;
     private TakePictureContract.Presenter mPresenter;
 
     @Override
@@ -48,7 +53,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void imageProcessed(@NonNull final Uri uri) {
         Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, uri);
-                startActivity(intent);
+        startActivity(intent);
     }
 
     @Override
@@ -86,14 +91,16 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                         mPresenter.onPictureTaken(data, TakePictureActivity.this);
                     }
                 });
-//                Toast.makeText(TakePictureActivity.this, "Click", Toast.LENGTH_SHORT).show();
-//                Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this,
-//                        Uri.EMPTY);
-//                startActivity(intent);
             }
         });
 
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
+
+        mImageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
+        mImageRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mAdapter = new ImageAdapter();
+        mImageRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -138,6 +145,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 PERMISSIONS_REQUEST_CAMERA);
+    }
+
+
+    @Override
+    public void setImages(@NonNull final SimpleArrayMap<Uri, Boolean> imageList) {
+        mAdapter.setImages(imageList);
     }
 
     @Override
