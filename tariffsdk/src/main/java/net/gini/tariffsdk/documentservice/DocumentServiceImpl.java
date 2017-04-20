@@ -9,16 +9,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.media.ExifInterface;
-import android.support.v4.util.SimpleArrayMap;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class DocumentServiceImpl implements DocumentService {
 
@@ -26,12 +27,12 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
-    private final SimpleArrayMap<Uri, Boolean> mImageList;
+    private final List<Image> mImageList;
 
     private DocumentServiceImpl(final Context context) {
         mContext = context.getApplicationContext();
-        mImageList = new SimpleArrayMap<>();
-        mDocumentListeners = new HashSet<>();
+        mImageList = new ArrayList<>();
+        mDocumentListeners = new CopyOnWriteArraySet<>();
     }
 
     @Override
@@ -40,19 +41,20 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void deleteImage(final Uri imageUri) {
-        new File(imageUri.getPath()).delete();
-        mImageList.remove(imageUri);
+    public void deleteImage(@NonNull final Uri uri) {
+        new File(uri.getPath()).delete();
+        mImageList.remove(new Image(uri, null));
     }
 
     @Override
-    public SimpleArrayMap<Uri, Boolean> getImageList() {
+    public List<Image> getImageList() {
         return mImageList;
     }
 
     @Override
-    public void keepImage(final Uri imageUri) {
-        //TODO
+    public void keepImage(@NonNull final Uri uri) {
+        //TODO - start processing
+        final Image image = new Image(uri, State.PROCESSING);
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -61,11 +63,11 @@ public class DocumentServiceImpl implements DocumentService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                imageSuccessfullyProcessed(imageUri);
+                imageSuccessfullyProcessed(image);
             }
         }).start();
 
-        mImageList.put(imageUri, true);
+        mImageList.add(image);
     }
 
     @Override
@@ -74,11 +76,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Uri saveImage(@NonNull final byte[] data) {
+    public Image saveImage(@NonNull final byte[] data) {
         final File directory = mContext.getDir("tariffsdk", Context.MODE_PRIVATE);
         final String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(
                 new Date());
         final File file = new File(directory, fileName + ".jpeg");
+        Uri uri;
         try {
             final FileOutputStream outputStream = new FileOutputStream(file);
             outputStream.write(data);
@@ -89,11 +92,11 @@ public class DocumentServiceImpl implements DocumentService {
             final String newRotation = getNewRotation(orientation);
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
             exif.saveAttributes();
-            return Uri.fromFile(file);
+            uri = Uri.fromFile(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            uri = Uri.EMPTY;
         }
-        return Uri.EMPTY;
+        return new Image(uri, State.WAITING_FOR_PROCESSING);
     }
 
     public static DocumentService getInstance(final Context context) {
@@ -106,24 +109,25 @@ public class DocumentServiceImpl implements DocumentService {
     private String getNewRotation(String orientation) {
         switch (orientation) {
             case "3":
-                return "" + ORIENTATION_ROTATE_180;
+                return Integer.toString(ORIENTATION_ROTATE_180);
             case "0":
             case "6":
-                return "" + ORIENTATION_ROTATE_90;
+                return Integer.toString(ORIENTATION_ROTATE_90);
             case "8":
-                return "" + ORIENTATION_ROTATE_270;
+                return Integer.toString(ORIENTATION_ROTATE_270);
         }
         return orientation;
     }
 
-    private void imageSuccessfullyProcessed(final Uri imageUri) {
-        mImageList.put(imageUri, false);
-        notifyListeners(imageUri);
+    private void imageSuccessfullyProcessed(final Image image) {
+        image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
+        mImageList.add(image);
+        notifyListeners(image);
     }
 
-    private void notifyListeners(final Uri imageUri) {
+    private void notifyListeners(final Image image) {
         for (DocumentListener documentListener : mDocumentListeners) {
-            documentListener.onDocumentProcessed(imageUri);
+            documentListener.onDocumentProcessed(image);
         }
     }
 }

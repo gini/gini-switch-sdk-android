@@ -1,9 +1,11 @@
 package net.gini.tariffsdk.takepictures;
 
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.util.SimpleArrayMap;
+
+import net.gini.tariffsdk.documentservice.Image;
+
+import java.util.List;
 
 interface TakePictureContract {
 
@@ -27,14 +29,14 @@ interface TakePictureContract {
 
         boolean cameraPermissionsGranted();
 
-        void openImageReview(@NonNull final Uri uri);
-
-        void imageSuccessfullyProcessed(@NonNull final Uri imageUri);
+        void imageSuccessfullyProcessed(@NonNull Image image);
 
         void initCamera();
 
+        void openImageReview(@NonNull final Image image);
+
         void requestPermissions();
 
-        void setImages(@NonNull final SimpleArrayMap<Uri, Boolean> imageList);
+        void setImages(@NonNull final List<Image> imageList);
     }
 }

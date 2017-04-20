@@ -8,26 +8,27 @@ import net.gini.tariffsdk.documentservice.DocumentService;
 class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
 
     private final DocumentService mDocumentService;
-    private final Uri mImageUri;
+    private final Uri mUri;
     private final ReviewPictureContract.View mView;
 
     ReviewPicturePresenter(final ReviewPictureContract.View view, DocumentService documentService,
-            Uri imageUri) {
+            Uri uri) {
         mView = view;
         mDocumentService = documentService;
-        mImageUri = imageUri;
-        mView.setImage(imageUri);
+        mUri = uri;
+
+        mView.setImage(uri);
     }
 
     @Override
     public void discardImage() {
-        mDocumentService.deleteImage(mImageUri);
+        mDocumentService.deleteImage(mUri);
         mView.finishReview();
     }
 
     @Override
     public void keepImage() {
-        mDocumentService.keepImage(mImageUri);
+        mDocumentService.keepImage(mUri);
         mView.finishReview();
     }
 

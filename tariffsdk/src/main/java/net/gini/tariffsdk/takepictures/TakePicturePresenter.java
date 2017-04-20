@@ -1,12 +1,13 @@
 package net.gini.tariffsdk.takepictures;
 
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.SimpleArrayMap;
 
 import net.gini.tariffsdk.documentservice.DocumentService;
+import net.gini.tariffsdk.documentservice.Image;
+
+import java.util.List;
 
 class TakePicturePresenter implements TakePictureContract.Presenter,
         DocumentService.DocumentListener {
@@ -24,9 +25,14 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
+    public void onDocumentProcessed(@NonNull final Image image) {
+        mView.imageSuccessfullyProcessed(image);
+    }
+
+    @Override
     public void onPictureTaken(@NonNull final byte[] data) {
-        final Uri uri = mDocumentService.saveImage(data);
-        mView.openImageReview(uri);
+        final Image image = mDocumentService.saveImage(data);
+        mView.openImageReview(image);
     }
 
     @Override
@@ -55,17 +61,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mDocumentService.removeDocumentListener(this);
     }
 
-    @Override
-    public void onDocumentProcessed(final Uri uri) {
-        mView.imageSuccessfullyProcessed(uri);
+    private boolean hasToCheckForPermissions() {
+        return mBuildVersion >= android.os.Build.VERSION_CODES.M;
     }
 
     private void setImagesInList() {
-        final SimpleArrayMap<Uri, Boolean> images = mDocumentService.getImageList();
+        final List<Image> images = mDocumentService.getImageList();
         mView.setImages(images);
-    }
-
-    private boolean hasToCheckForPermissions() {
-        return mBuildVersion >= android.os.Build.VERSION_CODES.M;
     }
 }

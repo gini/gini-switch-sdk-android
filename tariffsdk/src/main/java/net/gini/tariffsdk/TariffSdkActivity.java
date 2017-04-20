@@ -7,7 +7,16 @@ import net.gini.tariffsdk.takepictures.TakePictureActivity;
 
 final public class TariffSdkActivity extends TariffSdkBaseActivity {
 
-    private static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE = 191;
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode,
+            final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            finishAffinity();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +48,5 @@ final public class TariffSdkActivity extends TariffSdkBaseActivity {
 
     private boolean showOnboarding() {
         return false;
-    }
-
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode,
-            final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE) {
-            finishAffinity();
-        }
     }
 }

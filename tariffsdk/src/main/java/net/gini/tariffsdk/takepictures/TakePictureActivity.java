@@ -5,13 +5,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +26,10 @@ import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.documentservice.DocumentService;
 import net.gini.tariffsdk.documentservice.DocumentServiceImpl;
+import net.gini.tariffsdk.documentservice.Image;
 import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
+
+import java.util.List;
 
 final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
@@ -53,11 +54,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void imageSuccessfullyProcessed(@NonNull final Uri imageUri) {
+    public void imageSuccessfullyProcessed(@NonNull final Image image) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAdapter.hideLoadingForImage(imageUri);
+                mAdapter.hideLoadingForImage(image);
             }
         });
     }
@@ -112,8 +113,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(new ImageAdapter.Listener() {
             @Override
-            public void onImageClicked(final Uri uri) {
-                openImageReview(uri);
+            public void onImageClicked(final Image image) {
+                openImageReview(image);
             }
         });
         imageRecyclerView.setAdapter(mAdapter);
@@ -166,8 +167,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void openImageReview(@NonNull final Uri uri) {
-        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, uri);
+    public void openImageReview(@NonNull final Image image) {
+        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, image.getUri());
         startActivity(intent);
     }
 
@@ -178,7 +179,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void setImages(@NonNull final SimpleArrayMap<Uri, Boolean> imageList) {
+    public void setImages(@NonNull final List<Image> imageList) {
         mAdapter.setImages(imageList);
     }
 
