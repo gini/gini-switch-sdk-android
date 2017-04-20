@@ -4,11 +4,9 @@
     android:layout_width="72dp"
     android:layout_height="96dp">
 
-    <ImageView
+    <net.gini.tariffsdk.utils.AutoRotateImageView
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
         android:id="@+id/image_view"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

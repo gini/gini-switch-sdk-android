@@ -8,7 +8,6 @@ interface ReviewPictureContract {
         void discardImage();
 
         void keepImage();
-
     }
 
     interface View {
@@ -16,7 +15,5 @@ interface ReviewPictureContract {
         void finishReview();
 
         void setImage(final Uri uri);
-
-        void setRotation(final float degrees);
     }
 }

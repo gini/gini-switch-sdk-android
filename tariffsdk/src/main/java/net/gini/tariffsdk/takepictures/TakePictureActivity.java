@@ -98,7 +98,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                     @Override
                     public void onPictureTaken(@NonNull final byte[] data)
                             throws GiniCameraException {
-                        mPresenter.onPictureTaken(data, TakePictureActivity.this);
+                        mPresenter.onPictureTaken(data);
                     }
                 });
             }

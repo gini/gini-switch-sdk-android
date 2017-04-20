@@ -1,7 +1,6 @@
 package net.gini.tariffsdk.takepictures;
 
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
@@ -10,7 +9,7 @@ interface TakePictureContract {
 
     interface Presenter {
 
-        void onPictureTaken(@NonNull final byte[] data, @NonNull final Context context);
+        void onPictureTaken(@NonNull final byte[] data);
 
         void permissionResultDenied();
 

@@ -74,7 +74,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Uri saveImage(@NonNull final byte[] data, final File directory) {
+    public Uri saveImage(@NonNull final byte[] data) {
+        final File directory = mContext.getDir("tariffsdk", Context.MODE_PRIVATE);
         final String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(
                 new Date());
         final File file = new File(directory, fileName + ".jpeg");

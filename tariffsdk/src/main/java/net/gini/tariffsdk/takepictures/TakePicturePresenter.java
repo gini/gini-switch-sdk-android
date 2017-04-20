@@ -1,15 +1,12 @@
 package net.gini.tariffsdk.takepictures;
 
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.SimpleArrayMap;
 
 import net.gini.tariffsdk.documentservice.DocumentService;
-
-import java.io.File;
 
 class TakePicturePresenter implements TakePictureContract.Presenter,
         DocumentService.DocumentListener {
@@ -27,9 +24,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
-    public void onPictureTaken(@NonNull final byte[] data, @NonNull final Context context) {
-        final File directory = context.getDir("tariffsdk", Context.MODE_PRIVATE);
-        final Uri uri = mDocumentService.saveImage(data, directory);
+    public void onPictureTaken(@NonNull final byte[] data) {
+        final Uri uri = mDocumentService.saveImage(data);
         mView.openImageReview(uri);
     }
 

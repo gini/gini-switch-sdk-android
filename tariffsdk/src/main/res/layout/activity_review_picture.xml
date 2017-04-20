@@ -5,20 +5,12 @@
     android:layout_height="match_parent"
     tools:context="net.gini.tariffsdk.TariffSdkActivity">
 
-    <FrameLayout
-        android:id="@+id/image_container"
+    <net.gini.tariffsdk.utils.AutoRotateImageView
+        android:id="@+id/image_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false">
-
-        <ImageView
-            android:id="@+id/image_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@android:drawable/ic_menu_camera" />
-    </FrameLayout>
-
+        android:layout_gravity="center"
+        android:src="@android:drawable/ic_menu_camera" />
 
     <LinearLayout
         android:layout_width="match_parent"
