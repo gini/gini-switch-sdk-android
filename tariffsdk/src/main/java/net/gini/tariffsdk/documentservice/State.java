@@ -6,4 +6,5 @@ public enum State {
     PROCESSING,
     SUCCESSFULLY_PROCESSED,
     FAILED,
+    DELETED,
 }

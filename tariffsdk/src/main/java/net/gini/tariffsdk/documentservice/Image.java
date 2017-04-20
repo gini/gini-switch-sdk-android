@@ -8,7 +8,7 @@ public class Image {
     private final Uri mUri;
     private State mProcessingState;
 
-    public Image(final Uri uri, final State processingState) {
+    Image(final Uri uri, final State processingState) {
         mUri = uri;
         mProcessingState = processingState;
     }
@@ -33,7 +33,7 @@ public class Image {
         return mProcessingState;
     }
 
-    public void setProcessingState(final State processingState) {
+    void setProcessingState(final State processingState) {
         mProcessingState = processingState;
     }
 

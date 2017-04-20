@@ -42,9 +42,14 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void deleteImage(@NonNull final Uri uri) {
+
         new File(uri.getPath()).delete();
-        mImageList.remove(new Image(uri, null));
+
+        final Image image = new Image(uri, State.DELETED);
+        mImageList.remove(image);
+        notifyListeners(image);
     }
+
 
     @Override
     public List<Image> getImageList() {
@@ -63,7 +68,8 @@ public class DocumentServiceImpl implements DocumentService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                imageSuccessfullyProcessed(image);
+                image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
+                imageProcessed(image);
             }
         }).start();
 
@@ -119,9 +125,14 @@ public class DocumentServiceImpl implements DocumentService {
         return orientation;
     }
 
-    private void imageSuccessfullyProcessed(final Image image) {
-        image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
-        mImageList.add(image);
+    private void imageProcessed(final Image image) {
+        final int position = mImageList.indexOf(image);
+        if (position >= 0) {
+            mImageList.remove(position);
+            mImageList.add(position, image);
+        } else {
+            mImageList.add(image);
+        }
         notifyListeners(image);
     }
 

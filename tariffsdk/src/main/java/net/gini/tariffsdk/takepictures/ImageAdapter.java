@@ -56,18 +56,27 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    void hideLoadingForImage(final Image image) {
-
+    void deleteImage(final Image image) {
         final int position = mImageList.indexOf(image);
-        mImageList.remove(position);
-        mImageList.add(position, image);
-        notifyItemChanged(position);
+        if (position >= 0) {
+            mImageList.remove(position);
+            notifyItemChanged(position);
+        }
     }
 
     void setImages(List<Image> images) {
         mImageList.clear();
         mImageList.addAll(images);
         notifyDataSetChanged();
+    }
+
+    void updateImageState(final Image image) {
+        final int position = mImageList.indexOf(image);
+        if (position >= 0) {
+            mImageList.remove(position);
+            mImageList.add(position, image);
+            notifyItemChanged(position);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
