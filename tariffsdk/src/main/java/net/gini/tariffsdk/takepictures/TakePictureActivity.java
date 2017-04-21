@@ -125,6 +125,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         super.onPause();
         if (cameraPermissionsGranted() && mCamera != null) {
             mCamera.stop();
+            mCameraPreview.setVisibility(View.GONE);
         }
     }
 
@@ -145,13 +146,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     protected void onResume() {
-        super.onResume();
         if (cameraPermissionsGranted() && mCamera != null) {
             mCamera.start();
             mCameraPreview.setVisibility(View.VISIBLE);
             mTakePictureButton.setEnabled(true);
             mProgressBar.setVisibility(View.GONE);
         }
+        super.onResume();
     }
 
     @Override
