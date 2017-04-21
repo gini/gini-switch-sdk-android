@@ -138,7 +138,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     private void notifyListeners(final Image image) {
         for (DocumentListener documentListener : mDocumentListeners) {
-            documentListener.onDocumentProcessed(image);
+            documentListener.onImageStatChanged(image);
         }
     }
 }

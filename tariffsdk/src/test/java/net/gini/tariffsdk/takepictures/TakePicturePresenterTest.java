@@ -65,4 +65,22 @@ public class TakePicturePresenterTest {
         verify(mMockView, never()).requestPermissions();
     }
 
+    @Test
+    public void startPresenter_shouldAddListener() {
+        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
+        presenter.start();
+
+        verify(mMockDocumentService).addDocumentListener(presenter);
+    }
+
+    @Test
+    public void stopPresenter_shouldRemoveListener() {
+        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
+        presenter.stop();
+
+        verify(mMockDocumentService).removeDocumentListener(presenter);
+    }
+
+
+
 }

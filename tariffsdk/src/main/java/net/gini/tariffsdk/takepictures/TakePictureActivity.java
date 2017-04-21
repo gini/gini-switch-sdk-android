@@ -54,12 +54,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void imageDeleted(@NonNull final Image image) {
-        mAdapter.deleteImage(image);
-    }
-
-    @Override
-    public void imageSuccessfullyProcessed(@NonNull final Image image) {
+    public void imageStateChanged(@NonNull final Image image) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

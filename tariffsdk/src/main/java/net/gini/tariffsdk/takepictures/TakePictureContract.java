@@ -29,9 +29,7 @@ interface TakePictureContract {
 
         boolean cameraPermissionsGranted();
 
-        void imageDeleted(@NonNull Image image);
-
-        void imageSuccessfullyProcessed(@NonNull Image image);
+        void imageStateChanged(@NonNull Image image);
 
         void initCamera();
 

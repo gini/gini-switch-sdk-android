@@ -21,6 +21,6 @@ public interface DocumentService {
     Image saveImage(@NonNull final byte[] data);
 
     interface DocumentListener {
-        void onDocumentProcessed(@NonNull final Image image);
+        void onImageStatChanged(@NonNull final Image image);
     }
 }
