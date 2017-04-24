@@ -1,36 +1,86 @@
 package net.gini.tariffsdk;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
-import net.gini.tariffsdk.authentication.AuthenticationService;
+import net.gini.tariffsdk.documentservice.DocumentService;
+import net.gini.tariffsdk.documentservice.DocumentServiceImpl;
+import net.gini.tariffsdk.extractionservice.ExtractionService;
+import net.gini.tariffsdk.extractionservice.ExtractionServiceImpl;
+import net.gini.tariffsdk.extractionservice.Extractions;
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 
 /**
  * <p>
- * This class represents the Gini Tariff SDK. To create an instance of it the {@link
- * TariffSdk.SdkBuilder} should be used.
+ * This class represents the Gini Tariff SDK.
  * </p>
  */
 public class TariffSdk {
 
+
     public static int REQUEST_CODE = 666;
-    private AuthenticationService mAuthenticationService;
-
+    @SuppressLint("StaticFieldLeak") //application context is fine
+    private static volatile TariffSdk mSingleton;
     private final Context mContext;
-    private final OkHttpClient mOkHttpClient;
-    private final int mTheme;
+    private final DocumentService mDocumentService;
+    private final ExtractionService mExtractionService;
+    private int mLoadingView;
+    private OkHttpClient mOkHttpClient;
+    private int mTheme;
 
-    private TariffSdk(final Context context, final int theme, final String clientId,
-            final String clientPw, final OkHttpClient okHttpClient) {
-        mContext = context;
-        mTheme = theme;
-        mOkHttpClient = okHttpClient;
+    private TariffSdk(final Context context, final String clientId, final String clientPw,
+            final DocumentService authenticationService,
+            final ExtractionService extractionService) {
+
+        mContext = context.getApplicationContext();
+        mDocumentService = authenticationService;
+        mExtractionService = extractionService;
+    }
+
+    public static TariffSdk from(final Context context, @NonNull final String clientId,
+            @NonNull final String clientPw) {
+        if (context == null) {
+            throw new IllegalArgumentException("context == null");
+        }
+        if (mSingleton == null) {
+            synchronized (TariffSdk.class) {
+                if (mSingleton == null) {
+
+                    mSingleton = new TariffSdk(context, clientId, clientPw,
+                            new DocumentServiceImpl(context),
+                            new ExtractionServiceImpl());
+                }
+            }
+        }
+        return mSingleton;
+    }
+
+    public static TariffSdk getTariffSdk() {
+        return mSingleton;
+    }
+
+    public DocumentService getDocumentService() {
+        return mDocumentService;
+    }
+
+    /**
+     * <p>
+     * Use this to receive the extractions from the SDK.
+     * </p>
+     *
+     * @return the found extractions inside a list
+     */
+    public List<Extractions> getExtractions() {
+        //TODO
+        return mExtractionService.getExtractions();
     }
 
     /**
@@ -54,103 +104,39 @@ public class TariffSdk {
 
     /**
      * <p>
-     * The Tariff SDK Builder class, use this builder to create an instance of the {@link
-     * TariffSdk}.
+     * Set a specific loading view which is being shown during the extraction receiving
      * </p>
+     *
+     * @param loadingView the resource id of the view
      */
-    public static class SdkBuilder {
+    public TariffSdk withLoadingView(@LayoutRes final int loadingView) {
+        mLoadingView = loadingView;
+        return this;
+    }
 
-        @NonNull
-        private final String mClientId;
-        @NonNull
-        private final String mClientPw;
-        @NonNull
-        private final Context mContext;
-        private int mLoadingView = -1;
-        private OkHttpClient mOkHttpClient;
-        private boolean mShow = false;
-        private int mTheme = -1;
+    /**
+     * <p>
+     * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
+     * singleton.
+     * </p>
+     *
+     * @param okHttpClient the created okHttpClient
+     * @return the instance of the current builder
+     */
+    public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient) {
+        mOkHttpClient = assertNotNull(okHttpClient);
+        return this;
+    }
 
-        public SdkBuilder(@NonNull final Context context, @NonNull final String clientId,
-                @NonNull final String clientPw) {
-            mContext = assertNotNull(context);
-            mClientId = assertNotNull(clientId);
-            mClientPw = assertNotNull(clientPw);
+    public TariffSdk withTheme(@StyleRes final int theme) {
+        mTheme = theme;
+        return this;
+    }
+
+    private static <T> T assertNotNull(T parameter) {
+        if (parameter == null) {
+            throw new IllegalArgumentException("Parameter cannot be null");
         }
-
-        /**
-         * <p>
-         * Always show the onboarding nevertheless it already has been shown
-         * </p>
-         *
-         * @param show boolean if onboarding should be shown always
-         * @return the instance of the current builder
-         */
-        public SdkBuilder alwaysShowOnboarding(final boolean show) {
-            mShow = show;
-            return this;
-        }
-
-        /**
-         * <p>
-         * Generate a TariffSdk instance from the current builder
-         * </p>
-         *
-         * @return a TariffSdk instance
-         */
-        public TariffSdk createSdk() {
-            if (mOkHttpClient == null) {
-                mOkHttpClient = new OkHttpClient();
-            }
-            return new TariffSdk(mContext.getApplicationContext(), mTheme, mClientId, mClientPw,
-                    mOkHttpClient);
-        }
-
-        /**
-         * <p>
-         * Set a specific loading view which is being shown during the extraction receiving
-         * </p>
-         *
-         * @param loadingView the resource id of the view
-         * @return the instance of the current builder
-         */
-        public SdkBuilder setLoadingView(@LayoutRes final int loadingView) {
-            mLoadingView = loadingView;
-            return this;
-        }
-
-        /**
-         * <p>
-         * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
-         * singleton.
-         * </p>
-         *
-         * @param okHttpClient the created okHttpClient
-         * @return the instance of the current builder
-         */
-        public SdkBuilder setOkHttpClient(@NonNull OkHttpClient okHttpClient) {
-            mOkHttpClient = assertNotNull(okHttpClient);
-            return this;
-        }
-
-        /**
-         * <p>
-         * Set a specific theme for the SDK Activities, if not set the default app theme is used
-         * </p>
-         *
-         * @param theme the resource id of the theme
-         * @return the instance of the current builder
-         */
-        public SdkBuilder setTheme(@StyleRes final int theme) {
-            mTheme = theme;
-            return this;
-        }
-
-        private static <T> T assertNotNull(T parameter) {
-            if (parameter == null) {
-                throw new IllegalArgumentException("Parameter cannot be null");
-            }
-            return parameter;
-        }
+        return parameter;
     }
 }
