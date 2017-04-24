@@ -23,13 +23,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class DocumentServiceImpl implements DocumentService {
 
-    private static DocumentService mInstance;
-
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
 
-    private DocumentServiceImpl(final Context context) {
+    public DocumentServiceImpl(final Context context) {
         mContext = context.getApplicationContext();
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
@@ -103,13 +101,6 @@ public class DocumentServiceImpl implements DocumentService {
             uri = Uri.EMPTY;
         }
         return new Image(uri, State.WAITING_FOR_PROCESSING);
-    }
-
-    public static DocumentService getInstance(final Context context) {
-        if (mInstance == null) {
-            mInstance = new DocumentServiceImpl(context);
-        }
-        return mInstance;
     }
 
     private String getNewRotation(String orientation) {
