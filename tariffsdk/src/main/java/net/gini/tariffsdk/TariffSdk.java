@@ -85,7 +85,7 @@ public class TariffSdk {
     @NonNull
     public Intent getTariffSdkIntent() {
 
-        return new TariffSdkIntentFactory(mContext, mTheme).createTariffSdkIntent();
+        return new IntentFactory(this).createTariffSdkIntent();
     }
 
     /**
@@ -126,12 +126,20 @@ public class TariffSdk {
         return this;
     }
 
+    Context getContext() {
+        return mContext;
+    }
+
     DocumentService getDocumentService() {
         return mDocumentService;
     }
 
     static TariffSdk getSdk() {
         return mSingleton;
+    }
+
+    int getTheme() {
+        return mTheme;
     }
 
     private static <T> T assertNotNull(T parameter) {

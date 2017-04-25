@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application>
@@ -13,7 +14,12 @@
         <activity
             android:name=".TakePictureActivity"
             android:taskAffinity="net.gini.tariffsdk" />
-        <activity android:name=".ReviewPictureActivity" />
+        <activity
+            android:name=".ReviewPictureActivity"
+            android:taskAffinity="net.gini.tariffsdk" />
+        <activity
+            android:name=".ExtractionsActivity"
+            android:taskAffinity="net.gini.tariffsdk" />
     </application>
 
 </manifest>
