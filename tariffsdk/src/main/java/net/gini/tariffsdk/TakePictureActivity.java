@@ -99,6 +99,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
+        findViewById(R.id.button_finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                showFoundExtractions();
+            }
+        });
+
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
 
 
@@ -163,7 +170,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void openImageReview(@NonNull final Image image) {
-        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, image.getUri());
+
+        final IntentFactory tariffSdkIntentFactory = new IntentFactory(
+                TariffSdk.getSdk());
+        final Intent intent = tariffSdkIntentFactory.createReviewActivity(image.getUri());
         startActivity(intent);
     }
 
@@ -178,12 +188,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mAdapter.setImages(imageList);
     }
 
-    public static Intent newIntent(final Context context,
-            final int themeResourceId) {
-
-
-        Intent intent = new Intent(context, TakePictureActivity.class);
-        intent.putExtra(BUNDLE_EXTRA_THEME, themeResourceId);
-        return intent;
+    @Override
+    public void showFoundExtractions() {
+        IntentFactory intentFactory = new IntentFactory(TariffSdk.getSdk());
+        Intent intent = intentFactory.createExtractionsActivity();
+        startActivity(intent);
     }
 }

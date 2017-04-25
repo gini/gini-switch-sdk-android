@@ -9,6 +9,8 @@ interface TakePictureContract {
 
     interface Presenter {
 
+        void onAllPicturesTaken();
+
         void onPictureTaken(@NonNull final byte[] data);
 
         void permissionResultDenied();
@@ -36,5 +38,7 @@ interface TakePictureContract {
         void requestPermissions();
 
         void setImages(@NonNull final List<Image> imageList);
+
+        void showFoundExtractions();
     }
 }

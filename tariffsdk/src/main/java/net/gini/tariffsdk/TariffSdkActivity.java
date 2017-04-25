@@ -20,28 +20,19 @@ final public class TariffSdkActivity extends TariffSdkBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkForCorrectUsage();
+        if (getCallingActivity() == null) {
+            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
+        }
 
         if(showOnboarding()) {
 
             //TODO show onboarding
         } else {
-            final Intent intent = TakePictureActivity.newIntent(this, getThemeResourceId());
+            final Intent intent = new IntentFactory(TariffSdk.getSdk())
+                    .createTakePictureActivity();
             startActivityForResult(intent, REQUEST_CODE);
         }
         finish();
-    }
-
-    private void checkForCorrectUsage() {
-        if (getCallingActivity() == null) {
-            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
-        }
-        if (getIntent().getExtras() == null || !getIntent().getBooleanExtra(
-                TariffSdkIntentFactory.BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
-            throw new IllegalArgumentException(
-                    "Do not create this Intent by yourself, use the provided TariffSdk"
-                            + ".getTariffSdkIntent() method for it!");
-        }
     }
 
     private boolean showOnboarding() {

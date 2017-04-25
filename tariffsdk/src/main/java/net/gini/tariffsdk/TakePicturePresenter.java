@@ -22,6 +22,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
+    public void onAllPicturesTaken() {
+    }
+
+    @Override
     public void onImageStatChanged(@NonNull final Image image) {
         mView.imageStateChanged(image);
     }
