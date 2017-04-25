@@ -1,9 +1,13 @@
 package net.gini.tariffsdk;
 
 
-import java.util.List;
+import java.util.Set;
 
 interface ExtractionService {
 
-    List<Extractions> getExtractions();
+    Set<Extraction> getExtractions();
+
+    int getResultCodeForActivity();
+
+    void setExtraction(final Extraction extraction);
 }

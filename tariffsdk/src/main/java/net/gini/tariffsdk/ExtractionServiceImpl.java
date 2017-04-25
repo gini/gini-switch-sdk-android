@@ -1,15 +1,35 @@
 package net.gini.tariffsdk;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 class ExtractionServiceImpl implements ExtractionService {
 
-    private List<Extractions> mExtractions = new ArrayList<>();
+    private Set<Extraction> mExtractions = new HashSet<>();
+
+    ExtractionServiceImpl() {
+        //MOCK
+        mExtractions.add(new Extraction("Zip Code", "50733"));
+        mExtractions.add(new Extraction("Counter Number", "4711"));
+    }
 
     @Override
-    public List<Extractions> getExtractions() {
+    public Set<Extraction> getExtractions() {
         return mExtractions;
     }
+
+    @Override
+    public int getResultCodeForActivity() {
+        return TariffSdk.EXTRACTIONS_AVAILABLE;
+    }
+
+    @Override
+    public void setExtraction(final Extraction extraction) {
+        if (mExtractions.contains(extraction)) {
+            mExtractions.remove(extraction);
+        }
+        mExtractions.add(extraction);
+    }
+
 }
