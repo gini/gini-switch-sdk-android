@@ -1,9 +1,9 @@
-package net.gini.tariffsdk.documentservice;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
 
-public class Image {
+class Image {
 
     private final Uri mUri;
     private State mProcessingState;
@@ -29,7 +29,7 @@ public class Image {
         return mUri != null ? mUri.hashCode() : 0;
     }
 
-    public State getProcessingState() {
+    State getProcessingState() {
         return mProcessingState;
     }
 
@@ -37,7 +37,7 @@ public class Image {
         mProcessingState = processingState;
     }
 
-    public Uri getUri() {
+    Uri getUri() {
         return mUri;
     }
 }

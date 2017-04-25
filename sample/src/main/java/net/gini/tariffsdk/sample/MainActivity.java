@@ -16,8 +16,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
         if (requestCode == TariffSdk.REQUEST_CODE) {
-            //TODO interpret result code
-            mTariffSdk.getExtractions();
+            if (resultCode == TariffSdk.EXTRACTIONS_AVAILABLE) {
+                //TODO interpret result code
+                mTariffSdk.getExtractions();
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTariffSdk = TariffSdk.from(this, "clientId", "clientPw");
+        mTariffSdk = TariffSdk.init(this, "clientId", "clientPw");
 
         findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_start_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent tariffSdkIntent = mTariffSdk.withTheme(
-                        R.style.SpecialTheme).getTariffSdkIntent();
+                final Intent tariffSdkIntent = mTariffSdk
+                        .withTheme(R.style.SpecialTheme)
+                        .withLoadingView(R.layout.custom_loading_view)
+                        .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }
         });

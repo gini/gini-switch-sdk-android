@@ -1,10 +1,10 @@
-package net.gini.tariffsdk.extractionservice;
+package net.gini.tariffsdk;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtractionServiceImpl implements ExtractionService {
+class ExtractionServiceImpl implements ExtractionService {
 
     private List<Extractions> mExtractions = new ArrayList<>();
 

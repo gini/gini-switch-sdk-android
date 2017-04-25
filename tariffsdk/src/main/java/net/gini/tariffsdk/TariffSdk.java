@@ -8,12 +8,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
-import net.gini.tariffsdk.documentservice.DocumentService;
-import net.gini.tariffsdk.documentservice.DocumentServiceImpl;
-import net.gini.tariffsdk.extractionservice.ExtractionService;
-import net.gini.tariffsdk.extractionservice.ExtractionServiceImpl;
-import net.gini.tariffsdk.extractionservice.Extractions;
-
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -26,7 +20,8 @@ import okhttp3.OkHttpClient;
 public class TariffSdk {
 
 
-    public static int REQUEST_CODE = 666;
+    public static final int EXTRACTIONS_AVAILABLE = 1;
+    public static final int REQUEST_CODE = 666;
     @SuppressLint("StaticFieldLeak") //application context is fine
     private static volatile TariffSdk mSingleton;
     private final Context mContext;
@@ -45,7 +40,7 @@ public class TariffSdk {
         mExtractionService = extractionService;
     }
 
-    public static TariffSdk from(final Context context, @NonNull final String clientId,
+    public static TariffSdk init(final Context context, @NonNull final String clientId,
             @NonNull final String clientPw) {
         if (context == null) {
             throw new IllegalArgumentException("context == null");
@@ -53,7 +48,6 @@ public class TariffSdk {
         if (mSingleton == null) {
             synchronized (TariffSdk.class) {
                 if (mSingleton == null) {
-
                     mSingleton = new TariffSdk(context, clientId, clientPw,
                             new DocumentServiceImpl(context),
                             new ExtractionServiceImpl());
@@ -63,17 +57,9 @@ public class TariffSdk {
         return mSingleton;
     }
 
-    public static TariffSdk getTariffSdk() {
-        return mSingleton;
-    }
-
-    public DocumentService getDocumentService() {
-        return mDocumentService;
-    }
-
     /**
      * <p>
-     * Use this to receive the extractions from the SDK.
+     * Use this to receive the extractions init the SDK.
      * </p>
      *
      * @return the found extractions inside a list
@@ -91,7 +77,7 @@ public class TariffSdk {
      * Only use this method to instantiate an intent of this activity, otherwise an exception will
      * be thrown.
      * To start the activity the method {@link android.app.Activity#startActivityForResult(Intent,
-     * int)} with the request code from {@link TariffSdk#REQUEST_CODE} has to be used.
+     * int)} with the request code init {@link TariffSdk#REQUEST_CODE} has to be used.
      * </p>
      *
      * @return an intent of {@link TariffSdkActivity}
@@ -128,9 +114,24 @@ public class TariffSdk {
         return this;
     }
 
+    /**
+     * <p>
+     * Set a specific theme for the SDK Activities, if not set the default app theme is used
+     * </p>
+     *
+     * @param theme the resource id of the theme
+     */
     public TariffSdk withTheme(@StyleRes final int theme) {
         mTheme = theme;
         return this;
+    }
+
+    DocumentService getDocumentService() {
+        return mDocumentService;
+    }
+
+    static TariffSdk getSdk() {
+        return mSingleton;
     }
 
     private static <T> T assertNotNull(T parameter) {

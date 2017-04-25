@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import net.gini.tariffsdk.R;
-import net.gini.tariffsdk.documentservice.Image;
-import net.gini.tariffsdk.documentservice.State;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 import java.util.ArrayList;

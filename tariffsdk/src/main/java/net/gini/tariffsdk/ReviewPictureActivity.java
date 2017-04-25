@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.reviewpicture;
+package net.gini.tariffsdk;
 
 
 import android.content.Context;
@@ -10,9 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
 
-import net.gini.tariffsdk.R;
-import net.gini.tariffsdk.TariffSdk;
-import net.gini.tariffsdk.TariffSdkBaseActivity;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 public class ReviewPictureActivity extends TariffSdkBaseActivity implements
@@ -59,7 +56,7 @@ public class ReviewPictureActivity extends TariffSdkBaseActivity implements
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_preview);
 
         final Uri uri = getIntent().getExtras().getParcelable(BUNDLE_EXTRA_IMAGE_URI);
-        mPresenter = new ReviewPicturePresenter(this, TariffSdk.getTariffSdk().getDocumentService(),
+        mPresenter = new ReviewPicturePresenter(this, TariffSdk.getSdk().getDocumentService(),
                 uri);
     }
 

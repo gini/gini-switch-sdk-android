@@ -1,10 +1,8 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import net.gini.tariffsdk.documentservice.DocumentService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +45,22 @@ public class TakePicturePresenterTest {
     }
 
     @Test
+    public void startPresenter_shouldAddListener() {
+        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
+        presenter.start();
+
+        verify(mMockDocumentService).addDocumentListener(presenter);
+    }
+
+    @Test
+    public void stopPresenter_shouldRemoveListener() {
+        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
+        presenter.stop();
+
+        verify(mMockDocumentService).removeDocumentListener(presenter);
+    }
+
+    @Test
     public void versionGreaterThan23_requestPermissions() {
         TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
         presenter.mBuildVersion = AndroidMarshmallow;
@@ -63,22 +77,6 @@ public class TakePicturePresenterTest {
 
         presenter.start();
         verify(mMockView, never()).requestPermissions();
-    }
-
-    @Test
-    public void startPresenter_shouldAddListener() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.start();
-
-        verify(mMockDocumentService).addDocumentListener(presenter);
-    }
-
-    @Test
-    public void stopPresenter_shouldRemoveListener() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.stop();
-
-        verify(mMockDocumentService).removeDocumentListener(presenter);
     }
 
 

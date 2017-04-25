@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.documentservice;
+package net.gini.tariffsdk;
 
 
 import static android.support.media.ExifInterface.ORIENTATION_ROTATE_180;
@@ -21,13 +21,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class DocumentServiceImpl implements DocumentService {
+class DocumentServiceImpl implements DocumentService {
 
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
 
-    public DocumentServiceImpl(final Context context) {
+    DocumentServiceImpl(final Context context) {
         mContext = context.getApplicationContext();
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();

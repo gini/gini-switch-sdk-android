@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.reviewpicture;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
