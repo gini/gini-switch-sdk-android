@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
             final Intent data) {
         if (requestCode == TariffSdk.REQUEST_CODE) {
             if (resultCode == TariffSdk.EXTRACTIONS_AVAILABLE) {
-                //TODO interpret result code
                 mTariffSdk.getExtractions();
             }
         }
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 final Intent tariffSdkIntent = mTariffSdk
                         .withTheme(R.style.SpecialTheme)
-                        .withLoadingView(R.layout.custom_loading_view)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }

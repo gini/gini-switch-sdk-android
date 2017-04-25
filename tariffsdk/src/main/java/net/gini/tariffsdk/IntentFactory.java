@@ -34,14 +34,8 @@ final class IntentFactory {
         return intent;
     }
 
-    Intent createTakePictureActivity() {
-        final Intent intent = new Intent(mContext, TakePictureActivity.class);
-        addDefaultExtras(intent);
-        return intent;
-    }
-
     Intent createTariffSdkIntent() {
-        final Intent intent = new Intent(mContext, TariffSdkActivity.class);
+        final Intent intent = new Intent(mContext, TakePictureActivity.class);
         addDefaultExtras(intent);
         return intent;
     }

@@ -9,9 +9,6 @@
 
     <application>
         <activity
-            android:name=".TariffSdkActivity"
-            android:taskAffinity="net.gini.tariffsdk" />
-        <activity
             android:name=".TakePictureActivity"
             android:taskAffinity="net.gini.tariffsdk" />
         <activity

@@ -4,11 +4,10 @@ package net.gini.tariffsdk;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
-import java.util.List;
+import java.util.Set;
 
 import okhttp3.OkHttpClient;
 
@@ -20,14 +19,13 @@ import okhttp3.OkHttpClient;
 public class TariffSdk {
 
 
-    public static final int EXTRACTIONS_AVAILABLE = 1;
+    public static final int EXTRACTIONS_AVAILABLE = 4;
     public static final int REQUEST_CODE = 666;
     @SuppressLint("StaticFieldLeak") //application context is fine
     private static volatile TariffSdk mSingleton;
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
-    private int mLoadingView;
     private OkHttpClient mOkHttpClient;
     private int mTheme;
 
@@ -64,7 +62,7 @@ public class TariffSdk {
      *
      * @return the found extractions inside a list
      */
-    public List<Extractions> getExtractions() {
+    public Set<Extraction> getExtractions() {
         //TODO
         return mExtractionService.getExtractions();
     }
@@ -72,7 +70,7 @@ public class TariffSdk {
     /**
      * <p>
      * Use this to get an intent of the Tariff SDK
-     * {@link TariffSdkActivity}
+     * {@link TakePictureActivity}
      * activity.
      * Only use this method to instantiate an intent of this activity, otherwise an exception will
      * be thrown.
@@ -80,24 +78,12 @@ public class TariffSdk {
      * int)} with the request code init {@link TariffSdk#REQUEST_CODE} has to be used.
      * </p>
      *
-     * @return an intent of {@link TariffSdkActivity}
+     * @return an intent of {@link TakePictureActivity}
      */
     @NonNull
     public Intent getTariffSdkIntent() {
 
         return new IntentFactory(this).createTariffSdkIntent();
-    }
-
-    /**
-     * <p>
-     * Set a specific loading view which is being shown during the extraction receiving
-     * </p>
-     *
-     * @param loadingView the resource id of the view
-     */
-    public TariffSdk withLoadingView(@LayoutRes final int loadingView) {
-        mLoadingView = loadingView;
-        return this;
     }
 
     /**
@@ -132,6 +118,10 @@ public class TariffSdk {
 
     DocumentService getDocumentService() {
         return mDocumentService;
+    }
+
+    ExtractionService getExtractionService() {
+        return mExtractionService;
     }
 
     static TariffSdk getSdk() {

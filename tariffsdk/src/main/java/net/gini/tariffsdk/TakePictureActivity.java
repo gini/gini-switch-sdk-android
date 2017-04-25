@@ -29,6 +29,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
+    private static final int REQUEST_CODE_EXTRACTIONS = 123;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
@@ -67,10 +68,25 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    protected void onActivityResult(final int requestCode, final int resultCode,
+            final Intent data) {
+        if (resultCode != RESULT_CANCELED && requestCode == REQUEST_CODE_EXTRACTIONS) {
+            setResult(resultCode);
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (getCallingActivity() == null) {
+            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
+        }
+
         setContentView(R.layout.activity_take_picture);
+
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -192,6 +208,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public void showFoundExtractions() {
         IntentFactory intentFactory = new IntentFactory(TariffSdk.getSdk());
         Intent intent = intentFactory.createExtractionsActivity();
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_EXTRACTIONS);
     }
 }
