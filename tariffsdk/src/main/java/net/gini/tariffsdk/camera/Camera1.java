@@ -24,17 +24,12 @@ import java.util.List;
 public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
     private static final String TAG = Camera1.class.getSimpleName();
-
+    private final SurfaceHolder mHolder;
     @Nullable
     private Camera mCamera;
-
     @NonNull
     private Camera.CameraInfo mCameraInfo = new Camera.CameraInfo();
-
     private int mCurrentOrientation;
-
-    private final SurfaceHolder mHolder;
-
     @NonNull
     private Orientation mOrientation = Orientation.DEFAULT;
 
@@ -87,9 +82,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
         }
         mCamera = getCameraInstance();
         mCameraInfo = getCameraInfo();
-        if (mHolder != null) {
             mHolder.addCallback(this);
-        }
     }
 
     @Override
@@ -99,9 +92,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
             mCamera.release();
             mCamera = null;
         }
-        if (mHolder != null) {
             mHolder.removeCallback(this);
-        }
     }
 
     @Override
