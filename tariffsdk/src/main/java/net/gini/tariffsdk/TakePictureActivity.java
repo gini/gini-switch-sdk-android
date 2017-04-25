@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.Manifest;
@@ -19,15 +19,9 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import net.gini.tariffsdk.R;
-import net.gini.tariffsdk.TariffSdk;
-import net.gini.tariffsdk.TariffSdkBaseActivity;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
-import net.gini.tariffsdk.documentservice.DocumentService;
-import net.gini.tariffsdk.documentservice.Image;
-import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
 
 import java.util.List;
 
@@ -83,7 +77,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             actionBar.hide();
         }
 
-        final DocumentService documentService = TariffSdk.getTariffSdk().getDocumentService();
+        final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
         mPresenter = new TakePicturePresenter(this, documentService);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);

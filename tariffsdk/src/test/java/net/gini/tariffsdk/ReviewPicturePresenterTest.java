@@ -1,10 +1,8 @@
-package net.gini.tariffsdk.reviewpicture;
+package net.gini.tariffsdk;
 
 import static org.mockito.Mockito.verify;
 
 import android.net.Uri;
-
-import net.gini.tariffsdk.documentservice.DocumentService;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.documentservice;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-public interface DocumentService {
+interface DocumentService {
 
     void addDocumentListener(@NonNull DocumentListener listener);
 

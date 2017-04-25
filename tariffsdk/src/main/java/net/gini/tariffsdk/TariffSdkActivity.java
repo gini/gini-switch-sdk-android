@@ -3,8 +3,6 @@ package net.gini.tariffsdk;
 import android.content.Intent;
 import android.os.Bundle;
 
-import net.gini.tariffsdk.takepictures.TakePictureActivity;
-
 final public class TariffSdkActivity extends TariffSdkBaseActivity {
 
     private static final int REQUEST_CODE = 191;

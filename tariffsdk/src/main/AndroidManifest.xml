@@ -11,9 +11,9 @@
             android:name=".TariffSdkActivity"
             android:taskAffinity="net.gini.tariffsdk" />
         <activity
-            android:name=".takepictures.TakePictureActivity"
+            android:name=".TakePictureActivity"
             android:taskAffinity="net.gini.tariffsdk" />
-        <activity android:name=".reviewpicture.ReviewPictureActivity" />
+        <activity android:name=".ReviewPictureActivity" />
     </application>
 
 </manifest>

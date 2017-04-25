@@ -1,11 +1,8 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
-import net.gini.tariffsdk.documentservice.DocumentService;
-import net.gini.tariffsdk.documentservice.Image;
 
 import java.util.List;
 

@@ -1,9 +1,7 @@
-package net.gini.tariffsdk.reviewpicture;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
-
-import net.gini.tariffsdk.documentservice.DocumentService;
 
 class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
 
