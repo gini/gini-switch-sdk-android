@@ -3,11 +3,17 @@
     package="net.gini.tariffsdk">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
 
     <application>
         <activity
-            android:name=".takepicture.CameraActivity"
+            android:name=".TariffSdkActivity"
             android:taskAffinity="net.gini.tariffsdk" />
+        <activity
+            android:name=".takepictures.TakePictureActivity"
+            android:taskAffinity="net.gini.tariffsdk" />
+        <activity android:name=".reviewpicture.ReviewPictureActivity" />
     </application>
 
 </manifest>
