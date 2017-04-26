@@ -58,20 +58,22 @@ class DocumentServiceImpl implements DocumentService {
     public void keepImage(@NonNull final Uri uri) {
         //TODO - start processing
         final Image image = new Image(uri, State.PROCESSING);
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    //Artificial delay for mocking, later we process correct
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        if (!mImageList.contains(image)) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        //Artificial delay for mocking, later we process correct
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
+                    imageProcessed(image);
                 }
-                image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
-                imageProcessed(image);
-            }
-        }).start();
+            }).start();
 
-        mImageList.add(image);
+            mImageList.add(image);
+        }
     }
 
     @Override
