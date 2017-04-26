@@ -39,15 +39,30 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public void cleanup() {
+        new Thread(new Runnable() {
+            public void run() {
+                mDocumentListeners.clear();
+
+                for (Image image : mImageList) {
+                    Uri uri = image.getUri();
+                    deleteFileFromStorage(uri);
+                    mImageList.remove(image);
+                }
+            }
+        }).start();
+    }
+
+    @Override
     public void deleteImage(@NonNull final Uri uri) {
 
-        new File(uri.getPath()).delete();
+        deleteFileFromStorage(uri);
 
         final Image image = new Image(uri, State.DELETED);
         mImageList.remove(image);
+
         notifyListeners(image);
     }
-
 
     @Override
     public List<Image> getImageList() {
@@ -101,6 +116,10 @@ class DocumentServiceImpl implements DocumentService {
             uri = Uri.EMPTY;
         }
         return new Image(uri, State.WAITING_FOR_PROCESSING);
+    }
+
+    private void deleteFileFromStorage(final @NonNull Uri uri) {
+        new File(uri.getPath()).delete();
     }
 
     private String getNewRotation(String orientation) {

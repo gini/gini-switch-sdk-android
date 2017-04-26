@@ -112,6 +112,10 @@ public class TariffSdk {
         return this;
     }
 
+    void cleanUp() {
+        mDocumentService.cleanup();
+    }
+
     Context getContext() {
         return mContext;
     }

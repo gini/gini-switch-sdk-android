@@ -2,6 +2,7 @@ package net.gini.tariffsdk;
 
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,11 +23,12 @@ import android.widget.ProgressBar;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
+import net.gini.tariffsdk.utils.ExitDialogFragment;
 
 import java.util.List;
 
 final public class TakePictureActivity extends TariffSdkBaseActivity implements
-        TakePictureContract.View {
+        TakePictureContract.View, ExitDialogFragment.ExitDialogListener {
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private static final int REQUEST_CODE_EXTRACTIONS = 123;
@@ -78,6 +80,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        DialogFragment dialog = new ExitDialogFragment();
+        dialog.show(getFragmentManager(), "ExitDialogFragment");
+    }
+
+    @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -118,7 +126,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         findViewById(R.id.button_finish).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                showFoundExtractions();
+                mPresenter.onAllPicturesTaken();
             }
         });
 
@@ -138,12 +146,24 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void onNegative() {
+        //TODO track etc.
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         if (cameraPermissionsGranted() && mCamera != null) {
             mCamera.stop();
             mCameraPreview.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onPositive() {
+        //TODO track etc.
+        TariffSdk.getSdk().cleanUp();
+        finishAffinity();
     }
 
     @Override
