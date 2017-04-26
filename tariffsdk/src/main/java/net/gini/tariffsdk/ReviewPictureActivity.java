@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.view.View;
-import android.widget.Button;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
@@ -37,14 +36,14 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
             throw new IllegalArgumentException("Intent must contain an image Uri");
         }
 
-        final Button discardButton = (Button) findViewById(R.id.button_discard);
+        final View discardButton = findViewById(R.id.button_discard);
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 mPresenter.discardImage();
             }
         });
-        final Button keepButton = (Button) findViewById(R.id.button_keep);
+        final View keepButton = findViewById(R.id.button_keep);
         keepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -52,10 +51,22 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
             }
         });
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_preview);
+        final View rotateButton = findViewById(R.id.button_rotate);
+        rotateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mPresenter.rotateImage();
+            }
+        });
 
         final Uri uri = getIntent().getExtras().getParcelable(BUNDLE_EXTRA_IMAGE_URI);
         mPresenter = new ReviewPicturePresenter(this, TariffSdk.getSdk().getDocumentService(),
                 uri);
+    }
+
+    @Override
+    public void rotateView() {
+        mImagePreview.setRotation(mImagePreview.getRotation() + 90);
     }
 
     @Override

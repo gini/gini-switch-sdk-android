@@ -8,11 +8,15 @@ interface ReviewPictureContract {
         void discardImage();
 
         void keepImage();
+
+        void rotateImage();
     }
 
     interface View {
 
         void finishReview();
+
+        void rotateView();
 
         void setImage(final Uri uri);
     }
