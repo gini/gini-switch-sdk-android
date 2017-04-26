@@ -43,7 +43,7 @@ class DocumentServiceImpl implements DocumentService {
 
         new File(uri.getPath()).delete();
 
-        final Image image = new Image(uri, State.DELETED);
+        final Image image = new Image(uri, ImageState.DELETED);
         mImageList.remove(image);
         notifyListeners(image);
     }
@@ -57,7 +57,7 @@ class DocumentServiceImpl implements DocumentService {
     @Override
     public void keepImage(@NonNull final Uri uri) {
         //TODO - start processing
-        final Image image = new Image(uri, State.PROCESSING);
+        final Image image = new Image(uri, ImageState.PROCESSING);
         if (!mImageList.contains(image)) {
             new Thread(new Runnable() {
                 public void run() {
@@ -67,7 +67,7 @@ class DocumentServiceImpl implements DocumentService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
+                    image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
                     imageProcessed(image);
                 }
             }).start();
@@ -102,7 +102,7 @@ class DocumentServiceImpl implements DocumentService {
         } catch (IOException e) {
             uri = Uri.EMPTY;
         }
-        return new Image(uri, State.WAITING_FOR_PROCESSING);
+        return new Image(uri, ImageState.WAITING_FOR_PROCESSING);
     }
 
     private String getNewRotation(String orientation) {

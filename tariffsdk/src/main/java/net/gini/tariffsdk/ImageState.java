@@ -1,7 +1,7 @@
 package net.gini.tariffsdk;
 
 
-enum State {
+enum ImageState {
     WAITING_FOR_PROCESSING,
     PROCESSING,
     SUCCESSFULLY_PROCESSED,
