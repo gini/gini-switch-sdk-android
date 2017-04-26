@@ -1,7 +1,10 @@
 package net.gini.tariffsdk.utils;
 
 
+import static net.gini.tariffsdk.utils.BitmapUtils.decodeSampledBitmapFromUri;
+
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +22,8 @@ public class AutoRotateImageView extends FrameLayout {
 
     private final ImageView mImageView;
     private float mDegrees;
+    @Nullable
+    private Uri mUri;
 
     public AutoRotateImageView(final Context context) {
         this(context, null);
@@ -44,8 +49,8 @@ public class AutoRotateImageView extends FrameLayout {
     }
 
     public void setImageURI(@Nullable final Uri uri) {
-        mImageView.setImageURI(uri);
         mDegrees = getRequiredRotationDegrees(uri);
+        mUri = uri;
     }
 
     private float getRequiredRotationDegrees(final Uri imageUri) {
@@ -76,6 +81,7 @@ public class AutoRotateImageView extends FrameLayout {
                     @Override
                     public void onGlobalLayout() {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        setImageBitmap();
                         rotateImage();
                     }
                 });
@@ -100,5 +106,23 @@ public class AutoRotateImageView extends FrameLayout {
 
 
         mImageView.requestLayout();
+    }
+
+    private void setImageBitmap() {
+
+
+        final int newHeight;
+        final int newWidth;
+        if (mDegrees % 360 == 90 || mDegrees % 360 == 270) {
+            newWidth = getHeight();
+            newHeight = getWidth();
+        } else {
+            newWidth = getWidth();
+            newHeight = getHeight();
+        }
+
+        Bitmap bitmap =
+                decodeSampledBitmapFromUri(getContext(), mUri, newWidth, newHeight);
+        mImageView.setImageBitmap(bitmap);
     }
 }
