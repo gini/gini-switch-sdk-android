@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -77,11 +78,14 @@ class DocumentServiceImpl implements DocumentService {
             public void run() {
                 try {
                     //Artificial delay for mocking, later we process correct
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
+                //Pseudo mock states
+                image.setProcessingState(
+                        new Random().nextInt() % 2 == 0 ? State.SUCCESSFULLY_PROCESSED
+                                : State.FAILED);
                 imageProcessed(image);
             }
         }).start();

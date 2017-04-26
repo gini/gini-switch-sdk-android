@@ -136,7 +136,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         final RecyclerView imageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
         imageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mAdapter = new ImageAdapter(new ImageAdapter.Listener() {
+        mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
             public void onImageClicked(final Image image) {
                 openImageReview(image);
