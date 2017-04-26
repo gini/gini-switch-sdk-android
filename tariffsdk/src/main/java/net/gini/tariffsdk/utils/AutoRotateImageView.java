@@ -1,10 +1,7 @@
 package net.gini.tariffsdk.utils;
 
 
-import static net.gini.tariffsdk.utils.BitmapUtils.decodeSampledBitmapFromUri;
-
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -110,19 +107,20 @@ public class AutoRotateImageView extends FrameLayout {
 
     private void setImageBitmap() {
 
+        BitmapMemoryCache.getInstance().setImage(mUri, mImageView);
 
-        final int newHeight;
-        final int newWidth;
-        if (mDegrees % 360 == 90 || mDegrees % 360 == 270) {
-            newWidth = getHeight();
-            newHeight = getWidth();
-        } else {
-            newWidth = getWidth();
-            newHeight = getHeight();
-        }
-
-        Bitmap bitmap =
-                decodeSampledBitmapFromUri(getContext(), mUri, newWidth, newHeight);
-        mImageView.setImageBitmap(bitmap);
+//        final int newHeight;
+//        final int newWidth;
+//        if (mDegrees % 360 == 90 || mDegrees % 360 == 270) {
+//            newWidth = getHeight();
+//            newHeight = getWidth();
+//        } else {
+//            newWidth = getWidth();
+//            newHeight = getHeight();
+//        }
+//
+//        Bitmap bitmap =
+//                decodeSampledBitmapFromUri(getContext(), mUri, newWidth, newHeight);
+//        mImageView.setImageBitmap(bitmap);
     }
 }
