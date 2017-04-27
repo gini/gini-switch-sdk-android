@@ -11,7 +11,6 @@ import java.util.Set;
 final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
     private ExtractionService mExtractionService;
-    private Set<Extraction> mExtractionSet;
     private LinearLayout mExtractionViewContainer;
 
     @Override
@@ -45,7 +44,6 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
     }
 
     private void setExtractionsInView(Set<Extraction> extractionSet) {
-        mExtractionSet = extractionSet;
         mExtractionViewContainer.removeAllViews();
         for (Extraction extraction : extractionSet) {
             SingleExtractionView view = new SingleExtractionView(this, extraction);

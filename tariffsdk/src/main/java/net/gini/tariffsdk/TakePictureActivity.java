@@ -43,7 +43,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public boolean cameraPermissionsGranted() {
+    public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
     }
@@ -140,7 +140,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        if (cameraPermissionsGranted() && mCamera != null) {
+        if (hasCameraPermissions() && mCamera != null) {
             mCamera.stop();
             mCameraPreview.setVisibility(View.GONE);
         }
@@ -163,7 +163,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     protected void onResume() {
-        if (cameraPermissionsGranted() && mCamera != null) {
+        if (hasCameraPermissions() && mCamera != null) {
             mCamera.start();
             mCameraPreview.setVisibility(View.VISIBLE);
             mTakePictureButton.setEnabled(true);
