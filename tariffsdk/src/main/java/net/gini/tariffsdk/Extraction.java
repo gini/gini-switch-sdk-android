@@ -1,6 +1,8 @@
 package net.gini.tariffsdk;
 
-
+/**
+ * The extraction class that is used to map extractions.
+ */
 public class Extraction {
 
     private final String mName;
@@ -27,10 +29,27 @@ public class Extraction {
         return mName != null ? mName.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        return "Extraction{" +
+                "mName='" + mName + '\'' +
+                ", mValue='" + mValue + '\'' +
+                '}';
+    }
+
+    /**
+     * Use this to retrieve the name of the extraction.
+     *
+     * @return the name of the extraction as String
+     */
     public String getName() {
         return mName;
     }
 
+    /**
+     * Use this to retrieve the value of the extraction.
+     * @return the value of the extraction as String
+     */
     public String getValue() {
         return mValue;
     }

@@ -90,7 +90,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         super.onCreate(savedInstanceState);
 
         if (getCallingActivity() == null) {
-            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
+            throw new IllegalStateException(
+                    "Start this Intent with startActivityForResult() please, otherwise it will "
+                            + "not work correctly!");
         }
 
         setContentView(R.layout.activity_take_picture);

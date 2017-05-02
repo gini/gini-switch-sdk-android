@@ -4,20 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
+import net.gini.tariffsdk.Extraction;
 import net.gini.tariffsdk.TariffSdk;
+
+import java.util.Arrays;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private TariffSdk mTariffSdk;
 
+    private TextView mTextView;
+
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
         if (requestCode == TariffSdk.REQUEST_CODE) {
             if (resultCode == TariffSdk.EXTRACTIONS_AVAILABLE) {
-                mTariffSdk.getExtractions();
+                Set<Extraction> extractions = mTariffSdk.getExtractions();
+                mTextView.setText(Arrays.toString(extractions.toArray()));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -27,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTextView = (TextView) findViewById(R.id.textView);
 
         mTariffSdk = TariffSdk.init(this, "clientId", "clientPw");
 
