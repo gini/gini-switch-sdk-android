@@ -36,11 +36,11 @@ During the time of development of version 1.0 this is the only way we provide th
 Integrating the SDK
 ===================
 
-To integrate the SDK into your code, simple use the provided ``TariffSdk.SdkBuilder`` to generate a TariffSdk instance.
+To integrate the SDK into your code, simple use the provided ``TariffSdk.init`` method to generate a TariffSdk instance.
 Hereby a Context, your client id, your client secret and your domain is needed(For more information about those parameters and how to configure the SDK see the chapter: :ref:`Configuration`)
 
 .. code-block:: java
 
-  final TariffSdk tariffSdk = new TariffSdk.SdkBuilder(context, "your client id", "your client secret", "your domain").createSdk();
+  final TariffSdk tariffSdk = TariffSdk.init(this, "clientId", "clientPw");
 
 The generated TariffSdk instance can now be used to generate the needed Activity and to get the found extractions.

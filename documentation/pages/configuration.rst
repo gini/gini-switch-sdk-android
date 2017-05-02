@@ -13,7 +13,7 @@ The Gini Tariff SDK offers possibilities to configure it to your needs.
 Mandatory Configurations
 ========================
 
-There are four parameters that have to be provided during the constructor call of the builder.
+There are four parameters that have to be provided during the init call of the SDK
 
 #. A Context
 #. Your client ID
@@ -23,7 +23,7 @@ There are four parameters that have to be provided during the constructor call o
 
 .. note:: All of the above parameters have to be provided and are needed by the SDK to work correctly. An **IllegalArgumentException** is thrown if one of them is null.
 
-All other configurations that can be set using the builder are optional and are explained in detail in the next section.
+All other configurations that can be set are optional and are explained in detail in the next section.
 
 Optional Configurations
 =======================
@@ -37,7 +37,7 @@ Therefore the SDK provides the posibility to add a okHttpClient which is being r
 
 .. code-block:: java
 
-  public SdkBuilder setOkHttpClient(@NonNull OkHttpClient okHttpClient);
+  public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient)
 
 Theme
 -----
@@ -49,16 +49,7 @@ The theme can be set via:
 
 .. code-block:: java
 
-  public SdkBuilder setTheme(@StyleRes final int theme);
-
-LoadingView
------------
-
-Configure a view that is displayed during the receiving of the extractions. ``TODO View vs ressourceid``
-
-.. code-block:: java
-
-  public SdkBuilder setLoadingView(@LayoutRes final int loadingView);
+  public TariffSdk withTheme(@StyleRes final int theme);
 
 
 Overview Of Configurations
@@ -73,5 +64,4 @@ Client Secret        String         No
 Domain               String         No
 OkHttpClient         OkHttpClient   Yes
 Theme                int            Yes
-LoadingView          View           Yes
 ==================   ============   ============
