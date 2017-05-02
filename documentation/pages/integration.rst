@@ -41,6 +41,6 @@ Hereby a Context, your client id, your client secret and your domain is needed(F
 
 .. code-block:: java
 
-  final TariffSdk tariffSdk = TariffSdk.init(this, "clientId", "clientPw");
+  final TariffSdk tariffSdk = TariffSdk.init(this, "clientId", "clientPw", "domain");
 
 The generated TariffSdk instance can now be used to generate the needed Activity and to get the found extractions.

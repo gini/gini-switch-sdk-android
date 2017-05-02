@@ -15,11 +15,10 @@ Mandatory Configurations
 
 There are four parameters that have to be provided during the init call of the SDK
 
-#. A Context
-#. Your client ID
-#. Your client secret
-#. Your domain
-
+#. A Context *(Best the application context but not explicitly necessary since the application context is being received from the context instance anyway.)*
+#. Your client ID *(A String containing the client id for the SDK.)*
+#. Your client secret *(A String containing the client secret for the SDK.)*
+#. Your domain *(A String containing your domain, e.g.* ``gini.net`` *)*
 
 .. note:: All of the above parameters have to be provided and are needed by the SDK to work correctly. An **IllegalArgumentException** is thrown if one of them is null.
 
