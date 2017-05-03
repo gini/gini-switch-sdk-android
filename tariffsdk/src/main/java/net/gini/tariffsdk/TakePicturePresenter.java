@@ -48,7 +48,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (hasToCheckForPermissions() && !mView.cameraPermissionsGranted()) {
+        if (hasToCheckForPermissions() && !mView.hasCameraPermissions()) {
             mView.requestPermissions();
         } else {
             mView.initCamera();

@@ -32,11 +32,11 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Image image = mImageList.get(position);
         final Uri uri = image.getUri();
-        final State processingState = image.getProcessingState();
+        final ImageState processingState = image.getProcessingState();
         holder.mImageView.setImageURI(uri);
         //TODO
         holder.mProgressBar.setVisibility(
-                processingState == State.PROCESSING ? View.VISIBLE : View.GONE);
+                processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
 
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override

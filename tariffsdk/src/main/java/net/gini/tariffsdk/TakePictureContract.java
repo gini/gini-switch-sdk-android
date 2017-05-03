@@ -27,7 +27,7 @@ interface TakePictureContract {
 
         void cameraPermissionsDenied();
 
-        boolean cameraPermissionsGranted();
+        boolean hasCameraPermissions();
 
         void imageStateChanged(@NonNull Image image);
 

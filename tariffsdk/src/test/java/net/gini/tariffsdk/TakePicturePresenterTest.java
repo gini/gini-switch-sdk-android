@@ -24,7 +24,7 @@ public class TakePicturePresenterTest {
         TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
         presenter.mBuildVersion = AndroidMarshmallow;
 
-        when(mMockView.cameraPermissionsGranted()).thenReturn(false);
+        when(mMockView.hasCameraPermissions()).thenReturn(false);
         presenter.start();
         verify(mMockView, never()).initCamera();
     }
@@ -34,7 +34,7 @@ public class TakePicturePresenterTest {
         TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
         presenter.mBuildVersion = AndroidMarshmallow;
 
-        when(mMockView.cameraPermissionsGranted()).thenReturn(true);
+        when(mMockView.hasCameraPermissions()).thenReturn(true);
         presenter.start();
         verify(mMockView).initCamera();
     }
@@ -65,7 +65,7 @@ public class TakePicturePresenterTest {
         TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
         presenter.mBuildVersion = AndroidMarshmallow;
 
-        when(mMockView.cameraPermissionsGranted()).thenReturn(false);
+        when(mMockView.hasCameraPermissions()).thenReturn(false);
         presenter.start();
         verify(mMockView).requestPermissions();
     }
