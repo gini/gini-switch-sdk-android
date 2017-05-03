@@ -32,4 +32,4 @@ The extractions are provided inside a set of ``Extraction`` classes and can be r
   if(resultCode == TariffSdk.EXTRACTIONS_AVAILABLE)
     Set<Extraction> extractions = mTariffSdk.getExtractions();
 
-The ``Extraction`` class includes the name of the extraction and it's value. This are the extractions that have been found and have been checked/altered by the user.
+The ``Extraction`` class includes the name of the extraction and its value. This are the extractions that have been found by the SDK. Inside the SDK the user checks the extractions for their correctness, therefore it is possible that the extractions have been altered by the user.
