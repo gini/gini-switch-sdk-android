@@ -106,21 +106,6 @@ public class AutoRotateImageView extends FrameLayout {
     }
 
     private void setImageBitmap() {
-
         BitmapMemoryCache.getInstance().setImage(mUri, mImageView);
-
-//        final int newHeight;
-//        final int newWidth;
-//        if (mDegrees % 360 == 90 || mDegrees % 360 == 270) {
-//            newWidth = getHeight();
-//            newHeight = getWidth();
-//        } else {
-//            newWidth = getWidth();
-//            newHeight = getHeight();
-//        }
-//
-//        Bitmap bitmap =
-//                decodeSampledBitmapFromUri(getContext(), mUri, newWidth, newHeight);
-//        mImageView.setImageBitmap(bitmap);
     }
 }
