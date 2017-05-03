@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import net.gini.tariffsdk.R;
-import net.gini.tariffsdk.documentservice.Image;
-import net.gini.tariffsdk.documentservice.State;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 import java.util.ArrayList;
@@ -35,11 +32,11 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Image image = mImageList.get(position);
         final Uri uri = image.getUri();
-        final State processingState = image.getProcessingState();
+        final ImageState processingState = image.getProcessingState();
         holder.mImageView.setImageURI(uri);
         //TODO
         holder.mProgressBar.setVisibility(
-                processingState == State.PROCESSING ? View.VISIBLE : View.GONE);
+                processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
 
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override

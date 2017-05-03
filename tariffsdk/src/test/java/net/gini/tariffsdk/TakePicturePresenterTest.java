@@ -1,10 +1,8 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import net.gini.tariffsdk.documentservice.DocumentService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +24,7 @@ public class TakePicturePresenterTest {
         TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
         presenter.mBuildVersion = AndroidMarshmallow;
 
-        when(mMockView.cameraPermissionsGranted()).thenReturn(false);
+        when(mMockView.hasCameraPermissions()).thenReturn(false);
         presenter.start();
         verify(mMockView, never()).initCamera();
     }
@@ -36,7 +34,7 @@ public class TakePicturePresenterTest {
         TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
         presenter.mBuildVersion = AndroidMarshmallow;
 
-        when(mMockView.cameraPermissionsGranted()).thenReturn(true);
+        when(mMockView.hasCameraPermissions()).thenReturn(true);
         presenter.start();
         verify(mMockView).initCamera();
     }
@@ -44,25 +42,6 @@ public class TakePicturePresenterTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void versionGreaterThan23_requestPermissions() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.mBuildVersion = AndroidMarshmallow;
-
-        when(mMockView.cameraPermissionsGranted()).thenReturn(false);
-        presenter.start();
-        verify(mMockView).requestPermissions();
-    }
-
-    @Test
-    public void versionSmallerThan23_doNotRequestPermissions() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.mBuildVersion = AndroidLollipop;
-
-        presenter.start();
-        verify(mMockView, never()).requestPermissions();
     }
 
     @Test
@@ -79,6 +58,25 @@ public class TakePicturePresenterTest {
         presenter.stop();
 
         verify(mMockDocumentService).removeDocumentListener(presenter);
+    }
+
+    @Test
+    public void versionGreaterThan23_requestPermissions() {
+        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
+        presenter.mBuildVersion = AndroidMarshmallow;
+
+        when(mMockView.hasCameraPermissions()).thenReturn(false);
+        presenter.start();
+        verify(mMockView).requestPermissions();
+    }
+
+    @Test
+    public void versionSmallerThan23_doNotRequestPermissions() {
+        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
+        presenter.mBuildVersion = AndroidLollipop;
+
+        presenter.start();
+        verify(mMockView, never()).requestPermissions();
     }
 
 

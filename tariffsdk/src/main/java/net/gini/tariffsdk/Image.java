@@ -1,14 +1,14 @@
-package net.gini.tariffsdk.documentservice;
+package net.gini.tariffsdk;
 
 
 import android.net.Uri;
 
-public class Image {
+class Image {
 
     private final Uri mUri;
-    private State mProcessingState;
+    private ImageState mProcessingState;
 
-    Image(final Uri uri, final State processingState) {
+    Image(final Uri uri, final ImageState processingState) {
         mUri = uri;
         mProcessingState = processingState;
     }
@@ -29,15 +29,15 @@ public class Image {
         return mUri != null ? mUri.hashCode() : 0;
     }
 
-    public State getProcessingState() {
+    ImageState getProcessingState() {
         return mProcessingState;
     }
 
-    void setProcessingState(final State processingState) {
+    void setProcessingState(final ImageState processingState) {
         mProcessingState = processingState;
     }
 
-    public Uri getUri() {
+    Uri getUri() {
         return mUri;
     }
 }

@@ -1,15 +1,15 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.support.annotation.NonNull;
-
-import net.gini.tariffsdk.documentservice.Image;
 
 import java.util.List;
 
 interface TakePictureContract {
 
     interface Presenter {
+
+        void onAllPicturesTaken();
 
         void onPictureTaken(@NonNull final byte[] data);
 
@@ -27,7 +27,7 @@ interface TakePictureContract {
 
         void cameraPermissionsDenied();
 
-        boolean cameraPermissionsGranted();
+        boolean hasCameraPermissions();
 
         void imageStateChanged(@NonNull Image image);
 
@@ -38,5 +38,7 @@ interface TakePictureContract {
         void requestPermissions();
 
         void setImages(@NonNull final List<Image> imageList);
+
+        void showFoundExtractions();
     }
 }

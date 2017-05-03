@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.Manifest;
@@ -19,15 +19,9 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import net.gini.tariffsdk.R;
-import net.gini.tariffsdk.TariffSdkBaseActivity;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
-import net.gini.tariffsdk.documentservice.DocumentService;
-import net.gini.tariffsdk.documentservice.DocumentServiceImpl;
-import net.gini.tariffsdk.documentservice.Image;
-import net.gini.tariffsdk.reviewpicture.ReviewPictureActivity;
 
 import java.util.List;
 
@@ -35,6 +29,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
+    private static final int REQUEST_CODE_EXTRACTIONS = 123;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
@@ -48,7 +43,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public boolean cameraPermissionsGranted() {
+    public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
     }
@@ -73,17 +68,32 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    protected void onActivityResult(final int requestCode, final int resultCode,
+            final Intent data) {
+        if (resultCode != RESULT_CANCELED && requestCode == REQUEST_CODE_EXTRACTIONS) {
+            setResult(resultCode);
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (getCallingActivity() == null) {
+            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
+        }
+
         setContentView(R.layout.activity_take_picture);
+
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
 
-        final DocumentService documentService = DocumentServiceImpl.getInstance(this);
+        final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
         mPresenter = new TakePicturePresenter(this, documentService);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -105,6 +115,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
+        findViewById(R.id.button_finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                showFoundExtractions();
+            }
+        });
+
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
 
 
@@ -123,7 +140,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        if (cameraPermissionsGranted() && mCamera != null) {
+        if (hasCameraPermissions() && mCamera != null) {
             mCamera.stop();
             mCameraPreview.setVisibility(View.GONE);
         }
@@ -146,7 +163,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     protected void onResume() {
-        if (cameraPermissionsGranted() && mCamera != null) {
+        if (hasCameraPermissions() && mCamera != null) {
             mCamera.start();
             mCameraPreview.setVisibility(View.VISIBLE);
             mTakePictureButton.setEnabled(true);
@@ -169,7 +186,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void openImageReview(@NonNull final Image image) {
-        Intent intent = ReviewPictureActivity.newIntent(TakePictureActivity.this, image.getUri());
+
+        final IntentFactory tariffSdkIntentFactory = new IntentFactory(
+                TariffSdk.getSdk());
+        final Intent intent = tariffSdkIntentFactory.createReviewActivity(image.getUri());
         startActivity(intent);
     }
 
@@ -184,12 +204,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mAdapter.setImages(imageList);
     }
 
-    public static Intent newIntent(final Context context,
-            final int themeResourceId) {
-
-
-        Intent intent = new Intent(context, TakePictureActivity.class);
-        intent.putExtra(BUNDLE_EXTRA_THEME, themeResourceId);
-        return intent;
+    @Override
+    public void showFoundExtractions() {
+        IntentFactory intentFactory = new IntentFactory(TariffSdk.getSdk());
+        Intent intent = intentFactory.createExtractionsActivity();
+        startActivityForResult(intent, REQUEST_CODE_EXTRACTIONS);
     }
 }

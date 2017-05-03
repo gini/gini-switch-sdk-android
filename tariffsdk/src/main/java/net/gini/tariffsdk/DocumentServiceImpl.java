@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.documentservice;
+package net.gini.tariffsdk;
 
 
 import static android.support.media.ExifInterface.ORIENTATION_ROTATE_180;
@@ -21,15 +21,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class DocumentServiceImpl implements DocumentService {
-
-    private static DocumentService mInstance;
+class DocumentServiceImpl implements DocumentService {
 
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
 
-    private DocumentServiceImpl(final Context context) {
+    DocumentServiceImpl(final Context context) {
         mContext = context.getApplicationContext();
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
@@ -45,7 +43,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         new File(uri.getPath()).delete();
 
-        final Image image = new Image(uri, State.DELETED);
+        final Image image = new Image(uri, ImageState.DELETED);
         mImageList.remove(image);
         notifyListeners(image);
     }
@@ -59,21 +57,23 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void keepImage(@NonNull final Uri uri) {
         //TODO - start processing
-        final Image image = new Image(uri, State.PROCESSING);
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    //Artificial delay for mocking, later we process correct
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        final Image image = new Image(uri, ImageState.PROCESSING);
+        if (!mImageList.contains(image)) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        //Artificial delay for mocking, later we process correct
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
+                    imageProcessed(image);
                 }
-                image.setProcessingState(State.SUCCESSFULLY_PROCESSED);
-                imageProcessed(image);
-            }
-        }).start();
+            }).start();
 
-        mImageList.add(image);
+            mImageList.add(image);
+        }
     }
 
     @Override
@@ -102,14 +102,7 @@ public class DocumentServiceImpl implements DocumentService {
         } catch (IOException e) {
             uri = Uri.EMPTY;
         }
-        return new Image(uri, State.WAITING_FOR_PROCESSING);
-    }
-
-    public static DocumentService getInstance(final Context context) {
-        if (mInstance == null) {
-            mInstance = new DocumentServiceImpl(context);
-        }
-        return mInstance;
+        return new Image(uri, ImageState.WAITING_FOR_PROCESSING);
     }
 
     private String getNewRotation(String orientation) {

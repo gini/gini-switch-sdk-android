@@ -1,11 +1,8 @@
-package net.gini.tariffsdk.takepictures;
+package net.gini.tariffsdk;
 
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
-import net.gini.tariffsdk.documentservice.DocumentService;
-import net.gini.tariffsdk.documentservice.Image;
 
 import java.util.List;
 
@@ -22,6 +19,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
         mView = view;
         mDocumentService = documentService;
+    }
+
+    @Override
+    public void onAllPicturesTaken() {
     }
 
     @Override
@@ -47,7 +48,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (hasToCheckForPermissions() && !mView.cameraPermissionsGranted()) {
+        if (hasToCheckForPermissions() && !mView.hasCameraPermissions()) {
             mView.requestPermissions();
         } else {
             mView.initCamera();
