@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuration &mdash; Gini Tariff SDK 0.0.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|Source+Code+Pro|Roboto+Slab:400,700" rel="stylesheet" type="text/css" />
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'../',
+        VERSION:'0.0.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Gini Tariff SDK 0.0.0 documentation" href="../index.html"/>
+        <link rel="next" title="Usage" href="usage.html"/>
+        <link rel="prev" title="Integration" href="integration.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" id="gini-logo">gini API</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="integration.html">Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="integration.html#add-the-sdk-to-your-project">Add the SDK to your project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration.html#integrating-the-sdk">Integrating the SDK</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-of-the-sdk">Configuration of the SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mandatory-configurations">Mandatory Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-configurations">Optional Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#okhttpclient">OkHttpClient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#theme">Theme</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-configurations">Overview Of Configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#usage-of-the-sdk">Usage of the SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#receiving-extractions">Receiving Extractions</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Gini Tariff SDK</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="configuration">
+<span id="id1"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configuration-of-the-sdk">
+<h2>Configuration of the SDK<a class="headerlink" href="#configuration-of-the-sdk" title="Permalink to this headline">¶</a></h2>
+<p>The Gini Tariff SDK offers possibilities to configure it to your needs.</p>
+</div>
+<div class="section" id="mandatory-configurations">
+<h2>Mandatory Configurations<a class="headerlink" href="#mandatory-configurations" title="Permalink to this headline">¶</a></h2>
+<p>There are four parameters that have to be provided during the init call of the SDK</p>
+<ol class="arabic simple">
+<li>A Context <em>(Best the application context but not explicitly necessary since the application context is being received from the context instance anyway.)</em></li>
+<li>Your client id <em>(A String containing the client id for the SDK.)</em></li>
+<li>Your client secret <em>(A String containing the client secret for the SDK.)</em></li>
+<li>Your domain <em>(A String containing your domain, e.g.</em> <code class="docutils literal"><span class="pre">gini.net</span></code> <em>)</em></li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All of the above parameters have to be provided and are needed by the SDK to work correctly. An <strong>IllegalArgumentException</strong> is thrown if one of them is null.</p>
+</div>
+<p>All other configurations that can be set are optional and are explained in detail in the next section.</p>
+</div>
+<div class="section" id="optional-configurations">
+<h2>Optional Configurations<a class="headerlink" href="#optional-configurations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="okhttpclient">
+<h3>OkHttpClient<a class="headerlink" href="#okhttpclient" title="Permalink to this headline">¶</a></h3>
+<p>Since the SDK uses the library okHttp for its network operations an okHttp client has to be used.
+OkHttp clients are encouraged to be singletons due to caching, joining and canceling of calls.
+Therefore the SDK provides the posibility to add a okHttpClient which is being reused in the SDK:</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">TariffSdk</span> <span class="nf">withOkHttpClient</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">OkHttpClient</span> <span class="n">okHttpClient</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="theme">
+<h3>Theme<a class="headerlink" href="#theme" title="Permalink to this headline">¶</a></h3>
+<p>To style the screens of the SDK an Android theme can be provided to the SDK.
+The provided theme should extend the TariffSDKTheme and can overrite the following attributes:
+<code class="docutils literal"><span class="pre">TODO</span> <span class="pre">list</span> <span class="pre">attributes</span> <span class="pre">after</span> <span class="pre">design</span> <span class="pre">was</span> <span class="pre">specified</span></code>
+The theme can be set via:</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">TariffSdk</span> <span class="nf">withTheme</span><span class="o">(</span><span class="nd">@StyleRes</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">theme</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="overview-of-configurations">
+<h2>Overview Of Configurations<a class="headerlink" href="#overview-of-configurations" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="29%" />
+<col width="29%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Type</th>
+<th class="head">Optional</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Context</td>
+<td>Context</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Client ID</td>
+<td>String</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>Client Secret</td>
+<td>String</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Domain</td>
+<td>String</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>OkHttpClient</td>
+<td>OkHttpClient</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Theme</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="integration.html" class="btn btn-neutral" title="Integration"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Gini GmbH.
+    </p>
+  </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  
+</body>
+</html>
