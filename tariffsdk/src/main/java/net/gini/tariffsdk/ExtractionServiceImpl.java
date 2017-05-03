@@ -11,7 +11,7 @@ class ExtractionServiceImpl implements ExtractionService {
     ExtractionServiceImpl() {
         //MOCK
         mExtractions.add(new Extraction("Zip Code", "50733"));
-        mExtractions.add(new Extraction("Counter Number", "4711"));
+        mExtractions.add(new Extraction("Wholesale Supplier", "Stadtwerke München"));
     }
 
     @Override
