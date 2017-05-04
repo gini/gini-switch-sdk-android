@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.textView);
 
-        mTariffSdk = TariffSdk.init(this, "clientId", "clientPw");
+        mTariffSdk = TariffSdk.init(this, "clientId", "clientPw", "gini.net");
 
         findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
