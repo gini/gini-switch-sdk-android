@@ -6,9 +6,9 @@ import android.net.Uri;
 class Image {
 
     private final Uri mUri;
-    private State mProcessingState;
+    private ImageState mProcessingState;
 
-    Image(final Uri uri, final State processingState) {
+    Image(final Uri uri, final ImageState processingState) {
         mUri = uri;
         mProcessingState = processingState;
     }
@@ -29,11 +29,11 @@ class Image {
         return mUri != null ? mUri.hashCode() : 0;
     }
 
-    State getProcessingState() {
+    ImageState getProcessingState() {
         return mProcessingState;
     }
 
-    void setProcessingState(final State processingState) {
+    void setProcessingState(final ImageState processingState) {
         mProcessingState = processingState;
     }
 

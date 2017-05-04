@@ -20,13 +20,16 @@ public class Extraction {
 
         final Extraction that = (Extraction) o;
 
-        return mName != null ? mName.equals(that.mName) : that.mName == null;
+        if (mName != null ? !mName.equals(that.mName) : that.mName != null) return false;
+        return mValue != null ? mValue.equals(that.mValue) : that.mValue == null;
 
     }
 
     @Override
     public int hashCode() {
-        return mName != null ? mName.hashCode() : 0;
+        int result = mName != null ? mName.hashCode() : 0;
+        result = 31 * result + (mValue != null ? mValue.hashCode() : 0);
+        return result;
     }
 
     @Override

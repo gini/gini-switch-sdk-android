@@ -2,6 +2,7 @@ package net.gini.tariffsdk.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +16,7 @@ import android.widget.ImageView;
 
 import java.io.IOException;
 
-public class AutoRotateImageView extends FrameLayout {
+public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCache.BitmapListener {
 
     private final ImageView mImageView;
     private float mDegrees;
@@ -38,6 +39,11 @@ public class AutoRotateImageView extends FrameLayout {
         mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         addView(mImageView);
         observeViewTree(this);
+    }
+
+    @Override
+    public void bitmapLoaded(@Nullable final Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
     }
 
     @Override
@@ -106,21 +112,12 @@ public class AutoRotateImageView extends FrameLayout {
     }
 
     private void setImageBitmap() {
+        if (mUri != null) {
+            BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, mImageView.getHeight(),
+                    mImageView.getWidth(), getContext(), this);
 
-        BitmapMemoryCache.getInstance().setImage(mUri, mImageView);
-
-//        final int newHeight;
-//        final int newWidth;
-//        if (mDegrees % 360 == 90 || mDegrees % 360 == 270) {
-//            newWidth = getHeight();
-//            newHeight = getWidth();
-//        } else {
-//            newWidth = getWidth();
-//            newHeight = getHeight();
-//        }
-//
-//        Bitmap bitmap =
-//                decodeSampledBitmapFromUri(getContext(), mUri, newWidth, newHeight);
-//        mImageView.setImageBitmap(bitmap);
+        } else {
+            bitmapLoaded(null);
+        }
     }
 }

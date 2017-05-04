@@ -1,12 +1,14 @@
 package net.gini.tariffsdk;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 class ExtractionServiceImpl implements ExtractionService {
 
-    private Set<Extraction> mExtractions = new HashSet<>();
+    private Map<String, String> mExtractions = new HashMap<>();
 
     ExtractionServiceImpl() {
         //MOCK
@@ -16,7 +18,12 @@ class ExtractionServiceImpl implements ExtractionService {
 
     @Override
     public Set<Extraction> getExtractions() {
-        return mExtractions;
+        Set<Extraction> extractions = new HashSet<>();
+        for (String name : mExtractions.keySet()) {
+            Extraction extraction = createExtraction(name, mExtractions.get(name));
+            extractions.add(extraction);
+        }
+        return extractions;
     }
 
     @Override
@@ -26,10 +33,11 @@ class ExtractionServiceImpl implements ExtractionService {
 
     @Override
     public void setExtraction(final Extraction extraction) {
-        if (mExtractions.contains(extraction)) {
-            mExtractions.remove(extraction);
-        }
-        mExtractions.add(extraction);
+        mExtractions.put(extraction.getName(), extraction.getValue());
+    }
+
+    private Extraction createExtraction(final String name, final String value) {
+        return new Extraction(name, value);
     }
 
 }

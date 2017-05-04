@@ -39,14 +39,14 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Image image = mImageList.get(position);
         final Uri uri = image.getUri();
-        final State processingState = image.getProcessingState();
+        final ImageState processingState = image.getProcessingState();
         holder.mImageView.setImageURI(uri);
         //TODO
         holder.mProgressBar.setVisibility(
-                processingState == State.PROCESSING ? View.VISIBLE : View.GONE);
+                processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
         holder.mTextView.setText("Page " + (position + 1));
         holder.mStateImageView.setVisibility(
-                processingState == State.PROCESSING ? View.GONE : View.VISIBLE);
+                processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
         Drawable drawable = getImageDrawableFromState(processingState);
         holder.mStateImageView.setImageDrawable(drawable);
 
@@ -80,8 +80,8 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
         }
     }
 
-    private Drawable getImageDrawableFromState(final State state) {
-        if (state == State.SUCCESSFULLY_PROCESSED) {
+    private Drawable getImageDrawableFromState(final ImageState state) {
+        if (state == ImageState.SUCCESSFULLY_PROCESSED) {
             return ContextCompat.getDrawable(mContext, android.R.drawable.ic_input_get);
         }
         return ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);

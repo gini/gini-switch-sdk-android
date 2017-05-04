@@ -59,7 +59,7 @@ class DocumentServiceImpl implements DocumentService {
 
         deleteFileFromStorage(uri);
 
-        final Image image = new Image(uri, State.DELETED);
+        final Image image = new Image(uri, ImageState.DELETED);
         mImageList.remove(image);
 
         notifyListeners(image);
@@ -73,24 +73,26 @@ class DocumentServiceImpl implements DocumentService {
     @Override
     public void keepImage(@NonNull final Uri uri) {
         //TODO - start processing
-        final Image image = new Image(uri, State.PROCESSING);
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    //Artificial delay for mocking, later we process correct
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        final Image image = new Image(uri, ImageState.PROCESSING);
+        if (!mImageList.contains(image)) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        //Artificial delay for mocking, later we process correct
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //Pseudo mock states
+                    image.setProcessingState(
+                            new Random().nextInt() % 2 == 0 ? State.SUCCESSFULLY_PROCESSED
+                                    : State.FAILED);
+                    imageProcessed(image);
                 }
-                //Pseudo mock states
-                image.setProcessingState(
-                        new Random().nextInt() % 2 == 0 ? State.SUCCESSFULLY_PROCESSED
-                                : State.FAILED);
-                imageProcessed(image);
-            }
-        }).start();
+            }).start();
 
-        mImageList.add(image);
+            mImageList.add(image);
+        }
     }
 
     @Override
@@ -119,7 +121,7 @@ class DocumentServiceImpl implements DocumentService {
         } catch (IOException e) {
             uri = Uri.EMPTY;
         }
-        return new Image(uri, State.WAITING_FOR_PROCESSING);
+        return new Image(uri, ImageState.WAITING_FOR_PROCESSING);
     }
 
     private void deleteFileFromStorage(final @NonNull Uri uri) {
