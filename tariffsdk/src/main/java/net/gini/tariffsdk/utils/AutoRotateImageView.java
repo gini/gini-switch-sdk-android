@@ -2,6 +2,7 @@ package net.gini.tariffsdk.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,10 +16,12 @@ import android.widget.ImageView;
 
 import java.io.IOException;
 
-public class AutoRotateImageView extends FrameLayout {
+public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCache.BitmapListener {
 
     private final ImageView mImageView;
     private float mDegrees;
+    @Nullable
+    private Uri mUri;
 
     public AutoRotateImageView(final Context context) {
         this(context, null);
@@ -39,13 +42,18 @@ public class AutoRotateImageView extends FrameLayout {
     }
 
     @Override
+    public void bitmapLoaded(@Nullable final Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
+    }
+
+    @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public void setImageURI(@Nullable final Uri uri) {
-        mImageView.setImageURI(uri);
         mDegrees = getRequiredRotationDegrees(uri);
+        mUri = uri;
     }
 
     private float getRequiredRotationDegrees(final Uri imageUri) {
@@ -76,6 +84,7 @@ public class AutoRotateImageView extends FrameLayout {
                     @Override
                     public void onGlobalLayout() {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        setImageBitmap();
                         rotateImage();
                     }
                 });
@@ -100,5 +109,15 @@ public class AutoRotateImageView extends FrameLayout {
 
 
         mImageView.requestLayout();
+    }
+
+    private void setImageBitmap() {
+        if (mUri != null) {
+            BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, mImageView.getHeight(),
+                    mImageView.getWidth(), getContext(), this);
+
+        } else {
+            bitmapLoaded(null);
+        }
     }
 }
