@@ -85,8 +85,8 @@ class DocumentServiceImpl implements DocumentService {
                     }
                     //Pseudo mock states
                     image.setProcessingState(
-                            new Random().nextInt() % 2 == 0 ? State.SUCCESSFULLY_PROCESSED
-                                    : State.FAILED);
+                            new Random().nextInt() % 2 == 0 ? ImageState.SUCCESSFULLY_PROCESSED
+                                    : ImageState.FAILED);
                     imageProcessed(image);
                 }
             }).start();
