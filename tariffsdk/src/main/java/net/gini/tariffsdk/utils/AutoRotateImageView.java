@@ -2,6 +2,7 @@ package net.gini.tariffsdk.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -106,6 +107,13 @@ public class AutoRotateImageView extends FrameLayout {
     }
 
     private void setImageBitmap() {
-        BitmapMemoryCache.getInstance().setImage(mUri, mImageView);
+        BitmapMemoryCache.BitmapListener listener = new BitmapMemoryCache.BitmapListener() {
+            @Override
+            public void bitmapLoaded(@NonNull final Bitmap bitmap) {
+                mImageView.setImageBitmap(bitmap);
+            }
+        };
+        BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, mImageView.getHeight(),
+                mImageView.getWidth(), getContext(), listener);
     }
 }

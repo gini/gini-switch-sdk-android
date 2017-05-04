@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.LruCache;
-import android.widget.ImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
 class BitmapMemoryCache {
 
     private static BitmapMemoryCache mInstance = null;
-    private LruCache<Uri, Bitmap> mMemoryCache;
+    private final LruCache<Uri, Bitmap> mMemoryCache;
 
     private BitmapMemoryCache() {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -41,12 +41,12 @@ class BitmapMemoryCache {
         return mInstance;
     }
 
-    void setImage(Uri uri, ImageView imageView) {
+    void loadBitmapAsync(Uri uri, int height, int width, Context context, BitmapListener callback) {
         final Bitmap bitmap = getBitmapFromMemCache(uri);
         if (bitmap != null) {
-            imageView.setImageBitmap(bitmap);
+            callback.bitmapLoaded(bitmap);
         } else {
-            BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+            BitmapWorkerTask task = new BitmapWorkerTask(callback, height, width, context);
             task.execute(uri);
         }
     }
@@ -121,14 +121,15 @@ class BitmapMemoryCache {
         final int mHeight;
         final int mWidth;
         private final WeakReference<Context> mContextReference;
-        private final WeakReference<ImageView> mImageViewReference;
+        private final BitmapListener mImageViewReference;
 
-        BitmapWorkerTask(final ImageView imageView) {
+        BitmapWorkerTask(final BitmapListener listener, final int height, final int width,
+                final Context context) {
 
-            mImageViewReference = new WeakReference<>(imageView);
-            mHeight = imageView.getHeight();
-            mWidth = imageView.getWidth();
-            mContextReference = new WeakReference<>(imageView.getContext());
+            mImageViewReference = listener;
+            mHeight = height;
+            mWidth = width;
+            mContextReference = new WeakReference<>(context);
         }
 
         @Override
@@ -141,7 +142,11 @@ class BitmapMemoryCache {
 
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
-            mImageViewReference.get().setImageBitmap(bitmap);
+            mImageViewReference.bitmapLoaded(bitmap);
         }
+    }
+
+    interface BitmapListener {
+        void bitmapLoaded(@NonNull final Bitmap bitmap);
     }
 }
