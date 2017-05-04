@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.LruCache;
 
 import java.io.IOException;
@@ -121,14 +121,14 @@ class BitmapMemoryCache {
         final int mHeight;
         final int mWidth;
         private final WeakReference<Context> mContextReference;
-        private final BitmapListener mImageViewReference;
+        private final WeakReference<BitmapListener> mImageViewReference;
 
         BitmapWorkerTask(final BitmapListener listener, final int height, final int width,
                 final Context context) {
 
-            mImageViewReference = listener;
             mHeight = height;
             mWidth = width;
+            mImageViewReference = new WeakReference<>(listener);
             mContextReference = new WeakReference<>(context);
         }
 
@@ -142,11 +142,11 @@ class BitmapMemoryCache {
 
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
-            mImageViewReference.bitmapLoaded(bitmap);
+            mImageViewReference.get().bitmapLoaded(bitmap);
         }
     }
 
     interface BitmapListener {
-        void bitmapLoaded(@NonNull final Bitmap bitmap);
+        void bitmapLoaded(@Nullable final Bitmap bitmap);
     }
 }

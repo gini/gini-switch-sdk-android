@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import java.io.IOException;
 
-public class AutoRotateImageView extends FrameLayout {
+public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCache.BitmapListener {
 
     private final ImageView mImageView;
     private float mDegrees;
@@ -39,6 +39,11 @@ public class AutoRotateImageView extends FrameLayout {
         mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         addView(mImageView);
         observeViewTree(this);
+    }
+
+    @Override
+    public void bitmapLoaded(@Nullable final Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
     }
 
     @Override
@@ -107,13 +112,12 @@ public class AutoRotateImageView extends FrameLayout {
     }
 
     private void setImageBitmap() {
-        BitmapMemoryCache.BitmapListener listener = new BitmapMemoryCache.BitmapListener() {
-            @Override
-            public void bitmapLoaded(@NonNull final Bitmap bitmap) {
-                mImageView.setImageBitmap(bitmap);
-            }
-        };
-        BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, mImageView.getHeight(),
-                mImageView.getWidth(), getContext(), listener);
+        if (mUri != null) {
+            BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, mImageView.getHeight(),
+                    mImageView.getWidth(), getContext(), this);
+
+        } else {
+            bitmapLoaded(null);
+        }
     }
 }
