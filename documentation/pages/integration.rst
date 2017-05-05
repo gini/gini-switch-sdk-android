@@ -31,6 +31,25 @@ Next step is to add the SDK to your applications ``build.gradle`` file with:
   }
 
 During the time of development of version 1.0 this is the only way we provide the SDK, later we will push it to an maven repository and adjust this document.
+This is also the reason that the dependencies that are needed by the SDK have to be provided by the client, right now they are the following ones:
+
+#. com.android.support:appcompat-v7
+#. com.android.support:exifinterface
+#. com.android.support:design
+
+Where the version has to be bigger or equal to 25.2.0. so the following lines should also be added to your gradle build file:
+
+.. code-block:: groovy
+
+  dependencies {
+    …
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:exifinterface:25.2.0'
+    compile 'com.android.support:design:25.2.0'
+    …
+  }
+
+.. note:: This will be not necessery when the SDK is available on a maven repository.
 
 
 Integrating the SDK
