@@ -157,7 +157,27 @@ Then add this folder, if not already done, to your projects dependencies with:</
 }
 </pre></div>
 </div>
-<p>During the time of development of version 1.0 this is the only way we provide the SDK, later we will push it to an maven repository and adjust this document.</p>
+<p>During the time of development of version 1.0 this is the only way we provide the SDK. Later Gini will push it to an maven repository and adjust this document.
+This is also the reason that the dependencies that are needed by the SDK have to be provided by the client. Right now now they are the following ones:</p>
+<ol class="arabic simple">
+<li>com.android.support:appcompat-v7</li>
+<li>com.android.support:exifinterface</li>
+<li>com.android.support:design</li>
+</ol>
+<p>Where the version has to be bigger or equal to 25.2.0. so the following lines should also be added to your gradle build file:</p>
+<div class="highlight-groovy"><div class="highlight"><pre><span></span>dependencies {
+  …
+  compile &#39;com.android.support:appcompat-v7:25.2.0&#39;
+  compile &#39;com.android.support:exifinterface:25.2.0&#39;
+  compile &#39;com.android.support:design:25.2.0&#39;
+  …
+}
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This will be not necessery when the SDK is available on a maven repository.</p>
+</div>
 </div>
 <div class="section" id="integrating-the-sdk">
 <h2>Integrating the SDK<a class="headerlink" href="#integrating-the-sdk" title="Permalink to this headline">¶</a></h2>
