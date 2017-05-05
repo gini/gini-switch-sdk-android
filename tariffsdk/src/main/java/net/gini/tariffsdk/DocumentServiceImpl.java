@@ -41,17 +41,18 @@ class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void cleanup() {
+        mDocumentListeners.clear();
+        final List<Image> imagesToDelete = new ArrayList<>(mImageList);
+        mImageList.clear();
         new Thread(new Runnable() {
             public void run() {
-                mDocumentListeners.clear();
-
-                for (Image image : mImageList) {
+                for (Image image : imagesToDelete) {
                     Uri uri = image.getUri();
                     deleteFileFromStorage(uri);
-                    mImageList.remove(image);
                 }
             }
         }).start();
+
     }
 
     @Override
@@ -85,7 +86,7 @@ class DocumentServiceImpl implements DocumentService {
                     }
                     //Pseudo mock states
                     image.setProcessingState(
-                            new Random().nextInt() % 2 == 0 ? ImageState.SUCCESSFULLY_PROCESSED
+                            new Random().nextBoolean() ? ImageState.SUCCESSFULLY_PROCESSED
                                     : ImageState.FAILED);
                     imageProcessed(image);
                 }

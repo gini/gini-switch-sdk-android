@@ -65,6 +65,7 @@ public class TariffSdk {
      */
     public Set<Extraction> getExtractions() {
         //TODO
+        cleanUp();
         return mExtractionService.getExtractions();
     }
 

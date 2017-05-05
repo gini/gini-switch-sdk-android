@@ -74,6 +74,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             final Intent data) {
         if (resultCode != RESULT_CANCELED && requestCode == REQUEST_CODE_EXTRACTIONS) {
             setResult(resultCode);
+
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
