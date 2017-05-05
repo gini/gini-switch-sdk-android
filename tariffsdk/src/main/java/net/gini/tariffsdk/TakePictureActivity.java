@@ -2,6 +2,7 @@ package net.gini.tariffsdk;
 
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,11 +23,12 @@ import android.widget.ProgressBar;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
+import net.gini.tariffsdk.utils.ExitDialogFragment;
 
 import java.util.List;
 
 final public class TakePictureActivity extends TariffSdkBaseActivity implements
-        TakePictureContract.View {
+        TakePictureContract.View, ExitDialogFragment.ExitDialogListener {
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private static final int REQUEST_CODE_EXTRACTIONS = 123;
@@ -72,9 +74,16 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             final Intent data) {
         if (resultCode != RESULT_CANCELED && requestCode == REQUEST_CODE_EXTRACTIONS) {
             setResult(resultCode);
+
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogFragment dialog = new ExitDialogFragment();
+        dialog.show(getFragmentManager(), "ExitDialogFragment");
     }
 
     @Override
@@ -82,7 +91,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         super.onCreate(savedInstanceState);
 
         if (getCallingActivity() == null) {
-            throw new IllegalStateException("Start this Intent with startActivityForResult()!");
+            throw new IllegalStateException(
+                    "Start this Intent with startActivityForResult() please, otherwise it will "
+                            + "not work correctly!");
         }
 
         setContentView(R.layout.activity_take_picture);
@@ -118,7 +129,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         findViewById(R.id.button_finish).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                showFoundExtractions();
+                mPresenter.onAllPicturesTaken();
             }
         });
 
@@ -128,7 +139,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         final RecyclerView imageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
         imageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mAdapter = new ImageAdapter(new ImageAdapter.Listener() {
+        mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
             public void onImageClicked(final Image image) {
                 openImageReview(image);
@@ -138,12 +149,24 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void onNegative() {
+        //TODO track etc.
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         if (hasCameraPermissions() && mCamera != null) {
             mCamera.stop();
             mCameraPreview.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onPositive() {
+        //TODO track etc.
+        TariffSdk.getSdk().cleanUp();
+        finishAffinity();
     }
 
     @Override

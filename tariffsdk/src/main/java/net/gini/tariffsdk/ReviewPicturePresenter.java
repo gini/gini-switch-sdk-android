@@ -30,5 +30,11 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
         mView.finishReview();
     }
 
+    @Override
+    public void rotateImage() {
+        //TODO
+        mView.rotateView();
+    }
+
 
 }

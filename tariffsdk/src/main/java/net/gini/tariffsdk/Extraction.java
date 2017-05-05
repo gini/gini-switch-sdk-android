@@ -1,6 +1,12 @@
 package net.gini.tariffsdk;
 
-
+/**
+ * The Extraction class that is used to map the received extractions from the Gini API. An
+ * extraction is one information that has been found on the photographed images that have been
+ * taken by the user. The name field is a describing string of the extraction(e.g. "Zipcode" or
+ * "Wholesale Supplier") and the value field is the extracted string that has been found on the
+ * image(e.g. "50733" or "Stadtwerke München")
+ */
 public class Extraction {
 
     private final String mName;
@@ -30,10 +36,28 @@ public class Extraction {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Extraction{" +
+                "mName='" + mName + '\'' +
+                ", mValue='" + mValue + '\'' +
+                '}';
+    }
+
+    /**
+     * Use this to retrieve the name of the extraction.
+     *
+     * @return the name of the extraction as String
+     */
     public String getName() {
         return mName;
     }
 
+    /**
+     * Use this to retrieve the value of the extraction.
+     *
+     * @return the value of the extraction as String
+     */
     public String getValue() {
         return mValue;
     }

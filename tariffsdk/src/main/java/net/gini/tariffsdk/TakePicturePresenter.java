@@ -23,6 +23,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void onAllPicturesTaken() {
+        mView.showFoundExtractions();
     }
 
     @Override

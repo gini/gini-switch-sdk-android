@@ -10,6 +10,8 @@ interface DocumentService {
 
     void addDocumentListener(@NonNull DocumentListener listener);
 
+    void cleanup();
+
     void deleteImage(@NonNull final Uri uri);
 
     List<Image> getImageList();

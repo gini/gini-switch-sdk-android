@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -39,15 +40,31 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public void cleanup() {
+        mDocumentListeners.clear();
+        final List<Image> imagesToDelete = new ArrayList<>(mImageList);
+        mImageList.clear();
+        new Thread(new Runnable() {
+            public void run() {
+                for (Image image : imagesToDelete) {
+                    Uri uri = image.getUri();
+                    deleteFileFromStorage(uri);
+                }
+            }
+        }).start();
+
+    }
+
+    @Override
     public void deleteImage(@NonNull final Uri uri) {
 
-        new File(uri.getPath()).delete();
+        deleteFileFromStorage(uri);
 
         final Image image = new Image(uri, ImageState.DELETED);
         mImageList.remove(image);
+
         notifyListeners(image);
     }
-
 
     @Override
     public List<Image> getImageList() {
@@ -67,7 +84,10 @@ class DocumentServiceImpl implements DocumentService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
+                    //Pseudo mock states
+                    image.setProcessingState(
+                            new Random().nextBoolean() ? ImageState.SUCCESSFULLY_PROCESSED
+                                    : ImageState.FAILED);
                     imageProcessed(image);
                 }
             }).start();
@@ -103,6 +123,10 @@ class DocumentServiceImpl implements DocumentService {
             uri = Uri.EMPTY;
         }
         return new Image(uri, ImageState.WAITING_FOR_PROCESSING);
+    }
+
+    private void deleteFileFromStorage(final @NonNull Uri uri) {
+        new File(uri.getPath()).delete();
     }
 
     private String getNewRotation(String orientation) {

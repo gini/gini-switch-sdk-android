@@ -38,11 +38,12 @@ public class TariffSdk {
         mExtractionService = extractionService;
     }
 
-    public static TariffSdk init(final Context context, @NonNull final String clientId,
-            @NonNull final String clientPw) {
-        if (context == null) {
-            throw new IllegalArgumentException("context == null");
-        }
+    public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
+            @NonNull final String clientPw, @NonNull final String domain) {
+        assertNotNull(context);
+        assertNotNull(clientId);
+        assertNotNull(clientPw);
+        assertNotNull(domain);
         if (mSingleton == null) {
             synchronized (TariffSdk.class) {
                 if (mSingleton == null) {
@@ -64,6 +65,7 @@ public class TariffSdk {
      */
     public Set<Extraction> getExtractions() {
         //TODO
+        cleanUp();
         return mExtractionService.getExtractions();
     }
 
@@ -110,6 +112,10 @@ public class TariffSdk {
     public TariffSdk withTheme(@StyleRes final int theme) {
         mTheme = theme;
         return this;
+    }
+
+    void cleanUp() {
+        mDocumentService.cleanup();
     }
 
     Context getContext() {
