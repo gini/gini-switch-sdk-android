@@ -1,10 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="net.gini.tariffsdk">
 
-    <application android:allowBackup="true" android:label="@string/app_name"
-        android:supportsRtl="true">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application>
+        <activity
+            android:name=".TakePictureActivity"
+            android:taskAffinity="net.gini.tariffsdk" />
+        <activity
+            android:name=".ReviewPictureActivity"
+            android:taskAffinity="net.gini.tariffsdk" />
+        <activity
+            android:name=".ExtractionsActivity"
+            android:taskAffinity="net.gini.tariffsdk" />
     </application>
 
 </manifest>
