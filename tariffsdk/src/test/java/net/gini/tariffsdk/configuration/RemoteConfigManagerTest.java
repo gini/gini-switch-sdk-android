@@ -10,7 +10,6 @@ import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,6 +33,22 @@ public class RemoteConfigManagerTest {
     private Exception mMockException;
 
     @Test
+    public void requestConfigFails_shouldNotStoreThem() {
+
+        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(mMockTariffApi,
+                mMockRemoteConfigStore);
+
+        remoteConfigManager.requestRemoteConfig();
+
+        verify(mMockTariffApi).requestConfiguration(mNetworkCallbackConfigurationCaptor.capture());
+        mNetworkCallbackConfigurationCaptor.getValue().onError(mMockException);
+
+        verify(mMockRemoteConfigStore, never()).storeMaximalCameraResolution(anyLong());
+        verify(mMockRemoteConfigStore, never()).storeUseFlash(anyInt());
+
+    }
+
+    @Test
     public void requestConfigSucceeds_shouldStoreThem() {
 
         when(mMockConfiguration.getFlashMode()).thenReturn(Integer.MAX_VALUE);
@@ -52,31 +67,9 @@ public class RemoteConfigManagerTest {
 
     }
 
-    @Test
-    public void requestConfigFails_shouldNotStoreThem() {
-
-        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(mMockTariffApi,
-                mMockRemoteConfigStore);
-
-        remoteConfigManager.requestRemoteConfig();
-
-        verify(mMockTariffApi).requestConfiguration(mNetworkCallbackConfigurationCaptor.capture());
-        mNetworkCallbackConfigurationCaptor.getValue().onError(mMockException);
-
-        verify(mMockRemoteConfigStore, never()).storeMaximalCameraResolution(anyLong());
-        verify(mMockRemoteConfigStore, never()).storeUseFlash(anyInt());
-
-    }
-
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
     }
 
 }

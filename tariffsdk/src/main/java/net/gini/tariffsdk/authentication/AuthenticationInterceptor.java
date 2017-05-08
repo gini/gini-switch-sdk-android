@@ -29,7 +29,7 @@ public class AuthenticationInterceptor implements Interceptor {
             return new Response.Builder()
                     .code(401)
                     .request(chain.request())
-                    .protocol(Protocol.HTTP_2)
+                    .protocol(Protocol.HTTP_1_1)
                     .build();
         }
         return chain.proceed(requestBuilder.build());

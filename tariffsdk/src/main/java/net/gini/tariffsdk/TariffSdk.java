@@ -7,6 +7,16 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
+import net.gini.tariffsdk.authentication.AuthenticationService;
+import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
+import net.gini.tariffsdk.authentication.models.ClientCredentials;
+import net.gini.tariffsdk.authentication.user.UserManager;
+import net.gini.tariffsdk.configuration.RemoteConfigManager;
+import net.gini.tariffsdk.configuration.RemoteConfigStore;
+import net.gini.tariffsdk.network.TariffApi;
+import net.gini.tariffsdk.network.TariffApiImpl;
+import net.gini.tariffsdk.network.UserApiImpl;
+
 import java.util.Set;
 
 import okhttp3.OkHttpClient;
@@ -30,11 +40,11 @@ public class TariffSdk {
     private int mTheme;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
-            final DocumentService authenticationService,
+            final DocumentService documentService,
             final ExtractionService extractionService) {
 
         mContext = context.getApplicationContext();
-        mDocumentService = authenticationService;
+        mDocumentService = documentService;
         mExtractionService = extractionService;
     }
 
@@ -47,6 +57,19 @@ public class TariffSdk {
         if (mSingleton == null) {
             synchronized (TariffSdk.class) {
                 if (mSingleton == null) {
+
+                    ClientCredentials clientCredentials = new ClientCredentials(clientId, clientPw);
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    UserApiImpl userApi = new UserApiImpl(clientCredentials, okHttpClient);
+                    AuthenticationService authenticationService = new AuthenticationServiceImpl(
+                            userApi, new UserManager(context, domain));
+
+                    TariffApi tariffApi = new TariffApiImpl(okHttpClient, authenticationService);
+
+                    RemoteConfigStore remoteConfigStore = new RemoteConfigStore(context);
+                    RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi,
+                            remoteConfigStore);
+
                     mSingleton = new TariffSdk(context, clientId, clientPw,
                             new DocumentServiceImpl(context),
                             new ExtractionServiceImpl());
