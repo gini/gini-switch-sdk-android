@@ -1,7 +1,7 @@
 pipeline {
     agent any
-    deleteDir()
     stages {
+        deleteDir
         stage('Build') {
             steps {
                 sh './gradlew tariffsdk::assembleDebug --no-daemon'
