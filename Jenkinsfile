@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    deleteDir()
     stages {
         stage('Build') {
             steps {
@@ -9,6 +10,7 @@ pipeline {
         stage('Unit tests') {
             steps {
                 sh './gradlew tariffsdk::test --no-daemon'
+                junit '**/test-results/**/*.xml'
             }
         }
         stage('Instrumentation tests') {
