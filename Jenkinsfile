@@ -3,7 +3,6 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                deleteDir()
                 sh './gradlew tariffsdk::assembleDebug --no-daemon'
             }
         }
