@@ -15,7 +15,6 @@ pipeline {
         }
         stage('Instrumentation tests') {
             steps {
-                sh 'emulator -avd mobilecd_android-25_google_apis-x86_512M'
                 sh './gradlew tariffsdk::connectedAndroidTest'
             }
         }
