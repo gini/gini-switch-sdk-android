@@ -29,6 +29,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onImageSelected(final Image image) {
         mView.showImagePreview(image);
+        mView.showPreviewButtons();
+        mView.hideTakePictureButtons();
     }
 
     @Override
@@ -45,6 +47,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onTakePictureSelected() {
         mView.openTakePictureScreen();
+        mView.showTakePictureButtons();
+        mView.hidePreviewButtons();
     }
 
     @Override

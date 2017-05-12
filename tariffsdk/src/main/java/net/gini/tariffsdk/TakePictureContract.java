@@ -33,6 +33,10 @@ interface TakePictureContract {
 
         boolean hasCameraPermissions();
 
+        void hidePreviewButtons();
+
+        void hideTakePictureButtons();
+
         void imageStateChanged(@NonNull Image image);
 
         void initCamera();
@@ -48,5 +52,9 @@ interface TakePictureContract {
         void showFoundExtractions();
 
         void showImagePreview(final Image image);
+
+        void showPreviewButtons();
+
+        void showTakePictureButtons();
     }
 }

@@ -38,8 +38,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
     private TakePictureContract.Presenter mPresenter;
+    private View mPreviewButtonsContainer;
     private ProgressBar mProgressBar;
     private ImageButton mTakePictureButton;
+    private View mTakePictureButtonsContainer;
 
     @Override
     public void cameraPermissionsDenied() {
@@ -50,6 +52,16 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void hidePreviewButtons() {
+        mPreviewButtonsContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideTakePictureButtons() {
+        mTakePictureButtonsContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -154,6 +166,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
         imageRecyclerView.setAdapter(mAdapter);
+
+        mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
+        mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
     }
 
     @Override
@@ -253,5 +268,15 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreview.displayImage(image.getUri());
         mCameraPreview.setVisibility(View.GONE);
         mImagePreview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPreviewButtons() {
+        mPreviewButtonsContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showTakePictureButtons() {
+        mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
     }
 }
