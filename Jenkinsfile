@@ -9,6 +9,7 @@ pipeline {
         stage('Unit tests') {
             steps {
                 sh './gradlew tariffsdk::test --no-daemon'
+                junit '**/test-results/**/*.xml'
             }
         }
         stage('Instrumentation tests') {
@@ -19,9 +20,6 @@ pipeline {
     }
 
     post {
-        success {
-            junit '**/test-results/**/*.xml'
-        }
         always {
             deleteDir()
         }
