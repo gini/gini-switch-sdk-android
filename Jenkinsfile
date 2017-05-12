@@ -23,7 +23,7 @@ pipeline {
             junit '**/test-results/**/*.xml'
         }
         always {
-            deleteDir
+            deleteDir()
         }
     }
 }
