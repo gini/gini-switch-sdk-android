@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh './gradlew tariffsdk::assembleDebug --no-daemon'
+                sh './gradlew tariffsdk::assembleDebug'
             }
         }
         stage('Unit tests') {
             steps {
-                sh './gradlew tariffsdk::test --no-daemon'
+                sh './gradlew tariffsdk::test'
                 junit '**/test-results/**/*.xml'
             }
         }
