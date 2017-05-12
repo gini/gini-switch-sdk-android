@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 class TariffSdkBaseActivity extends AppCompatActivity {
 
-    private static final int NOT_SET = -1;
+    private static final int NOT_SET = 0;
     protected static String BUNDLE_EXTRA_THEME = "BUNDLE_EXTRA_THEME";
 
     @Override
@@ -17,14 +17,16 @@ class TariffSdkBaseActivity extends AppCompatActivity {
         checkForCorrectUsage();
     }
 
-    protected int getThemeResourceId() {
-        return getIntent().getIntExtra(TariffSdkBaseActivity.BUNDLE_EXTRA_THEME, NOT_SET);
+    protected int getThemeResourceIdFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_THEME, NOT_SET);
     }
 
     private void applySettings() {
-        final int theme = getThemeResourceId();
+        final int theme = getThemeResourceIdFromBundle();
         if (theme != NOT_SET) {
             setTheme(theme);
+        } else {
+            setTheme(R.style.GiniTheme);
         }
     }
 

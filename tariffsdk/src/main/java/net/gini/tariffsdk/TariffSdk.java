@@ -27,7 +27,7 @@ public class TariffSdk {
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
     private OkHttpClient mOkHttpClient;
-    private int mTheme;
+    private int mTheme = 0;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
             final DocumentService authenticationService,
