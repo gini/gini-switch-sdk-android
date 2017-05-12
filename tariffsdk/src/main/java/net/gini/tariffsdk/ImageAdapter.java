@@ -18,8 +18,9 @@ import net.gini.tariffsdk.utils.AutoRotateImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
+class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int EMPTY_VIEW_TYPE = 1;
     private final Context mContext;
     private final List<Image> mImageList;
     private final Listener mListener;
@@ -32,38 +33,59 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mImageList.size();
+        if (mImageList.size() == 0) {
+            return 1;
+        }
+        return mImageList.size() + 1;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Image image = mImageList.get(position);
-        final Uri uri = image.getUri();
-        final ImageState processingState = image.getProcessingState();
-        holder.mImageView.setImageURI(uri);
-        //TODO
-        holder.mProgressBar.setVisibility(
-                processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
-        holder.mTextView.setText("Page " + (position + 1));
-        holder.mStateImageView.setVisibility(
-                processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
-        Drawable drawable = getImageDrawableFromState(processingState);
-        holder.mStateImageView.setImageDrawable(drawable);
-
-        holder.mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                mListener.onImageClicked(image);
-            }
-        });
+    public int getItemViewType(final int position) {
+        if (position == mImageList.size()) {
+            return EMPTY_VIEW_TYPE;
+        }
+        return super.getItemViewType(position);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof ViewHolder) {
+            ViewHolder viewHolder = (ViewHolder) holder;
+            final Image image = mImageList.get(position);
+            final Uri uri = image.getUri();
+            final ImageState processingState = image.getProcessingState();
+            viewHolder.mImageView.setImageURI(uri);
+            //TODO
+            viewHolder.mProgressBar.setVisibility(
+                    processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
+            viewHolder.mTextView.setText("Page " + (position + 1));
+            viewHolder.mStateImageView.setVisibility(
+                    processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
+            Drawable drawable = getImageDrawableFromState(processingState);
+            viewHolder.mStateImageView.setImageDrawable(drawable);
+
+            viewHolder.mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    mListener.onImageClicked(image);
+                }
+            });
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        if (viewType == EMPTY_VIEW_TYPE) {
+            final View view = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.image_list_item_empty,
+                    parent, false);
+            return new EmptyViewHolder(view);
+        }
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_list_item,
                 parent, false);
         return new ViewHolder(view);
     }
+
 
     void setImages(List<Image> images) {
         mImageList.clear();
@@ -87,7 +109,14 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
         return ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    private static class EmptyViewHolder extends RecyclerView.ViewHolder {
+
+        EmptyViewHolder(final View itemView) {
+            super(itemView);
+        }
+    }
+
+    private static class ViewHolder extends RecyclerView.ViewHolder {
 
         AutoRotateImageView mImageView;
         ProgressBar mProgressBar;
