@@ -27,6 +27,11 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
+    public void onImageSelected(final Image image) {
+        mView.showImagePreview(image);
+    }
+
+    @Override
     public void onImageStatChanged(@NonNull final Image image) {
         mView.imageStateChanged(image);
     }
@@ -35,6 +40,11 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     public void onPictureTaken(@NonNull final byte[] data) {
         final Image image = mDocumentService.saveImage(data);
         mView.openImageReview(image);
+    }
+
+    @Override
+    public void onTakePictureSelected() {
+        mView.openTakePictureScreen();
     }
 
     @Override

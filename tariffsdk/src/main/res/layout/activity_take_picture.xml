@@ -4,20 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/image_overview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:scrollbars="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:visibility="gone">
+        tools:visibility="gone" />
 
-    </android.support.v7.widget.RecyclerView>
+    <net.gini.tariffsdk.utils.AutoRotateImageView
+        android:id="@+id/image_review"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/image_overview" />
 
     <SurfaceView
         android:id="@+id/camera_preview"
@@ -25,9 +31,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/image_overview"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
         android:visibility="invisible" />
 
 

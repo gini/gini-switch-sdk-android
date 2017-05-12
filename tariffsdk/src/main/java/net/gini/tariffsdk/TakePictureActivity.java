@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
+import net.gini.tariffsdk.utils.AutoRotateImageView;
 import net.gini.tariffsdk.utils.ExitDialogFragment;
 
 import java.util.List;
@@ -35,6 +36,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
+    private AutoRotateImageView mImagePreview;
     private TakePictureContract.Presenter mPresenter;
     private ProgressBar mProgressBar;
     private ImageButton mTakePictureButton;
@@ -134,6 +136,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         });
 
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
+        mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
 
 
         final RecyclerView imageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
@@ -141,8 +144,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
+            public void onCameraClicked() {
+                mPresenter.onTakePictureSelected();
+            }
+
+            @Override
             public void onImageClicked(final Image image) {
-                openImageReview(image);
+                mPresenter.onImageSelected(image);
             }
         });
         imageRecyclerView.setAdapter(mAdapter);
@@ -217,6 +225,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void openTakePictureScreen() {
+        mCameraPreview.setVisibility(View.VISIBLE);
+        mImagePreview.setVisibility(View.GONE);
+    }
+
+    @Override
     public void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 PERMISSIONS_REQUEST_CAMERA);
@@ -232,5 +246,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         IntentFactory intentFactory = new IntentFactory(TariffSdk.getSdk());
         Intent intent = intentFactory.createExtractionsActivity();
         startActivityForResult(intent, REQUEST_CODE_EXTRACTIONS);
+    }
+
+    @Override
+    public void showImagePreview(final Image image) {
+        mImagePreview.displayImage(image.getUri());
+        mCameraPreview.setVisibility(View.GONE);
+        mImagePreview.setVisibility(View.VISIBLE);
     }
 }

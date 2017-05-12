@@ -2,6 +2,7 @@ package net.gini.tariffsdk;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
@@ -50,7 +50,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ViewHolder) {
-            ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolder viewHolder = (ViewHolder) holder;
             final Image image = mImageList.get(position);
             final Uri uri = image.getUri();
             final ImageState processingState = image.getProcessingState();
@@ -58,7 +58,12 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //TODO
             viewHolder.mProgressBar.setVisibility(
                     processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
-            viewHolder.mTextView.setText("Page " + (position + 1));
+            viewHolder.mStatusIndicator.setVisibility(
+                    processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
+            viewHolder.mStatusIndicator.setBackgroundColor(
+                    processingState == ImageState.SUCCESSFULLY_PROCESSED ? Color.GREEN : Color.RED);
+
+
             viewHolder.mStateImageView.setVisibility(
                     processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
             Drawable drawable = getImageDrawableFromState(processingState);
@@ -70,6 +75,13 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     mListener.onImageClicked(image);
                 }
             });
+        } else {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    mListener.onCameraClicked();
+                }
+            });
         }
     }
 
@@ -77,8 +89,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         if (viewType == EMPTY_VIEW_TYPE) {
             final View view = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.image_list_item_empty,
-                    parent, false);
+                    R.layout.image_list_item_empty, parent, false);
             return new EmptyViewHolder(view);
         }
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_list_item,
@@ -121,19 +132,21 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         AutoRotateImageView mImageView;
         ProgressBar mProgressBar;
         ImageView mStateImageView;
-        TextView mTextView;
+        View mStatusIndicator;
 
 
         ViewHolder(final View itemView) {
             super(itemView);
             mImageView = (AutoRotateImageView) itemView.findViewById(R.id.image_view);
             mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
-            mTextView = (TextView) itemView.findViewById(R.id.text_page);
+            mStatusIndicator = itemView.findViewById(R.id.status_indicator_view);
             mStateImageView = (ImageView) itemView.findViewById(R.id.image_state);
         }
     }
 
     interface Listener {
+        void onCameraClicked();
+
         void onImageClicked(final Image image);
     }
 }
