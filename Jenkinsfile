@@ -16,14 +16,14 @@ pipeline {
                 sh './gradlew tariffsdk::connectedAndroidTest'
             }
         }
+    }
 
-        post {
-                success {
-                    junit '**/test-results/**/*.xml'
-                }
-                always {
-                    deleteDir
-                }
-            }
+    post {
+        success {
+            junit '**/test-results/**/*.xml'
+        }
+        always {
+            deleteDir
+        }
     }
 }
