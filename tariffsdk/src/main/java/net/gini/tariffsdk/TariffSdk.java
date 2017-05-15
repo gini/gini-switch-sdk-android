@@ -4,8 +4,9 @@ package net.gini.tariffsdk;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
 
 import java.util.Set;
 
@@ -26,8 +27,9 @@ public class TariffSdk {
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
+    private int mButtonSelector;
+    private int mButtonTextColor;
     private OkHttpClient mOkHttpClient;
-    private int mTheme = 0;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
             final DocumentService authenticationService,
@@ -89,33 +91,51 @@ public class TariffSdk {
     }
 
     /**
+     * Use this to set a custom button style. The style has to be a selector and should provide
+     * different states the button can have, e.g. pressed etc. See {@link
+     * <a href="https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList">Official StateList documentation</a>} for more information.
+     * @param selector as a drawable resource.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setButtonStyleSelector(@DrawableRes final int selector) {
+        mButtonSelector = selector;
+        return this;
+    }
+
+    /**
      * <p>
      * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
      * singleton.
      * </p>
      *
      * @param okHttpClient the created okHttpClient
-     * @return the instance of the current builder
+     * @return the instance of the available SDK
      */
     public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient) {
         mOkHttpClient = assertNotNull(okHttpClient);
         return this;
     }
 
-    /**
-     * <p>
-     * Set a specific theme for the SDK Activities, if not set the default app theme is used
-     * </p>
-     *
-     * @param theme the resource id of the theme
-     */
-    public TariffSdk withTheme(@StyleRes final int theme) {
-        mTheme = theme;
-        return this;
-    }
-
     void cleanUp() {
         mDocumentService.cleanup();
+    }
+
+    int getButtonSelector() {
+        return mButtonSelector;
+    }
+
+    int getButtonTextColor() {
+        return mButtonTextColor;
+    }
+
+    /**
+     * Use this to set a custom button text color.
+     * @param color as a color resource id.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setButtonTextColor(@ColorRes final int color) {
+        mButtonTextColor = color;
+        return this;
     }
 
     Context getContext() {
@@ -132,10 +152,6 @@ public class TariffSdk {
 
     static TariffSdk getSdk() {
         return mSingleton;
-    }
-
-    int getTheme() {
-        return mTheme;
     }
 
     private static <T> T assertNotNull(T parameter) {

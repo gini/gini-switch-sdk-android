@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import net.gini.tariffsdk.Extraction;
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         mTariffSdk = TariffSdk.init(this, "clientId", "clientPw", "gini.net");
 
-        findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
+        Button viewById = (Button) findViewById(R.id.button_start);
+        viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 final Intent tariffSdkIntent = mTariffSdk.getTariffSdkIntent();
@@ -52,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View view) {
                 final Intent tariffSdkIntent = mTariffSdk
-                        .withTheme(R.style.SpecialTheme)
+                        .setButtonStyleSelector(R.drawable.custom_button)
+                        .setButtonTextColor(R.color.white)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }

@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 class TariffSdkBaseActivity extends AppCompatActivity {
 
     private static final int NOT_SET = 0;
+    protected static String BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE =
+            "BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE";
+    protected static String BUNDLE_EXTRA_BUTTON_TEXT_COLOR = "BUNDLE_EXTRA_BUTTON_TEXT_COLOR";
     protected static String BUNDLE_EXTRA_THEME = "BUNDLE_EXTRA_THEME";
 
     @Override
@@ -17,8 +20,24 @@ class TariffSdkBaseActivity extends AppCompatActivity {
         checkForCorrectUsage();
     }
 
+    protected int getButtonStyleResourceIdFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE, NOT_SET);
+    }
+
+    protected int getButtonTextColorResourceIdFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, NOT_SET);
+    }
+
     protected int getThemeResourceIdFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_THEME, NOT_SET);
+    }
+
+    protected boolean hasCustomButtonStyleSet() {
+        return getButtonStyleResourceIdFromBundle() != NOT_SET;
+    }
+
+    protected boolean hasCustomButtonTextColor() {
+        return getButtonTextColorResourceIdFromBundle() != NOT_SET;
     }
 
     private void applySettings() {

@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
@@ -140,7 +141,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
-        findViewById(R.id.button_finish).setOnClickListener(new View.OnClickListener() {
+        final Button viewById = (Button) findViewById(R.id.button_finish);
+        viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 mPresenter.onAllPicturesTaken();
@@ -169,6 +171,25 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
         mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
+
+        Button deleteImageButton = (Button) findViewById(R.id.button_delete_image);
+        Button retakeImageButton = (Button) findViewById(R.id.button_take_new_image);
+
+        if (hasCustomButtonStyleSet()) {
+            int customButtonStyle = getButtonStyleResourceIdFromBundle();
+            deleteImageButton.setBackgroundResource(customButtonStyle);
+            retakeImageButton.setBackgroundResource(customButtonStyle);
+            viewById.setBackgroundResource(customButtonStyle);
+        }
+
+        if (hasCustomButtonTextColor()) {
+            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
+            int textColor = ContextCompat.getColor(this, customButtonTextColor);
+            deleteImageButton.setTextColor(textColor);
+            retakeImageButton.setTextColor(textColor);
+            viewById.setTextColor(textColor);
+        }
+
     }
 
     @Override

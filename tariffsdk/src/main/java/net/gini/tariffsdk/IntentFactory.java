@@ -2,7 +2,8 @@ package net.gini.tariffsdk;
 
 
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
-import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_THEME;
+import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
+import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,14 +12,15 @@ import android.net.Uri;
 final class IntentFactory {
 
     static final String BUNDLE_EXTRA_RIGHT_INSTANTIATED = "BUNDLE_EXTRA_RIGHT_INSTANTIATED";
+    private final int mButtonSelectorStyle;
+    private final int mButtonTextColor;
 
     private final Context mContext;
 
-    private final int mTheme;
-
     IntentFactory(final TariffSdk tariffSdk) {
         mContext = tariffSdk.getContext();
-        mTheme = tariffSdk.getTheme();
+        mButtonSelectorStyle = tariffSdk.getButtonSelector();
+        mButtonTextColor = tariffSdk.getButtonTextColor();
     }
 
     Intent createExtractionsActivity() {
@@ -42,7 +44,8 @@ final class IntentFactory {
 
     private void addDefaultExtras(final Intent intent) {
         intent.putExtra(BUNDLE_EXTRA_RIGHT_INSTANTIATED, true);
-        intent.putExtra(BUNDLE_EXTRA_THEME, mTheme);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE, mButtonSelectorStyle);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, mButtonTextColor);
     }
 
 }

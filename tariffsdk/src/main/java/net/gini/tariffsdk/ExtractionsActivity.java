@@ -4,6 +4,7 @@ package net.gini.tariffsdk;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.util.Set;
@@ -25,7 +26,8 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         //TODO make this generic so we can set the showing fields via remote config
         setExtractionsInView(mExtractionService.getExtractions());
 
-        findViewById(R.id.button_done).setOnClickListener(new View.OnClickListener() {
+        final Button viewById = (Button) findViewById(R.id.button_done);
+        viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 setExtractions();
@@ -33,6 +35,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
                 finish();
             }
         });
+        viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
     }
 
     private void setExtractions() {
