@@ -4,8 +4,10 @@ package net.gini.tariffsdk;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.View;
+import android.widget.Button;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
@@ -36,14 +38,14 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
             throw new IllegalArgumentException("Intent must contain an image Uri");
         }
 
-        final View discardButton = findViewById(R.id.button_discard);
+        final Button discardButton = (Button) findViewById(R.id.button_discard);
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 mPresenter.discardImage();
             }
         });
-        final View keepButton = findViewById(R.id.button_keep);
+        final Button keepButton = (Button) findViewById(R.id.button_keep);
         keepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -62,6 +64,20 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
         final Uri uri = getIntent().getExtras().getParcelable(BUNDLE_EXTRA_IMAGE_URI);
         mPresenter = new ReviewPicturePresenter(this, TariffSdk.getSdk().getDocumentService(),
                 uri);
+
+
+        if (hasCustomButtonStyleSet()) {
+            int customButtonStyle = getButtonStyleResourceIdFromBundle();
+            discardButton.setBackgroundResource(customButtonStyle);
+            keepButton.setBackgroundResource(customButtonStyle);
+        }
+
+        if (hasCustomButtonTextColor()) {
+            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
+            int textColor = ContextCompat.getColor(this, customButtonTextColor);
+            discardButton.setTextColor(textColor);
+            keepButton.setTextColor(textColor);
+        }
     }
 
     @Override

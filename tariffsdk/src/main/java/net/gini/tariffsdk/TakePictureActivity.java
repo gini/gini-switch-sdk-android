@@ -172,7 +172,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
         mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
 
-        Button deleteImageButton = (Button) findViewById(R.id.button_delete_image);
+        ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
         Button retakeImageButton = (Button) findViewById(R.id.button_take_new_image);
 
         if (hasCustomButtonStyleSet()) {
@@ -185,7 +185,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         if (hasCustomButtonTextColor()) {
             int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
             int textColor = ContextCompat.getColor(this, customButtonTextColor);
-            deleteImageButton.setTextColor(textColor);
             retakeImageButton.setTextColor(textColor);
             viewById.setTextColor(textColor);
         }
