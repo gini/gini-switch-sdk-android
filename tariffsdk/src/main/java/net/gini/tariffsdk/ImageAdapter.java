@@ -2,7 +2,6 @@ package net.gini.tariffsdk;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -24,10 +23,15 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context mContext;
     private final List<Image> mImageList;
     private final Listener mListener;
+    private final int mNegativeColor;
+    private final int mPositiveColor;
 
-    ImageAdapter(Context context, Listener listener) {
+    ImageAdapter(Context context, Listener listener, final int positiveColor,
+            final int negativeColor) {
         mContext = context;
         mListener = listener;
+        mPositiveColor = positiveColor;
+        mNegativeColor = negativeColor;
         mImageList = new ArrayList<>();
     }
 
@@ -61,7 +65,9 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             viewHolder.mStatusIndicator.setVisibility(
                     processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
             viewHolder.mStatusIndicator.setBackgroundColor(
-                    processingState == ImageState.SUCCESSFULLY_PROCESSED ? Color.GREEN : Color.RED);
+                    processingState == ImageState.SUCCESSFULLY_PROCESSED
+                            ? ContextCompat.getColor(mContext, mPositiveColor)
+                            : ContextCompat.getColor(mContext, mNegativeColor));
 
 
             viewHolder.mStateImageView.setVisibility(

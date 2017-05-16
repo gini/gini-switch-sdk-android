@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="titleTextColor">#FFFFFF</color>
+    <color name="positiveColor">#20BAA7</color>
+    <color name="negativeColor">#CC2166</color>
 </resources>

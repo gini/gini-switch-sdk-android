@@ -163,7 +163,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             public void onImageClicked(final Image image) {
                 mPresenter.onImageSelected(image);
             }
-        });
+        }, getPositiveColor(), getNegativeColor());
+
         imageRecyclerView.setAdapter(mAdapter);
 
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);

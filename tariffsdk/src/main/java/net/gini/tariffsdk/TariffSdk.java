@@ -29,7 +29,9 @@ public class TariffSdk {
     private final ExtractionService mExtractionService;
     private int mButtonSelector;
     private int mButtonTextColor;
+    private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
+    private int mPositiveColor;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
             final DocumentService authenticationService,
@@ -38,6 +40,8 @@ public class TariffSdk {
         mContext = context.getApplicationContext();
         mDocumentService = authenticationService;
         mExtractionService = extractionService;
+        mPositiveColor = R.color.positiveColor;
+        mNegativeColor = R.color.negativeColor;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -148,6 +152,38 @@ public class TariffSdk {
 
     ExtractionService getExtractionService() {
         return mExtractionService;
+    }
+
+    int getNegativeColor() {
+        return mNegativeColor;
+    }
+
+    /**
+     * Use this to set the negative color which indicates that a process did fail or something went
+     * wrong. The color should indicate failure and can therefore be something like red.
+     *
+     * @param color as a color resource int.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setNegativeColor(@ColorRes final int color) {
+        mNegativeColor = color;
+        return this;
+    }
+
+    int getPositiveColor() {
+        return mPositiveColor;
+    }
+
+    /**
+     * Use this to set the positive color which indicates that a process did succeed. The color
+     * should indicate success and can therefore be something like green.
+     *
+     * @param color as a color resource int.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setPositiveColor(@ColorRes final int color) {
+        mPositiveColor = color;
+        return this;
     }
 
     static TariffSdk getSdk() {

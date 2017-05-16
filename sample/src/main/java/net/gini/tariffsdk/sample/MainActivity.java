@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 final Intent tariffSdkIntent = mTariffSdk
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
+                        .setPositiveColor(R.color.positiveColor)
+                        .setNegativeColor(R.color.negativeColor)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }

@@ -13,6 +13,8 @@ class TariffSdkBaseActivity extends AppCompatActivity {
     protected static String BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE =
             "BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE";
     protected static String BUNDLE_EXTRA_BUTTON_TEXT_COLOR = "BUNDLE_EXTRA_BUTTON_TEXT_COLOR";
+    protected static String BUNDLE_EXTRA_NEGATIVE_COLOR = "BUNDLE_EXTRA_NEGATIVE_COLOR";
+    protected static String BUNDLE_EXTRA_POSITIVE_COLOR = "BUNDLE_EXTRA_POSITIVE_COLOR";
     protected static String BUNDLE_EXTRA_THEME = "BUNDLE_EXTRA_THEME";
 
     @Override
@@ -40,6 +42,14 @@ class TariffSdkBaseActivity extends AppCompatActivity {
 
     protected int getButtonTextColorResourceIdFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, NOT_SET);
+    }
+
+    protected int getNegativeColor() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, R.color.negativeColor);
+    }
+
+    protected int getPositiveColor() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_POSITIVE_COLOR, R.color.positiveColor);
     }
 
     protected int getThemeResourceIdFromBundle() {
