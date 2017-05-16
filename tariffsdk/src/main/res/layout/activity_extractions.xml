@@ -1,24 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/container_splash"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:background="?colorPrimary"
+        tools:visibility="gone">
 
-        <LinearLayout
-            android:id="@+id/view_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/splashTextView"
+            android:layout_centerHorizontal="true"
+            android:src="@android:drawable/ic_popup_sync" />
 
-        <Button
-            android:id="@+id/button_done"
+        <TextView
+            android:id="@+id/splashTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Done" />
-    </LinearLayout>
-</ScrollView>
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="TODO: Wir haben Alles was wir für einen Anbieterwechsel brauchen. Tralala"
+            android:textColor="@color/titleTextColor"
+            android:textSize="24sp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/container_extractions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/view_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/button_done"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Done" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
