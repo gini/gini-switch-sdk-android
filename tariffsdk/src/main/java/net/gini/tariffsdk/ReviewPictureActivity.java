@@ -5,11 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
+import net.gini.tariffsdk.utils.ColoredOverflowToolbar;
 
 final public class ReviewPictureActivity extends TariffSdkBaseActivity implements
         ReviewPictureContract.View {
@@ -29,10 +32,13 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
 
         setContentView(R.layout.activity_review_picture);
 
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+        ColoredOverflowToolbar toolbar = (ColoredOverflowToolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        TextView title = (TextView) toolbar.getChildAt(0);
+        title.setText("TODO: Ist die Seite vollständing und in Leserichtung fotografiert?");
+
+
         if (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(
                 BUNDLE_EXTRA_IMAGE_URI)) {
             throw new IllegalArgumentException("Intent must contain an image Uri");
@@ -78,6 +84,18 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
             discardButton.setTextColor(textColor);
             keepButton.setTextColor(textColor);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem item = menu.add("TODO: DUMMY");
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
+                return false;
+            }
+        });
+        return true;
     }
 
     @Override

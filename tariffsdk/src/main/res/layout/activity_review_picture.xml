@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?colorPrimary">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <net.gini.tariffsdk.utils.ColoredOverflowToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end|right"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:text="bla bla bla blahg bla sdfjklsjfak asdf\n sadfjksfsdfasdf" />
+            android:textColor="@color/titleTextColor" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@android:drawable/ic_menu_agenda" />
-
-    </LinearLayout>
+    </net.gini.tariffsdk.utils.ColoredOverflowToolbar>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_rotate"
@@ -33,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/footer"
         android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
         android:src="@android:drawable/ic_menu_rotate" />
 
     <net.gini.tariffsdk.utils.AutoRotateImageView
@@ -40,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
-        android:layout_below="@+id/linearLayout" />
+        android:layout_below="@+id/toolbar" />
 
     <LinearLayout
         android:id="@+id/footer"

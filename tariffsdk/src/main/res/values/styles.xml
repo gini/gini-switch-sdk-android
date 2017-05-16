@@ -6,6 +6,4 @@
         <item name="colorAccent">#1976d2</item>
     </style>
 
-    <style name="GiniButtonStyle" parent="Base.Widget.AppCompat.Button"></style>
-
 </resources>
