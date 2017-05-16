@@ -2,6 +2,8 @@ package net.gini.tariffsdk;
 
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -59,20 +61,17 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             final Uri uri = image.getUri();
             final ImageState processingState = image.getProcessingState();
             viewHolder.mImageView.setImageURI(uri);
-            //TODO
             viewHolder.mProgressBar.setVisibility(
                     processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
             viewHolder.mStatusIndicator.setVisibility(
                     processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
-            viewHolder.mStatusIndicator.setBackgroundColor(
-                    processingState == ImageState.SUCCESSFULLY_PROCESSED
-                            ? ContextCompat.getColor(mContext, mPositiveColor)
-                            : ContextCompat.getColor(mContext, mNegativeColor));
-
-
             viewHolder.mStateImageView.setVisibility(
                     processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
-            Drawable drawable = getImageDrawableFromState(processingState);
+
+            final int processingColor = getProcessingStateColor(processingState);
+            viewHolder.mStatusIndicator.setBackgroundColor(processingColor);
+
+            final Drawable drawable = getImageDrawableFromState(processingState);
             viewHolder.mStateImageView.setImageDrawable(drawable);
 
             viewHolder.mImageView.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +102,6 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return new ViewHolder(view);
     }
 
-
     void setImages(List<Image> images) {
         mImageList.clear();
         mImageList.addAll(images);
@@ -120,10 +118,22 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private Drawable getImageDrawableFromState(final ImageState state) {
+        Drawable drawable;
         if (state == ImageState.SUCCESSFULLY_PROCESSED) {
-            return ContextCompat.getDrawable(mContext, android.R.drawable.ic_input_get);
+            drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_input_get);
+        } else {
+            drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);
         }
-        return ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);
+        final int processingColor = getProcessingStateColor(state);
+        drawable.setAlpha(255);
+        drawable.setColorFilter(new PorterDuffColorFilter(processingColor, PorterDuff.Mode.SRC_IN));
+        return drawable;
+    }
+
+    private int getProcessingStateColor(final ImageState processingState) {
+        return processingState == ImageState.SUCCESSFULLY_PROCESSED
+                ? ContextCompat.getColor(mContext, mPositiveColor)
+                : ContextCompat.getColor(mContext, mNegativeColor);
     }
 
     private static class EmptyViewHolder extends RecyclerView.ViewHolder {
