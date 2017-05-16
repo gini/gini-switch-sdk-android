@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.SurfaceView;
@@ -25,6 +24,7 @@ import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
+import net.gini.tariffsdk.utils.ColoredOverflowToolbar;
 import net.gini.tariffsdk.utils.ExitDialogFragment;
 
 import java.util.List;
@@ -113,11 +113,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         setContentView(R.layout.activity_take_picture);
 
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+        ColoredOverflowToolbar toolbar = (ColoredOverflowToolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
         mPresenter = new TakePicturePresenter(this, documentService);
@@ -153,7 +150,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
 
 
-        final RecyclerView imageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
+        final RecyclerView imageRecyclerView = (RecyclerView) toolbar.getChildAt(0);
         imageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {

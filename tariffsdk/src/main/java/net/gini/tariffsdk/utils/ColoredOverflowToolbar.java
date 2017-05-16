@@ -52,7 +52,11 @@ public class ColoredOverflowToolbar extends Toolbar {
 
     private void changeOverflowColorRecursively(View view, final int color) {
 
-        if (view instanceof ImageView) {
+        //Unfortunately ActionMenuPresenter$OverflowMenuButton is private and therefore no
+        // instance of can be done
+        if (view instanceof ImageView
+                && view.getClass().getName().equals(
+                "android.support.v7.widget.ActionMenuPresenter$OverflowMenuButton")) {
             final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(color,
                     PorterDuff.Mode.SRC_IN);
             ((ImageView) view).getDrawable().setAlpha(255);

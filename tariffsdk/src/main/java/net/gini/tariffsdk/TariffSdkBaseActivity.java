@@ -4,6 +4,8 @@ package net.gini.tariffsdk;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 class TariffSdkBaseActivity extends AppCompatActivity {
 
@@ -18,6 +20,18 @@ class TariffSdkBaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         applySettings();
         checkForCorrectUsage();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem item = menu.add("TODO: DUMMY");
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
+                return false;
+            }
+        });
+        return true;
     }
 
     protected int getButtonStyleResourceIdFromBundle() {
