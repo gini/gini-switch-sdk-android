@@ -6,6 +6,7 @@ import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELEC
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_NEGATIVE_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_POSITIVE_COLOR;
+import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_THEME;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ final class IntentFactory {
     private final Context mContext;
     private final int mNegativeColor;
     private final int mPositiveColor;
+    private final int mTheme;
 
     IntentFactory(final TariffSdk tariffSdk) {
         mContext = tariffSdk.getContext();
@@ -27,6 +29,7 @@ final class IntentFactory {
         mButtonTextColor = tariffSdk.getButtonTextColor();
         mPositiveColor = tariffSdk.getPositiveColor();
         mNegativeColor = tariffSdk.getNegativeColor();
+        mTheme = tariffSdk.getTheme();
     }
 
     Intent createExtractionsActivity() {
@@ -54,6 +57,7 @@ final class IntentFactory {
         intent.putExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, mButtonTextColor);
         intent.putExtra(BUNDLE_EXTRA_POSITIVE_COLOR, mPositiveColor);
         intent.putExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, mNegativeColor);
+        intent.putExtra(BUNDLE_EXTRA_THEME, mTheme);
     }
 
 }

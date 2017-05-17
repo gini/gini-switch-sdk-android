@@ -1,14 +1,20 @@
 package net.gini.tariffsdk;
 
 
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
 class TariffSdkBaseActivity extends AppCompatActivity {
 
+    @StyleableRes
     private static final int NOT_SET = 0;
     protected static String BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE =
             "BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE";
@@ -22,6 +28,10 @@ class TariffSdkBaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         applySettings();
         checkForCorrectUsage();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primaryColor));
+        }
     }
 
     @Override
@@ -53,7 +63,7 @@ class TariffSdkBaseActivity extends AppCompatActivity {
     }
 
     protected int getThemeResourceIdFromBundle() {
-        return getIntent().getIntExtra(BUNDLE_EXTRA_THEME, NOT_SET);
+        return getIntent().getIntExtra(BUNDLE_EXTRA_THEME, R.style.GiniTheme);
     }
 
     protected boolean hasCustomButtonStyleSet() {
@@ -66,11 +76,7 @@ class TariffSdkBaseActivity extends AppCompatActivity {
 
     private void applySettings() {
         final int theme = getThemeResourceIdFromBundle();
-        if (theme != NOT_SET) {
-            setTheme(theme);
-        } else {
-            setTheme(R.style.GiniTheme);
-        }
+        setTheme(theme);
     }
 
     private void checkForCorrectUsage() {
@@ -79,6 +85,20 @@ class TariffSdkBaseActivity extends AppCompatActivity {
             throw new IllegalArgumentException(
                     "Do not create this Intent by yourself, use the provided TariffSdk"
                             + ".getTariffSdkIntent() method for it!");
+        }
+
+        final TypedValue typedValue = new TypedValue();
+        final TypedArray typedArray = obtainStyledAttributes(typedValue.data,
+                new int[]{R.attr.windowActionBar,
+                        R.attr.windowNoTitle});
+        try {
+            if (typedArray.getBoolean(0, true) || !typedArray.getBoolean(1, false)) {
+                throw new IllegalArgumentException(
+                        "Your Style should extend the GiniTheme! Check the documentation for more"
+                                + " information about it.");
+            }
+        } finally {
+            typedArray.recycle();
         }
     }
 

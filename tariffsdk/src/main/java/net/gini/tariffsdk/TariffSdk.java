@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
 
 import java.util.Set;
 
@@ -32,6 +33,7 @@ public class TariffSdk {
     private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
+    private int mTheme;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
             final DocumentService authenticationService,
@@ -42,6 +44,7 @@ public class TariffSdk {
         mExtractionService = extractionService;
         mPositiveColor = R.color.positiveColor;
         mNegativeColor = R.color.negativeColor;
+        mTheme = R.style.GiniTheme;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -76,7 +79,6 @@ public class TariffSdk {
     }
 
     /**
-     * <p>
      * Use this to get an intent of the Tariff SDK
      * {@link TakePictureActivity}
      * activity.
@@ -84,7 +86,6 @@ public class TariffSdk {
      * be thrown.
      * To start the activity the method {@link android.app.Activity#startActivityForResult(Intent,
      * int)} with the request code init {@link TariffSdk#REQUEST_CODE} has to be used.
-     * </p>
      *
      * @return an intent of {@link TakePictureActivity}
      */
@@ -97,7 +98,9 @@ public class TariffSdk {
     /**
      * Use this to set a custom button style. The style has to be a selector and should provide
      * different states the button can have, e.g. pressed etc. See {@link
-     * <a href="https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList">Official StateList documentation</a>} for more information.
+     * <a href="https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList">Official
+     * StateList documentation</a>} for more information.
+     *
      * @param selector as a drawable resource.
      * @return the instance of the available SDK
      */
@@ -134,6 +137,7 @@ public class TariffSdk {
 
     /**
      * Use this to set a custom button text color.
+     *
      * @param color as a color resource id.
      * @return the instance of the available SDK
      */
@@ -188,6 +192,23 @@ public class TariffSdk {
 
     static TariffSdk getSdk() {
         return mSingleton;
+    }
+
+    int getTheme() {
+        return mTheme;
+    }
+
+    /**
+     * Set a specific theme for the SDK Activities, if not set the default app theme is used.
+     * Use this to set the accent color which will be used for dialogs, loading indicators and
+     * others.
+     *
+     * @param theme the resource id of the theme
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setTheme(@StyleRes final int theme) {
+        mTheme = theme;
+        return this;
     }
 
     private static <T> T assertNotNull(T parameter) {

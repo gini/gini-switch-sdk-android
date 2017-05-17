@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorPrimary">
+    android:background="@color/primaryColor">
 
     <net.gini.tariffsdk.utils.ColoredOverflowToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/primaryColor"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         <TextView
             android:id="@+id/title"
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
+        android:background="@color/primaryColor"
         android:orientation="horizontal"
         android:padding="4dp">
 
