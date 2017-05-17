@@ -4,6 +4,7 @@ import static junit.framework.Assert.assertEquals;
 
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
+import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_EXIT_DIALOG_TEXT;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_NEGATIVE_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_POSITIVE_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_THEME;
@@ -42,6 +43,16 @@ public class TariffSdkTest {
         Intent intent = tariffSdk.getTariffSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, 0);
         assertEquals(12345, buttonTextColor);
+    }
+
+    @Test
+    @SmallTest
+    public void customSettingsSDK_shouldSetExitDialogText() {
+        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
+        tariffSdk.setExitDialogText(12345);
+        Intent intent = tariffSdk.getTariffSdkIntent();
+        final int exitDialogText = intent.getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, 0);
+        assertEquals(12345, exitDialogText);
     }
 
     @Test
@@ -117,6 +128,15 @@ public class TariffSdkTest {
         Intent intent = tariffSdk.getTariffSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, 0);
         assertEquals(0, buttonTextColor);
+    }
+
+    @Test
+    @SmallTest
+    public void defaultSettingsSDK_shouldNotSetExitDialogText() {
+        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
+        Intent intent = tariffSdk.getTariffSdkIntent();
+        final int exitDialogText = intent.getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, 0);
+        assertEquals(R.string.exit_dialog_text, exitDialogText);
     }
 
     @Before

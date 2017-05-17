@@ -4,6 +4,7 @@ package net.gini.tariffsdk;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
+import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_EXIT_DIALOG_TEXT;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_NEGATIVE_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_POSITIVE_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_THEME;
@@ -19,6 +20,7 @@ final class IntentFactory {
     private final int mButtonTextColor;
 
     private final Context mContext;
+    private final int mExitDialogText;
     private final int mNegativeColor;
     private final int mPositiveColor;
     private final int mTheme;
@@ -30,6 +32,7 @@ final class IntentFactory {
         mPositiveColor = tariffSdk.getPositiveColor();
         mNegativeColor = tariffSdk.getNegativeColor();
         mTheme = tariffSdk.getTheme();
+        mExitDialogText = tariffSdk.getExitDialogText();
     }
 
     Intent createExtractionsActivity() {
@@ -58,6 +61,7 @@ final class IntentFactory {
         intent.putExtra(BUNDLE_EXTRA_POSITIVE_COLOR, mPositiveColor);
         intent.putExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, mNegativeColor);
         intent.putExtra(BUNDLE_EXTRA_THEME, mTheme);
+        intent.putExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, mExitDialogText);
     }
 
 }

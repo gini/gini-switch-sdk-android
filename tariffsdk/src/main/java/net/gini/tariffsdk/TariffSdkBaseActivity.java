@@ -1,6 +1,7 @@
 package net.gini.tariffsdk;
 
 
+import android.app.DialogFragment;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,8 +13,12 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
-class TariffSdkBaseActivity extends AppCompatActivity {
+import net.gini.tariffsdk.utils.ExitDialogFragment;
 
+class TariffSdkBaseActivity extends AppCompatActivity implements
+        ExitDialogFragment.ExitDialogListener {
+
+    protected static final String BUNDLE_EXTRA_EXIT_DIALOG_TEXT = "BUNDLE_EXTRA_EXIT_DIALOG_TEXT";
     @StyleableRes
     private static final int NOT_SET = 0;
     protected static String BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE =
@@ -36,14 +41,27 @@ class TariffSdkBaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item = menu.add("TODO: DUMMY");
+        MenuItem item = menu.add(R.string.menu_entry_cancel);
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final MenuItem item) {
+                showAbortDialog();
                 return false;
             }
         });
         return true;
+    }
+
+    @Override
+    public void onNegative() {
+        //TODO track etc.
+    }
+
+    @Override
+    public void onPositive() {
+        //TODO track etc.
+        TariffSdk.getSdk().cleanUp();
+        finishAffinity();
     }
 
     protected int getButtonStyleResourceIdFromBundle() {
@@ -52,6 +70,10 @@ class TariffSdkBaseActivity extends AppCompatActivity {
 
     protected int getButtonTextColorResourceIdFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, NOT_SET);
+    }
+
+    protected int getExitDialogText() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, R.string.exit_dialog_text);
     }
 
     protected int getNegativeColor() {
@@ -72,6 +94,11 @@ class TariffSdkBaseActivity extends AppCompatActivity {
 
     protected boolean hasCustomButtonTextColor() {
         return getButtonTextColorResourceIdFromBundle() != NOT_SET;
+    }
+
+    protected void showAbortDialog() {
+        DialogFragment dialog = ExitDialogFragment.newInstance(getExitDialogText());
+        dialog.show(getFragmentManager(), "ExitDialogFragment");
     }
 
     private void applySettings() {

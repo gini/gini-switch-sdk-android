@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.annotation.VisibleForTesting;
 
@@ -32,6 +33,7 @@ public class TariffSdk {
     private final ExtractionService mExtractionService;
     private int mButtonSelector;
     private int mButtonTextColor;
+    private int mExitDialogText;
     private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
@@ -47,6 +49,7 @@ public class TariffSdk {
         mPositiveColor = R.color.positiveColor;
         mNegativeColor = R.color.negativeColor;
         mTheme = R.style.GiniTheme;
+        mExitDialogText = R.string.exit_dialog_text;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -154,6 +157,21 @@ public class TariffSdk {
 
     DocumentService getDocumentService() {
         return mDocumentService;
+    }
+
+    int getExitDialogText() {
+        return mExitDialogText;
+    }
+
+    /**
+     * Use this to set a custom text for the cancel dialog.
+     *
+     * @param text as a string resource id.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExitDialogText(@StringRes final int text) {
+        mExitDialogText = text;
+        return this;
     }
 
     ExtractionService getExtractionService() {
