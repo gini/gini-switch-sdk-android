@@ -8,6 +8,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.Set;
 
@@ -23,8 +24,9 @@ public class TariffSdk {
 
     public static final int EXTRACTIONS_AVAILABLE = 4;
     public static final int REQUEST_CODE = 666;
+    @VisibleForTesting
     @SuppressLint("StaticFieldLeak") //application context is fine
-    private static volatile TariffSdk mSingleton;
+    static volatile TariffSdk mSingleton;
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
