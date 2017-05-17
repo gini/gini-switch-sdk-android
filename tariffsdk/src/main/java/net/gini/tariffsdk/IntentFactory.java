@@ -1,6 +1,7 @@
 package net.gini.tariffsdk;
 
 
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
@@ -15,6 +16,7 @@ import android.net.Uri;
 final class IntentFactory {
 
     static final String BUNDLE_EXTRA_RIGHT_INSTANTIATED = "BUNDLE_EXTRA_RIGHT_INSTANTIATED";
+    private final int mAnalyzedText;
     private final int mButtonSelectorStyle;
     private final int mButtonTextColor;
 
@@ -30,10 +32,12 @@ final class IntentFactory {
         mPositiveColor = tariffSdk.getPositiveColor();
         mNegativeColor = tariffSdk.getNegativeColor();
         mTheme = tariffSdk.getTheme();
+        mAnalyzedText = tariffSdk.getAnalyzedText();
     }
 
     Intent createExtractionsActivity() {
         final Intent intent = new Intent(mContext, ExtractionsActivity.class);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, mAnalyzedText);
         addDefaultExtras(intent);
         return intent;
     }

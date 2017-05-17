@@ -15,6 +15,7 @@ import java.util.Set;
 
 final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT = "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT";
     private ExtractionService mExtractionService;
     private LinearLayout mExtractionViewContainer;
 
@@ -67,6 +68,10 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
             }
         });
         viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+    }
+
+    private int getAnalyzedTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, R.string.analyzed_text);
     }
 
     private void setExtractions() {

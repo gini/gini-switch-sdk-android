@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.annotation.VisibleForTesting;
 
@@ -30,6 +31,7 @@ public class TariffSdk {
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
+    private int mAnalyzedText;
     private int mButtonSelector;
     private int mButtonTextColor;
     private int mNegativeColor;
@@ -47,6 +49,7 @@ public class TariffSdk {
         mPositiveColor = R.color.positiveColor;
         mNegativeColor = R.color.negativeColor;
         mTheme = R.style.GiniTheme;
+        mAnalyzedText = R.string.analyzed_text;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -127,6 +130,21 @@ public class TariffSdk {
 
     void cleanUp() {
         mDocumentService.cleanup();
+    }
+
+    int getAnalyzedText() {
+        return mAnalyzedText;
+    }
+
+    /**
+     * Set the text for the Analysing Completed Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setAnalyzedText(@StringRes final int text) {
+        mAnalyzedText = text;
+        return this;
     }
 
     int getButtonSelector() {
