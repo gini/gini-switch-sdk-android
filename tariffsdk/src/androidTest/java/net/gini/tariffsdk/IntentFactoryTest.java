@@ -5,6 +5,7 @@ import static junit.framework.Assert.assertEquals;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +30,8 @@ public class IntentFactoryTest {
         mTariffSdk.setAnalyzedImage(12345);
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(12345, analyzedText);
+        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
+        assertEquals(12345, image);
     }
 
     @Test
@@ -49,18 +50,39 @@ public class IntentFactoryTest {
         mTariffSdk.setAnalyzedTextColor(12345);
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
-                0);
-        assertEquals(12345, analyzedText);
+        int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
+        assertEquals(12345, color);
     }
+
+
+    @Test
+    @SmallTest
+    public void custom_shouldHaveCustomTextSize() {
+        mTariffSdk.setAnalyzedTextSize(16);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
+        assertEquals(16, textSize);
+    }
+
+    @Test
+    @SmallTest
+    public void default_shouldHaveDefaultTextSize() {
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
+        int defaultSize = mContext.getResources().getInteger(R.integer.analyzed_text_size);
+        assertEquals(defaultSize, textSize);
+    }
+
 
     @Test
     @SmallTest
     public void default_shouldHaveDefaultImage() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(R.drawable.analyzed_image, analyzedText);
+        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
+        assertEquals(R.drawable.analyzed_image, image);
     }
 
     @Test
@@ -77,9 +99,8 @@ public class IntentFactoryTest {
     public void default_shouldHaveDefaultTextColor() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
-                0);
-        assertEquals(R.color.titleTextColor, analyzedText);
+        int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
+        assertEquals(R.color.titleTextColor, color);
     }
 
     @Before
