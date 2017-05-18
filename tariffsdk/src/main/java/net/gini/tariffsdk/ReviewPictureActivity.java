@@ -37,11 +37,7 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
         TextView title = (TextView) toolbar.getChildAt(0);
         title.setText("TODO: Ist die Seite vollständing und in Leserichtung fotografiert?");
 
-
-        if (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(
-                BUNDLE_EXTRA_IMAGE_URI)) {
-            throw new IllegalArgumentException("Intent must contain an image Uri");
-        }
+        checkForUriInBundle();
 
         final Button discardButton = (Button) findViewById(R.id.button_discard);
         discardButton.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +81,6 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
         }
     }
 
-
     @Override
     public void rotateView() {
         mImagePreview.setRotation(mImagePreview.getRotation() + 90);
@@ -94,6 +89,13 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
     @Override
     public void setImage(final Uri uri) {
         mImagePreview.setImageURI(uri);
+    }
+
+    private void checkForUriInBundle() {
+        if (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(
+                BUNDLE_EXTRA_IMAGE_URI)) {
+            throw new IllegalArgumentException("Intent must contain an image Uri");
+        }
     }
 
 }

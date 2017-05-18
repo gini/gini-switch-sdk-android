@@ -39,9 +39,6 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mImageList.size() == 0) {
-            return 1;
-        }
         return mImageList.size() + 1;
     }
 
@@ -131,7 +128,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private int getProcessingStateColor(final ImageState processingState) {
-        return processingState == ImageState.SUCCESSFULLY_PROCESSED
+        return (processingState == ImageState.SUCCESSFULLY_PROCESSED)
                 ? ContextCompat.getColor(mContext, mPositiveColor)
                 : ContextCompat.getColor(mContext, mNegativeColor);
     }
