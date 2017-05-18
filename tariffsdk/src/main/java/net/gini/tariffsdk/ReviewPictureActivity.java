@@ -5,12 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
-import net.gini.tariffsdk.utils.ColoredOverflowToolbar;
 
 final public class ReviewPictureActivity extends TariffSdkBaseActivity implements
         ReviewPictureContract.View {
@@ -30,8 +30,9 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
 
         setContentView(R.layout.activity_review_picture);
 
-        ColoredOverflowToolbar toolbar = (ColoredOverflowToolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        colorToolbar(toolbar);
 
         TextView title = (TextView) toolbar.getChildAt(0);
         title.setText("TODO: Ist die Seite vollständing und in Leserichtung fotografiert?");

@@ -2,12 +2,15 @@ package net.gini.tariffsdk;
 
 
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleableRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +47,24 @@ class TariffSdkBaseActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    protected void colorToolbar(final Toolbar toolbar) {
+        Drawable drawable = toolbar.getOverflowIcon();
+        if (drawable != null) {
+
+            final TypedValue typedValue = new TypedValue();
+            final TypedArray typedArray = obtainStyledAttributes(typedValue.data,
+                    new int[]{R.attr.colorAccent});
+            try {
+                final int color = typedArray.getColor(0, 0);
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable.mutate(), color);
+                toolbar.setOverflowIcon(drawable);
+            } finally {
+                typedArray.recycle();
+            }
+        }
     }
 
     protected int getButtonStyleResourceIdFromBundle() {
