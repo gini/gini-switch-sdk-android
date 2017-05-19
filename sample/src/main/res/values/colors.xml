@@ -6,4 +6,5 @@
     <color name="white">#ffffff</color>
     <color name="positiveColor">#007500</color>
     <color name="positiveNegative">#750000</color>
+    <color name="analyzedTextColor">#ff00ff</color>
 </resources>

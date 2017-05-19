@@ -1,20 +1,31 @@
 package net.gini.tariffsdk;
 
 
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
+
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.Set;
 
 final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE = "BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE";
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT = "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT";
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR =
+            "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR";
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE =
+            "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
     private ExtractionService mExtractionService;
     private LinearLayout mExtractionViewContainer;
 
@@ -30,6 +41,63 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         display.getSize(size);
         int height = size.y;
 
+        setUpAnalyzedCompletedScreen(containerSplash, height);
+
+        mExtractionViewContainer = (LinearLayout) findViewById(R.id.view_container);
+        mExtractionService = TariffSdk.getSdk().getExtractionService();
+
+        //TODO make this generic so we can set the showing fields via remote config
+        setExtractionsInView(mExtractionService.getExtractions());
+
+        final Button viewById = (Button) findViewById(R.id.button_done);
+        viewById.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                setExtractions();
+                setResult(mExtractionService.getResultCodeForActivity());
+                finish();
+            }
+        });
+        viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+
+    }
+
+    private int getAnalyzedImageFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE,
+                R.drawable.ic_check_circle);
+    }
+
+    private int getAnalyzedTextColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
+                R.color.titleTextColor);
+    }
+
+    private int getAnalyzedTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, R.string.analyzed_text);
+    }
+
+    private int getAnalyzedTextSizeFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
+                getResources().getInteger(R.integer.analyzed_text_size));
+    }
+
+    private void setExtractions() {
+        for (int i = 0; i < mExtractionViewContainer.getChildCount(); i++) {
+            Extraction extraction = ((SingleExtractionView) mExtractionViewContainer.getChildAt(
+                    i)).getExtraction();
+            mExtractionService.setExtraction(extraction);
+        }
+    }
+
+    private void setExtractionsInView(Set<Extraction> extractionSet) {
+        mExtractionViewContainer.removeAllViews();
+        for (Extraction extraction : extractionSet) {
+            SingleExtractionView view = new SingleExtractionView(this, extraction);
+            mExtractionViewContainer.addView(view);
+        }
+    }
+
+    private void setUpAnalyzedCompletedScreen(final View containerSplash, final int height) {
         final View containerExtractions = findViewById(R.id.container_extractions);
         ViewCompat.animate(containerSplash)
                 .translationY(height)
@@ -51,39 +119,13 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
                 })
                 .start();
 
-        mExtractionViewContainer = (LinearLayout) findViewById(R.id.view_container);
-        mExtractionService = TariffSdk.getSdk().getExtractionService();
+        ImageView analyzedImage = (ImageView) findViewById(R.id.analyzed_image);
+        analyzedImage.setImageDrawable(ContextCompat.getDrawable(this, getAnalyzedImageFromBundle
+                ()));
 
-        //TODO make this generic so we can set the showing fields via remote config
-        setExtractionsInView(mExtractionService.getExtractions());
-
-        final Button viewById = (Button) findViewById(R.id.button_done);
-        viewById.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                setExtractions();
-                setResult(mExtractionService.getResultCodeForActivity());
-                finish();
-            }
-        });
-        viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+        TextView analyzedText = (TextView) findViewById(R.id.analyzed_text);
+        analyzedText.setText(getAnalyzedTextFromBundle());
+        analyzedText.setTextColor(ContextCompat.getColor(this, getAnalyzedTextColorFromBundle()));
+        analyzedText.setTextSize(COMPLEX_UNIT_SP, getAnalyzedTextSizeFromBundle());
     }
-
-    private void setExtractions() {
-        for (int i = 0; i < mExtractionViewContainer.getChildCount(); i++) {
-            Extraction extraction = ((SingleExtractionView) mExtractionViewContainer.getChildAt(
-                    i)).getExtraction();
-            mExtractionService.setExtraction(extraction);
-        }
-    }
-
-    private void setExtractionsInView(Set<Extraction> extractionSet) {
-        mExtractionViewContainer.removeAllViews();
-        for (Extraction extraction : extractionSet) {
-            SingleExtractionView view = new SingleExtractionView(this, extraction);
-            mExtractionViewContainer.addView(view);
-        }
-    }
-
-
 }

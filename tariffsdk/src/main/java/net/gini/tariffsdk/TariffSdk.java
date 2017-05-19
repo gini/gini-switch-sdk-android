@@ -31,6 +31,10 @@ public class TariffSdk {
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
+    private int mAnalyzedImage;
+    private int mAnalyzedText;
+    private int mAnalyzedTextColor;
+    private int mAnalyzedTextSize;
     private int mButtonSelector;
     private int mButtonTextColor;
     private int mExitDialogText;
@@ -50,6 +54,10 @@ public class TariffSdk {
         mNegativeColor = R.color.negativeColor;
         mTheme = R.style.GiniTheme;
         mExitDialogText = R.string.exit_dialog_text;
+        mAnalyzedText = R.string.analyzed_text;
+        mAnalyzedImage = R.drawable.ic_check_circle;
+        mAnalyzedTextColor = R.color.titleTextColor;
+        mAnalyzedTextSize = context.getResources().getInteger(R.integer.analyzed_text_size);
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -130,6 +138,69 @@ public class TariffSdk {
 
     void cleanUp() {
         mDocumentService.cleanup();
+    }
+
+    int getAnalyzedImage() {
+        return mAnalyzedImage;
+    }
+
+    /**
+     * Set the image for the Analysing Completed Screen.
+     *
+     * @param image the resource id of the image
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setAnalyzedImage(@DrawableRes final int image) {
+        mAnalyzedImage = image;
+        return this;
+    }
+
+    int getAnalyzedText() {
+        return mAnalyzedText;
+    }
+
+    /**
+     * Set the text for the Analysing Completed Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setAnalyzedText(@StringRes final int text) {
+        mAnalyzedText = text;
+        return this;
+    }
+
+    int getAnalyzedTextColor() {
+        return mAnalyzedTextColor;
+    }
+
+    /**
+     * Set the text color for the Analysing Completed Screen.
+     *
+     * @param color the resource id of the text color
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setAnalyzedTextColor(@ColorRes final int color) {
+        mAnalyzedTextColor = color;
+        return this;
+    }
+
+    int getAnalyzedTextSize() {
+        return mAnalyzedTextSize;
+    }
+
+    /**
+     * Set the text size for the Analysing Completed Screen. Note that it will set the size in sp.
+     * See {@link
+     * <a href="https://developer.android.com/guide/topics/resources/more-resources.html#Dimension">Dimension
+     * documentation</a>} for more information.
+     *
+     * @param size the size of the analyzed text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setAnalyzedTextSize(final int size) {
+        mAnalyzedTextSize = size;
+        return this;
     }
 
     int getButtonSelector() {

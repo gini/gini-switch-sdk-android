@@ -4,31 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/container_splash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/primaryColor"
-        tools:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/splashTextView"
-            android:layout_centerHorizontal="true"
-            android:src="@android:drawable/ic_popup_sync" />
-
-        <TextView
-            android:id="@+id/splashTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="TODO: Wir haben Alles was wir für einen Anbieterwechsel brauchen. Tralala"
-            android:textColor="@color/titleTextColor"
-            android:textSize="24sp" />
-
-    </RelativeLayout>
+    <include
+        layout="@layout/container_analyzed_screen"
+        tools:visibility="gone" />
 
     <ScrollView
         android:id="@+id/container_extractions"

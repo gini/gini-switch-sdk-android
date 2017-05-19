@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Gini Tariff Sdk Sample</string>
+    <string name="analyzedText">Awesome Analyzed Text</string>
     <string name="exit_text">Wanna Quit?</string>
 </resources>

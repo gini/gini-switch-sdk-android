@@ -118,6 +118,52 @@ The text has to be a string resource id.
 
 
 
+Text (Analyze Completed Screen)
+-------------------------------
+
+To set the text in the analyze completed screen use the ``setAnalyzedText()`` method. This string is applied to the text seen in the analyze completed screen.
+The string has to be a resource id.
+
+.. code-block:: java
+
+  tariffSdk.setAnalyzedText(R.string.your_string);
+
+
+Text Color (Analyze Completed Screen)
+------------------------------------
+
+To set the text color use the ``setAnalyzedTextColor()`` method. This color is applied to the text seen in the analyze completed screen.
+The color has to be a resource id.
+
+.. code-block:: java
+
+  tariffSdk.setAnalyzedTextColor(R.color.your_color);
+
+
+Image (Analyze Completed Screen)
+--------------------------------
+
+To set the image color use the ``setAnalyzedImage()`` method. This iamge is shown in the analyze completed screen.
+The image has to be a resource id of a drawable. The image will be displayed in a 96x96 dp size, therefore your drawable should be in this size, or you should use vector drawables.
+
+.. code-block:: java
+
+  tariffSdk.setAnalyzedImage(R.drawable.your_analyzed_image);
+
+
+Text Size (Analyze Completed Screen)
+------------------------------------
+
+To set the text size use the ``setAnalyzedTextSize()`` method. This size is applied to the text seen in the analyze completed screen.
+The size has to be in ``sp``.
+
+.. code-block:: java
+
+  tariffSdk.setAnalyzedTextSize(16);
+
+.. note:: See `official Android documentation <https://developer.android.com/guide/topics/resources/more-resources.html#Dimension>`_ about dimensions for more information.
+
+
 Overview Of Configurations
 ==========================
 
@@ -134,4 +180,8 @@ Button Style         int            Yes
 Positive Color       int            Yes
 Negative Color       int            Yes
 Exit Dialog Text     int            Yes
+Text (ACS)           int            Yes
+Text Color (ACS)     int            Yes
+Text Size (ACS)      int            Yes
+Image (ACS)          int            Yes
 ==================   ============   ============

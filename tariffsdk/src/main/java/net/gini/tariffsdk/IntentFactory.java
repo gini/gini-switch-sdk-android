@@ -1,6 +1,10 @@
 package net.gini.tariffsdk;
 
 
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
@@ -16,9 +20,12 @@ import android.net.Uri;
 final class IntentFactory {
 
     static final String BUNDLE_EXTRA_RIGHT_INSTANTIATED = "BUNDLE_EXTRA_RIGHT_INSTANTIATED";
+    private final int mAnalyzedImage;
+    private final int mAnalyzedText;
+    private final int mAnalyzedTextColor;
+    private final int mAnalyzedTextSize;
     private final int mButtonSelectorStyle;
     private final int mButtonTextColor;
-
     private final Context mContext;
     private final int mExitDialogText;
     private final int mNegativeColor;
@@ -33,10 +40,18 @@ final class IntentFactory {
         mNegativeColor = tariffSdk.getNegativeColor();
         mTheme = tariffSdk.getTheme();
         mExitDialogText = tariffSdk.getExitDialogText();
+        mAnalyzedText = tariffSdk.getAnalyzedText();
+        mAnalyzedImage = tariffSdk.getAnalyzedImage();
+        mAnalyzedTextColor = tariffSdk.getAnalyzedTextColor();
+        mAnalyzedTextSize = tariffSdk.getAnalyzedTextSize();
     }
 
     Intent createExtractionsActivity() {
         final Intent intent = new Intent(mContext, ExtractionsActivity.class);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, mAnalyzedText);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, mAnalyzedImage);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, mAnalyzedTextColor);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, mAnalyzedTextSize);
         addDefaultExtras(intent);
         return intent;
     }

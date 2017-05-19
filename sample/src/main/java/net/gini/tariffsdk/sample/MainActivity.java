@@ -58,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.positiveColor)
                         .setNegativeColor(R.color.negativeColor)
+                        .setAnalyzedText(R.string.analyzedText)
+                        .setAnalyzedTextColor(R.color.analyzedTextColor)
+                        .setAnalyzedImage(R.drawable.ic_analyzed_image)
                         .setTheme(R.style.CustomTheme)
                         .setExitDialogText(R.string.exit_text)
+                        .setAnalyzedTextSize(16)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }
