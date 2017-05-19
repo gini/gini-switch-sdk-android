@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,7 +24,6 @@ import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
-import net.gini.tariffsdk.utils.ColoredOverflowToolbar;
 
 import java.util.List;
 
@@ -110,8 +110,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         setContentView(R.layout.activity_take_picture);
 
-        ColoredOverflowToolbar toolbar = (ColoredOverflowToolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        colorToolbar(toolbar);
 
         final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
         mPresenter = new TakePicturePresenter(this, documentService);

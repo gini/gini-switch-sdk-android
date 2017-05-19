@@ -183,7 +183,7 @@ public class TariffSdk {
     }
 
     /**
-     * Use this to set the negative color which indicates that a process did fail or something went
+     * Use this to set the negative color which indicates that a process failed or something went
      * wrong. The color should indicate failure and can therefore be something like red.
      *
      * @param color as a color resource int.
@@ -199,7 +199,7 @@ public class TariffSdk {
     }
 
     /**
-     * Use this to set the positive color which indicates that a process did succeed. The color
+     * Use this to set the positive color which indicates that a process succeeded. The color
      * should indicate success and can therefore be something like green.
      *
      * @param color as a color resource int.
