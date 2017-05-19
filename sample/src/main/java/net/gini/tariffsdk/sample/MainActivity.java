@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAnalyzedTextColor(R.color.analyzedTextColor)
                         .setAnalyzedImage(R.drawable.ic_analyzed_image)
                         .setTheme(R.style.CustomTheme)
+                        .setExitDialogText(R.string.exit_text)
                         .setAnalyzedTextSize(16)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
