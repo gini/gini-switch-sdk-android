@@ -11,7 +11,11 @@ interface TakePictureContract {
 
         void onAllPicturesTaken();
 
+        void onImageSelected(final Image image);
+
         void onPictureTaken(@NonNull final byte[] data);
+
+        void onTakePictureSelected();
 
         void permissionResultDenied();
 
@@ -29,16 +33,28 @@ interface TakePictureContract {
 
         boolean hasCameraPermissions();
 
+        void hidePreviewButtons();
+
+        void hideTakePictureButtons();
+
         void imageStateChanged(@NonNull Image image);
 
         void initCamera();
 
         void openImageReview(@NonNull final Image image);
 
+        void openTakePictureScreen();
+
         void requestPermissions();
 
         void setImages(@NonNull final List<Image> imageList);
 
         void showFoundExtractions();
+
+        void showImagePreview(final Image image);
+
+        void showPreviewButtons();
+
+        void showTakePictureButtons();
     }
 }

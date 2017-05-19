@@ -32,23 +32,77 @@ OkHttpClient
 
 Since the SDK uses the library okHttp for its network operations an okHttp client has to be used.
 OkHttp clients are encouraged to be singletons due to caching, joining and canceling of calls.
-Therefore the SDK provides the posibility to add a okHttpClient which is being reused in the SDK:
+Therefore the SDK provides the possibility to add a okHttpClient which is being reused in the SDK:
 
 .. code-block:: java
 
   public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient)
 
-Theme
------
+Accent Color
+------------
 
-To style the screens of the SDK an Android theme can be provided to the SDK.
-The provided theme should extend the TariffSDKTheme and can overrite the following attributes:
-``TODO list attributes after design was specified``
-The theme can be set via:
+To set an accent color for the SDK you can overwrite the ``GiniTheme`` style. This color is applied to the overflow menu icon, the dialog's text color of their buttons and the color of the loading indicator. Overwritting other colors is being ignored and will not be processed by the SDK for now.
+This style can be applied to the SDK with the ``setTheme()`` method.
+
+.. code-block:: xml
+
+  <style name="CustomTheme" parent="GiniTheme">
+      <item name="colorAccent">#FFEB3B</item>
+  </style>
+
 
 .. code-block:: java
 
-  public TariffSdk withTheme(@StyleRes final int theme);
+  tariffSdk.setTheme(R.style.CustomTheme);
+
+
+Button Style
+------------
+
+To set a custom button style a stateList drawable has to be created. This drawable should support all needed states of a button. e.g. pressed, focused. This drawable can be applied to the SDK with the ``setButtonStyleSelector()`` method and is used to style the buttons of the review screen, preview screen, take picture screen and show extractions screen.(TODO: add references to the screen pages)
+
+.. code-block:: java
+
+  tariffSdk.setButtonStyleSelector(R.drawable.custom_button);
+
+.. note:: See `official Android documentation <https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList>`_ to StateList for more information.
+
+
+Button Text Color
+-----------------
+
+To set the button text color use the ``setButtonTextColor()`` method. This color is applied to all buttons of the review screen, preview screen, take picture screen and show extractions screen.(TODO: add references to the screen pages)
+The color has to be a resource id.
+
+.. code-block:: java
+
+  tariffSdk.setButtonTextColor(R.color.your_color);
+
+
+Positive Color
+--------------
+
+To set the positive color use the ``setPositiveColor()`` method. This color is used to indicate that that a process succeeded. It is shown in status indicator of the images.
+The color has to be a resource id.
+
+.. code-block:: java
+
+  tariffSdk.setPositiveColor(R.color.your_positiveColor)
+
+.. note:: The color should indicate success and can therefore be something like green.
+
+
+Negative Color
+--------------
+
+To set the negative color use the ``setNegativeColor()`` method. This color is used to indicate that that a process failed or something went wrong. It is shown in the status indicator of the images.
+The color has to be a resource id.
+
+.. code-block:: java
+
+  tariffSdk.setNegativeColor(R.color.your_negativeColor)
+
+.. note:: The color should indicate failure and can therefore be something like red.
 
 
 Overview Of Configurations
@@ -62,5 +116,8 @@ Client ID            String         No
 Client Secret        String         No
 Domain               String         No
 OkHttpClient         OkHttpClient   Yes
-Theme                int            Yes
+Accent Color         int            Yes
+Button Style         int            Yes
+Positive Color       int            Yes
+Negative Color       int            Yes
 ==================   ============   ============

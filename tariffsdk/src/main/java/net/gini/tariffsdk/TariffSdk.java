@@ -4,8 +4,11 @@ package net.gini.tariffsdk;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.Set;
 
@@ -21,12 +24,17 @@ public class TariffSdk {
 
     public static final int EXTRACTIONS_AVAILABLE = 4;
     public static final int REQUEST_CODE = 666;
+    @VisibleForTesting
     @SuppressLint("StaticFieldLeak") //application context is fine
-    private static volatile TariffSdk mSingleton;
+    static volatile TariffSdk mSingleton;
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
+    private int mButtonSelector;
+    private int mButtonTextColor;
+    private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
+    private int mPositiveColor;
     private int mTheme;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
@@ -36,6 +44,9 @@ public class TariffSdk {
         mContext = context.getApplicationContext();
         mDocumentService = authenticationService;
         mExtractionService = extractionService;
+        mPositiveColor = R.color.positiveColor;
+        mNegativeColor = R.color.negativeColor;
+        mTheme = R.style.GiniTheme;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -70,7 +81,6 @@ public class TariffSdk {
     }
 
     /**
-     * <p>
      * Use this to get an intent of the Tariff SDK
      * {@link TakePictureActivity}
      * activity.
@@ -78,7 +88,6 @@ public class TariffSdk {
      * be thrown.
      * To start the activity the method {@link android.app.Activity#startActivityForResult(Intent,
      * int)} with the request code init {@link TariffSdk#REQUEST_CODE} has to be used.
-     * </p>
      *
      * @return an intent of {@link TakePictureActivity}
      */
@@ -89,33 +98,54 @@ public class TariffSdk {
     }
 
     /**
+     * Use this to set a custom button style. The style has to be a selector and should provide
+     * different states the button can have, e.g. pressed etc. See {@link
+     * <a href="https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList">Official
+     * StateList documentation</a>} for more information.
+     *
+     * @param selector as a drawable resource.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setButtonStyleSelector(@DrawableRes final int selector) {
+        mButtonSelector = selector;
+        return this;
+    }
+
+    /**
      * <p>
      * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
      * singleton.
      * </p>
      *
      * @param okHttpClient the created okHttpClient
-     * @return the instance of the current builder
+     * @return the instance of the available SDK
      */
     public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient) {
         mOkHttpClient = assertNotNull(okHttpClient);
         return this;
     }
 
-    /**
-     * <p>
-     * Set a specific theme for the SDK Activities, if not set the default app theme is used
-     * </p>
-     *
-     * @param theme the resource id of the theme
-     */
-    public TariffSdk withTheme(@StyleRes final int theme) {
-        mTheme = theme;
-        return this;
-    }
-
     void cleanUp() {
         mDocumentService.cleanup();
+    }
+
+    int getButtonSelector() {
+        return mButtonSelector;
+    }
+
+    int getButtonTextColor() {
+        return mButtonTextColor;
+    }
+
+    /**
+     * Use this to set a custom button text color.
+     *
+     * @param color as a color resource id.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setButtonTextColor(@ColorRes final int color) {
+        mButtonTextColor = color;
+        return this;
     }
 
     Context getContext() {
@@ -130,12 +160,57 @@ public class TariffSdk {
         return mExtractionService;
     }
 
+    int getNegativeColor() {
+        return mNegativeColor;
+    }
+
+    /**
+     * Use this to set the negative color which indicates that a process failed or something went
+     * wrong. The color should indicate failure and can therefore be something like red.
+     *
+     * @param color as a color resource int.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setNegativeColor(@ColorRes final int color) {
+        mNegativeColor = color;
+        return this;
+    }
+
+    int getPositiveColor() {
+        return mPositiveColor;
+    }
+
+    /**
+     * Use this to set the positive color which indicates that a process succeeded. The color
+     * should indicate success and can therefore be something like green.
+     *
+     * @param color as a color resource int.
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setPositiveColor(@ColorRes final int color) {
+        mPositiveColor = color;
+        return this;
+    }
+
     static TariffSdk getSdk() {
         return mSingleton;
     }
 
     int getTheme() {
         return mTheme;
+    }
+
+    /**
+     * Set a specific theme for the SDK Activities, if not set the default app theme is used.
+     * Use this to set the accent color which will be used for dialogs, loading indicators and
+     * others.
+     *
+     * @param theme the resource id of the theme
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setTheme(@StyleRes final int theme) {
+        mTheme = theme;
+        return this;
     }
 
     private static <T> T assertNotNull(T parameter) {
