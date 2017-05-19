@@ -47,9 +47,8 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void customSettingsSDK_shouldSetExitDialogText() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        tariffSdk.setExitDialogText(12345);
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        mTariffSdk.setExitDialogText(12345);
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int exitDialogText = intent.getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, 0);
         assertEquals(12345, exitDialogText);
     }
@@ -124,8 +123,7 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldNotSetExitDialogText() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int exitDialogText = intent.getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, 0);
         assertEquals(R.string.exit_dialog_text, exitDialogText);
     }
