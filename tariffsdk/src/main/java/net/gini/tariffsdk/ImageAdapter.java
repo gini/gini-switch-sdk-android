@@ -2,6 +2,8 @@ package net.gini.tariffsdk;
 
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -11,55 +13,87 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
+class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int EMPTY_VIEW_TYPE = 1;
     private final Context mContext;
     private final List<Image> mImageList;
     private final Listener mListener;
+    private final int mNegativeColor;
+    private final int mPositiveColor;
 
-    ImageAdapter(Context context, Listener listener) {
+    ImageAdapter(Context context, Listener listener, final int positiveColor,
+            final int negativeColor) {
         mContext = context;
         mListener = listener;
+        mPositiveColor = positiveColor;
+        mNegativeColor = negativeColor;
         mImageList = new ArrayList<>();
     }
 
     @Override
     public int getItemCount() {
-        return mImageList.size();
+        return mImageList.size() + 1;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Image image = mImageList.get(position);
-        final Uri uri = image.getUri();
-        final ImageState processingState = image.getProcessingState();
-        holder.mImageView.setImageURI(uri);
-        //TODO
-        holder.mProgressBar.setVisibility(
-                processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
-        holder.mTextView.setText("Page " + (position + 1));
-        holder.mStateImageView.setVisibility(
-                processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
-        Drawable drawable = getImageDrawableFromState(processingState);
-        holder.mStateImageView.setImageDrawable(drawable);
-
-        holder.mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                mListener.onImageClicked(image);
-            }
-        });
+    public int getItemViewType(final int position) {
+        if (position == mImageList.size()) {
+            return EMPTY_VIEW_TYPE;
+        }
+        return super.getItemViewType(position);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof ViewHolder) {
+            final ViewHolder viewHolder = (ViewHolder) holder;
+            final Image image = mImageList.get(position);
+            final Uri uri = image.getUri();
+            final ImageState processingState = image.getProcessingState();
+            viewHolder.mImageView.setImageURI(uri);
+            viewHolder.mProgressBar.setVisibility(
+                    processingState == ImageState.PROCESSING ? View.VISIBLE : View.GONE);
+            viewHolder.mStatusIndicator.setVisibility(
+                    processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
+            viewHolder.mStateImageView.setVisibility(
+                    processingState == ImageState.PROCESSING ? View.GONE : View.VISIBLE);
+
+            final int processingColor = getProcessingStateColor(processingState);
+            viewHolder.mStatusIndicator.setBackgroundColor(processingColor);
+
+            final Drawable drawable = getImageDrawableFromState(processingState);
+            viewHolder.mStateImageView.setImageDrawable(drawable);
+
+            viewHolder.mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    mListener.onImageClicked(image);
+                }
+            });
+        } else {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    mListener.onCameraClicked();
+                }
+            });
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        if (viewType == EMPTY_VIEW_TYPE) {
+            final View view = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.image_list_item_empty, parent, false);
+            return new EmptyViewHolder(view);
+        }
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_list_item,
                 parent, false);
         return new ViewHolder(view);
@@ -81,30 +115,51 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     }
 
     private Drawable getImageDrawableFromState(final ImageState state) {
+        Drawable drawable;
         if (state == ImageState.SUCCESSFULLY_PROCESSED) {
-            return ContextCompat.getDrawable(mContext, android.R.drawable.ic_input_get);
+            drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_input_get);
+        } else {
+            drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);
         }
-        return ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);
+        final int processingColor = getProcessingStateColor(state);
+        drawable.setAlpha(255);
+        drawable.setColorFilter(new PorterDuffColorFilter(processingColor, PorterDuff.Mode.SRC_IN));
+        return drawable;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    private int getProcessingStateColor(final ImageState processingState) {
+        return (processingState == ImageState.SUCCESSFULLY_PROCESSED)
+                ? ContextCompat.getColor(mContext, mPositiveColor)
+                : ContextCompat.getColor(mContext, mNegativeColor);
+    }
+
+    private static class EmptyViewHolder extends RecyclerView.ViewHolder {
+
+        EmptyViewHolder(final View itemView) {
+            super(itemView);
+        }
+    }
+
+    private static class ViewHolder extends RecyclerView.ViewHolder {
 
         AutoRotateImageView mImageView;
         ProgressBar mProgressBar;
         ImageView mStateImageView;
-        TextView mTextView;
+        View mStatusIndicator;
 
 
         ViewHolder(final View itemView) {
             super(itemView);
             mImageView = (AutoRotateImageView) itemView.findViewById(R.id.image_view);
             mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
-            mTextView = (TextView) itemView.findViewById(R.id.text_page);
+            mStatusIndicator = itemView.findViewById(R.id.status_indicator_view);
             mStateImageView = (ImageView) itemView.findViewById(R.id.image_state);
         }
     }
 
     interface Listener {
+        void onCameraClicked();
+
         void onImageClicked(final Image image);
     }
 }
