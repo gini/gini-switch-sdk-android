@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <net.gini.tariffsdk.utils.ColoredOverflowToolbar
+    <!--<net.gini.tariffsdk.utils.ColoredOverflowToolbar-->
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,8 +26,8 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:visibility="gone" />
 
-    </net.gini.tariffsdk.utils.ColoredOverflowToolbar>
-
+        <!--</net.gini.tariffsdk.utils.ColoredOverflowToolbar>-->
+    </android.support.v7.widget.Toolbar>
     <net.gini.tariffsdk.utils.AutoRotateImageView
         android:id="@+id/image_review"
         android:layout_width="match_parent"

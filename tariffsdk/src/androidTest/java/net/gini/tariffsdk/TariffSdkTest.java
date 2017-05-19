@@ -23,13 +23,13 @@ import org.junit.runner.RunWith;
 public class TariffSdkTest {
 
     private Context mContext;
+    private TariffSdk mTariffSdk;
 
     @Test
     @SmallTest
     public void customSettingsSDK_shouldSetButtonStyle() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        tariffSdk.setButtonStyleSelector(12345);
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        mTariffSdk.setButtonStyleSelector(12345);
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE, 0);
         assertEquals(12345, buttonTextColor);
     }
@@ -37,9 +37,8 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void customSettingsSDK_shouldSetButtonTextColor() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        tariffSdk.setButtonTextColor(12345);
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        mTariffSdk.setButtonTextColor(12345);
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, 0);
         assertEquals(12345, buttonTextColor);
     }
@@ -47,9 +46,8 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void customSettingsSDK_shouldSetNegativeColor() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        tariffSdk.setNegativeColor(12345);
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        mTariffSdk.setNegativeColor(12345);
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int negativeColor = intent.getIntExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, 0);
         assertEquals(12345, negativeColor);
     }
@@ -57,9 +55,8 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void customSettingsSDK_shouldSetPositiveColor() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        tariffSdk.setPositiveColor(12345);
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        mTariffSdk.setPositiveColor(12345);
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int positiveColor = intent.getIntExtra(BUNDLE_EXTRA_POSITIVE_COLOR, 0);
         assertEquals(12345, positiveColor);
     }
@@ -67,9 +64,8 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void customSettingsSDK_shouldSetTheme() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        tariffSdk.setTheme(12345);
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        mTariffSdk.setTheme(12345);
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int theme = intent.getIntExtra(BUNDLE_EXTRA_THEME, 0);
         assertEquals(12345, theme);
     }
@@ -77,8 +73,7 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldDefaultNegativeColor() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int negativeColor = intent.getIntExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, 0);
         assertEquals(R.color.negativeColor, negativeColor);
     }
@@ -86,8 +81,7 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldDefaultPositiveColor() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int positiveColor = intent.getIntExtra(BUNDLE_EXTRA_POSITIVE_COLOR, 0);
         assertEquals(R.color.positiveColor, positiveColor);
     }
@@ -95,8 +89,7 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldHaveGiniTheme() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int theme = intent.getIntExtra(BUNDLE_EXTRA_THEME, 0);
         assertEquals(R.style.GiniTheme, theme);
     }
@@ -104,8 +97,7 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldNotSetButtonStyle() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int buttonStyle = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE, 0);
         assertEquals(0, buttonStyle);
     }
@@ -113,8 +105,7 @@ public class TariffSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldNotSetButtonTextColor() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
-        Intent intent = tariffSdk.getTariffSdkIntent();
+        Intent intent = mTariffSdk.getTariffSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, 0);
         assertEquals(0, buttonTextColor);
     }
@@ -122,14 +113,14 @@ public class TariffSdkTest {
     @Before
     public void setUp() throws Exception {
         mContext = InstrumentationRegistry.getTargetContext();
+        mTariffSdk = TariffSdk.init(mContext, "", "", "");
     }
 
     @Test
     @SmallTest
     public void setupSDK_shouldBeSingleton() {
-        TariffSdk tariffSdk = TariffSdk.init(mContext, "", "", "");
         TariffSdk tariffSdk1 = TariffSdk.init(mContext, "", "", "");
-        assertEquals(tariffSdk, tariffSdk1);
+        assertEquals(mTariffSdk, tariffSdk1);
     }
 
     @After
