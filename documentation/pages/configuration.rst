@@ -41,8 +41,8 @@ Therefore the SDK provides the possibility to add a okHttpClient which is being 
 Accent Color
 ------------
 
-To set an accent color for the SDK you can use overwrite the ``GiniTheme`` style. This color is applied to the overflow menu icon, the text color of the buttons on dialogs and the color of the loading indicator. Overwritting other colors is being ignored and will not be processed by the SDK for now.
-This style can the be applied to the SDK with the ``setTheme()`` method.
+To set an accent color for the SDK you can overwrite the ``GiniTheme`` style. This color is applied to the overflow menu icon, the dialog's text color of their buttons and the color of the loading indicator. Overwritting other colors is being ignored and will not be processed by the SDK for now.
+This style can be applied to the SDK with the ``setTheme()`` method.
 
 .. code-block:: xml
 
@@ -59,7 +59,7 @@ This style can the be applied to the SDK with the ``setTheme()`` method.
 Button Style
 ------------
 
-To set an own button style a stateList drawable has to be created. This drawable should support all needed states of a button. e.g. pressed, focused. This drawable can be applied to the SDK with the ``setButtonStyleSelector()`` method and is used to style the buttons of the review screen, preview screen, take picture screen and show extractions screen.(TODO: add references to the screen pages)
+To set a custom button style a stateList drawable has to be created. This drawable should support all needed states of a button. e.g. pressed, focused. This drawable can be applied to the SDK with the ``setButtonStyleSelector()`` method and is used to style the buttons of the review screen, preview screen, take picture screen and show extractions screen.(TODO: add references to the screen pages)
 
 .. code-block:: java
 
@@ -82,7 +82,7 @@ The color has to be a resource id.
 Positive Color
 --------------
 
-To set the positive color use the ``setpositiveColor()`` method. This color is used to indicate that a process that a process did succeed. It is shown in status indicator of the images.
+To set the positive color use the ``setPositiveColor()`` method. This color is used to indicate that that a process succeeded. It is shown in status indicator of the images.
 The color has to be a resource id.
 
 .. code-block:: java
@@ -95,7 +95,7 @@ The color has to be a resource id.
 Negative Color
 --------------
 
-To set the negative color use the ``setNegativeColor()`` method. This color is used to indicate that a process did fail or something went wrong. It is shown in status indicator of the images.
+To set the negative color use the ``setNegativeColor()`` method. This color is used to indicate that that a process failed or something went wrong. It is shown in the status indicator of the images.
 The color has to be a resource id.
 
 .. code-block:: java

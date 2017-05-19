@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/primaryColor">
 
-    <net.gini.tariffsdk.utils.ColoredOverflowToolbar
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/titleTextColor" />
 
-    </net.gini.tariffsdk.utils.ColoredOverflowToolbar>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_rotate"
