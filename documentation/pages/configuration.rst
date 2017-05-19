@@ -105,6 +105,19 @@ The color has to be a resource id.
 .. note:: The color should indicate failure and can therefore be something like red.
 
 
+
+Exit Dialog Text
+----------------
+
+To set a title text for the exit dialog the ``setExitDialogText()`` method can be used. This dialog is shown when the user presses back or cancel.
+The text has to be a string resource id.
+
+.. code-block:: java
+
+  tariffSdk.setExitDialogText(R.string.exit_text);
+
+
+
 Overview Of Configurations
 ==========================
 
@@ -120,4 +133,5 @@ Accent Color         int            Yes
 Button Style         int            Yes
 Positive Color       int            Yes
 Negative Color       int            Yes
+Exit Dialog Text     int            Yes
 ==================   ============   ============

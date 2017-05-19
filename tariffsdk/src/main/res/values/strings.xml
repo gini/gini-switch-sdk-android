@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="confirm">Yes</string>
+    <string name="cancel">No</string>
+    <string name="exit_dialog_text">Abort Scanning Process?</string>
+    <string name="menu_entry_cancel">Cancel</string>
+</resources>

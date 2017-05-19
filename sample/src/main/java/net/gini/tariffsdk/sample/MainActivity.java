@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveColor(R.color.positiveColor)
                         .setNegativeColor(R.color.negativeColor)
                         .setTheme(R.style.CustomTheme)
+                        .setExitDialogText(R.string.exit_text)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }
