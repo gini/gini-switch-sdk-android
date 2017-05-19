@@ -64,7 +64,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
     private int getAnalyzedImageFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE,
-                R.drawable.analyzed_image);
+                R.drawable.ic_check_circle);
     }
 
     private int getAnalyzedTextColorFromBundle() {

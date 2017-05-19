@@ -67,22 +67,11 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultTextSize() {
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
-        int defaultSize = mContext.getResources().getInteger(R.integer.analyzed_text_size);
-        assertEquals(defaultSize, textSize);
-    }
-
-
-    @Test
-    @SmallTest
     public void default_shouldHaveDefaultImage() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(R.drawable.analyzed_image, image);
+        assertEquals(R.drawable.ic_check_circle, image);
     }
 
     @Test
@@ -101,6 +90,16 @@ public class IntentFactoryTest {
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
         assertEquals(R.color.titleTextColor, color);
+    }
+
+    @Test
+    @SmallTest
+    public void default_shouldHaveDefaultTextSize() {
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
+        int defaultSize = mContext.getResources().getInteger(R.integer.analyzed_text_size);
+        assertEquals(defaultSize, textSize);
     }
 
     @Before

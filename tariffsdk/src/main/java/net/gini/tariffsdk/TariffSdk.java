@@ -53,7 +53,7 @@ public class TariffSdk {
         mNegativeColor = R.color.negativeColor;
         mTheme = R.style.GiniTheme;
         mAnalyzedText = R.string.analyzed_text;
-        mAnalyzedImage = R.drawable.analyzed_image;
+        mAnalyzedImage = R.drawable.ic_check_circle;
         mAnalyzedTextColor = R.color.titleTextColor;
         mAnalyzedTextSize = context.getResources().getInteger(R.integer.analyzed_text_size);
     }

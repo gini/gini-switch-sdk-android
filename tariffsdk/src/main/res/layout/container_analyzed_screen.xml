@@ -12,7 +12,7 @@
         android:layout_height="96dp"
         android:layout_above="@+id/analyzed_text"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/analyzed_image" />
+        android:src="@drawable/ic_check_circle" />
 
     <TextView
         android:id="@+id/analyzed_text"
