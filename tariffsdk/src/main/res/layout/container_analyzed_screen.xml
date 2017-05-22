@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:textColor="@color/titleTextColor"
+        android:textColor="@color/primaryText"
         android:textSize="24sp"
         tools:text="Wir haben Alles was wir für einen Anbieterwechsel brauchen. Tralala" />
 

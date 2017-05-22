@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:parentTag="android.support.design.widget.TextInputLayout"
+    tools:parentTag="LinearLayout"
     tools:showIn="@layout/activity_extractions">
 
-    <android.support.design.widget.TextInputEditText
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingStart="4dp"
+        android:textSize="12sp" />
+
+    <FrameLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <EditText
         android:id="@+id/text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:maxLines="1" />
+    </FrameLayout>
 
 </merge>

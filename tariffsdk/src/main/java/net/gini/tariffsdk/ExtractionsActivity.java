@@ -26,6 +26,11 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR";
     static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE =
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
+    static final String BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR =
+            "BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR";
+    static final String BUNDLE_EXTRA_EDIT_TEXT_COLOR = "BUNDLE_EXTRA_EDIT_TEXT_COLOR";
+    static final String BUNDLE_EXTRA_HINT_COLOR = "BUNDLE_EXTRA_HINT_COLOR";
+    static final String BUNDLE_EXTRA_LINE_COLOR = "BUNDLE_EXTRA_LINE_COLOR";
     private ExtractionService mExtractionService;
     private LinearLayout mExtractionViewContainer;
 
@@ -58,8 +63,9 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
                 finish();
             }
         });
-        viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
-
+        if (hasCustomButtonStyleSet()) {
+            viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+        }
     }
 
     private int getAnalyzedImageFromBundle() {
@@ -69,7 +75,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
     private int getAnalyzedTextColorFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
-                R.color.titleTextColor);
+                R.color.primaryText);
     }
 
     private int getAnalyzedTextFromBundle() {
@@ -79,6 +85,23 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
     private int getAnalyzedTextSizeFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
                 getResources().getInteger(R.integer.analyzed_text_size));
+    }
+
+    private int getEditTextBackgroundColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR,
+                R.color.secondaryColor);
+    }
+
+    private int getEditTextColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, R.color.primaryText);
+    }
+
+    private int getHintColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_HINT_COLOR, R.color.primaryText);
+    }
+
+    private int getLineColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_LINE_COLOR, R.color.primaryText);
     }
 
     private void setExtractions() {
@@ -93,6 +116,11 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         mExtractionViewContainer.removeAllViews();
         for (Extraction extraction : extractionSet) {
             SingleExtractionView view = new SingleExtractionView(this, extraction);
+            view.setTextColor(getEditTextColorFromBundle());
+
+            view.setHintColor(getHintColorFromBundle());
+            view.setLineColor(getLineColorFromBundle());
+            view.setBackgroundColor(getEditTextBackgroundColorFromBundle());
             mExtractionViewContainer.addView(view);
         }
     }
@@ -101,7 +129,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         final View containerExtractions = findViewById(R.id.container_extractions);
         ViewCompat.animate(containerSplash)
                 .translationY(height)
-                .setDuration(500)
+                .setDuration(250)
                 .setStartDelay(3000)
                 .setListener(new ViewPropertyAnimatorListener() {
                     @Override
