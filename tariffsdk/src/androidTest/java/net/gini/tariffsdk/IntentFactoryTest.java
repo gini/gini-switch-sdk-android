@@ -6,6 +6,7 @@ import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZE
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_TEXT;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_HINT_COLOR;
@@ -27,6 +28,16 @@ public class IntentFactoryTest {
 
     private Context mContext;
     private TariffSdk mTariffSdk;
+
+    @Test
+    @SmallTest
+    public void custom_shouldHaveCustomButtonText() {
+        mTariffSdk.setExtractionButtonText(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int buttonText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
+        assertEquals(12345, buttonText);
+    }
 
     @Test
     @SmallTest
@@ -106,6 +117,15 @@ public class IntentFactoryTest {
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
         assertEquals(16, textSize);
+    }
+
+    @Test
+    @SmallTest
+    public void default_shouldHaveDefaultButtonText() {
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
+        assertEquals(R.string.button_extractions, textColor);
     }
 
     @Test

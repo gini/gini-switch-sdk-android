@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         .setTheme(R.style.CustomTheme)
                         .setExitDialogText(R.string.exit_text)
                         .setAnalyzedTextSize(16)
+                        .setExtractionEditTextBackgroundColor(R.color.primaryColor)
                         .getTariffSdkIntent();
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }

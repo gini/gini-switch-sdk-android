@@ -26,6 +26,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR";
     static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE =
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
+    static final String BUNDLE_EXTRA_BUTTON_TEXT = "BUNDLE_EXTRA_BUTTON_TEXT";
     static final String BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR =
             "BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR";
     static final String BUNDLE_EXTRA_EDIT_TEXT_COLOR = "BUNDLE_EXTRA_EDIT_TEXT_COLOR";
@@ -54,8 +55,8 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         //TODO make this generic so we can set the showing fields via remote config
         setExtractionsInView(mExtractionService.getExtractions());
 
-        final Button viewById = (Button) findViewById(R.id.button_done);
-        viewById.setOnClickListener(new View.OnClickListener() {
+        final Button confirmButton = (Button) findViewById(R.id.button_done);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 setExtractions();
@@ -64,8 +65,14 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
             }
         });
         if (hasCustomButtonStyleSet()) {
-            viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+            confirmButton.setBackgroundResource(getButtonStyleResourceIdFromBundle());
         }
+        if (hasCustomButtonTextColor()) {
+            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
+            int textColor = ContextCompat.getColor(this, customButtonTextColor);
+            confirmButton.setTextColor(textColor);
+        }
+        confirmButton.setText(getButtonTextFromBundle());
     }
 
     private int getAnalyzedImageFromBundle() {
@@ -85,6 +92,10 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
     private int getAnalyzedTextSizeFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
                 getResources().getInteger(R.integer.analyzed_text_size));
+    }
+
+    private int getButtonTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, R.string.button_extractions);
     }
 
     private int getEditTextBackgroundColorFromBundle() {

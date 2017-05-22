@@ -38,6 +38,7 @@ public class TariffSdk {
     private int mButtonSelector;
     private int mButtonTextColor;
     private int mExitDialogText;
+    private int mExtractionButtonText;
     private int mExtractionEditTextBackgroundColor;
     private int mExtractionEditTextColor;
     private int mExtractionHintColor;
@@ -66,6 +67,7 @@ public class TariffSdk {
         mExtractionHintColor = R.color.secondaryText;
         mExtractionLineColor = R.color.primaryText;
         mExtractionEditTextBackgroundColor = R.color.secondaryColor;
+        mExtractionButtonText = R.string.button_extractions;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -84,21 +86,6 @@ public class TariffSdk {
             }
         }
         return mSingleton;
-    }
-
-    public int getExtractionEditTextBackgroundColor() {
-        return mExtractionEditTextBackgroundColor;
-    }
-
-    /**
-     * Set the background color of the edit text in the extraction Screen.
-     *
-     * @param color the resource id of the text color
-     * @return the instance of the available SDK
-     */
-    public TariffSdk setExtractionEditTextBackgroundColor(@ColorRes final int color) {
-        mExtractionEditTextBackgroundColor = color;
-        return this;
     }
 
     /**
@@ -265,6 +252,36 @@ public class TariffSdk {
      */
     public TariffSdk setExitDialogText(@StringRes final int text) {
         mExitDialogText = text;
+        return this;
+    }
+
+    int getExtractionButtonText() {
+        return mExtractionButtonText;
+    }
+
+    /**
+     * Set the text for the button on the extraction Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionButtonText(@StringRes final int text) {
+        mExtractionButtonText = text;
+        return this;
+    }
+
+    int getExtractionEditTextBackgroundColor() {
+        return mExtractionEditTextBackgroundColor;
+    }
+
+    /**
+     * Set the background color of the edit text in the extraction Screen.
+     *
+     * @param color the resource id of the text color
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionEditTextBackgroundColor(@ColorRes final int color) {
+        mExtractionEditTextBackgroundColor = color;
         return this;
     }
 
