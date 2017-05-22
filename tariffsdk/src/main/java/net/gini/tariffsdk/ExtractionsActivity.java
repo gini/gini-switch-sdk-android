@@ -64,15 +64,8 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
                 finish();
             }
         });
-        if (hasCustomButtonStyleSet()) {
-            confirmButton.setBackgroundResource(getButtonStyleResourceIdFromBundle());
-        }
-        if (hasCustomButtonTextColor()) {
-            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
-            int textColor = ContextCompat.getColor(this, customButtonTextColor);
-            confirmButton.setTextColor(textColor);
-        }
-        confirmButton.setText(getButtonTextFromBundle());
+
+        styleConfirmButton(confirmButton);
     }
 
     private int getAnalyzedImageFromBundle() {
@@ -132,6 +125,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
             view.setHintColor(getHintColorFromBundle());
             view.setLineColor(getLineColorFromBundle());
             view.setBackgroundColor(getEditTextBackgroundColorFromBundle());
+            view.setNegativeColor(getNegativeColor());
             mExtractionViewContainer.addView(view);
         }
     }
@@ -166,5 +160,19 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         analyzedText.setText(getAnalyzedTextFromBundle());
         analyzedText.setTextColor(ContextCompat.getColor(this, getAnalyzedTextColorFromBundle()));
         analyzedText.setTextSize(COMPLEX_UNIT_SP, getAnalyzedTextSizeFromBundle());
+    }
+
+    private void styleConfirmButton(final Button confirmButton) {
+        if (hasCustomButtonStyleSet()) {
+            confirmButton.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+        } else {
+            confirmButton.setBackgroundColor(ContextCompat.getColor(this, R.color.button_confirm));
+        }
+        int customButtonTextColor =
+                hasCustomButtonTextColor() ? getButtonTextColorResourceIdFromBundle()
+                        : R.color.primaryText;
+        int textColor = ContextCompat.getColor(this, customButtonTextColor);
+        confirmButton.setTextColor(textColor);
+        confirmButton.setText(getButtonTextFromBundle());
     }
 }
