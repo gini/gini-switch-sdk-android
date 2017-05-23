@@ -13,6 +13,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private final TakePictureContract.View mView;
     @VisibleForTesting
     int mBuildVersion = android.os.Build.VERSION.SDK_INT;
+    private Image mSelectedImage = null;
 
     TakePicturePresenter(final TakePictureContract.View view,
             final DocumentService documentService) {
@@ -28,7 +29,9 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void onImageSelected(final Image image) {
+        mSelectedImage = image;
         mView.showImagePreview(image);
+        mView.displayImageProcessingState(image);
         mView.showPreviewButtons();
         mView.hideTakePictureButtons();
     }
@@ -46,6 +49,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void onTakePictureSelected() {
+        mSelectedImage = null;
         mView.openTakePictureScreen();
         mView.showTakePictureButtons();
         mView.hidePreviewButtons();

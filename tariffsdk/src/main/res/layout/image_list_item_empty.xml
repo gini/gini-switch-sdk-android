@@ -3,12 +3,15 @@
     android:layout_width="64dp"
     android:layout_height="80dp"
     android:layout_margin="4dp"
-    android:background="#4a4a4a"
+    android:background="@color/secondaryColor"
     android:orientation="vertical">
 
-    <ImageView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@android:drawable/ic_menu_camera" />
+        android:gravity="center"
+        android:text="+"
+        android:textColor="@color/titleTextColor"
+        android:textSize="36sp" />
 
 </LinearLayout>
