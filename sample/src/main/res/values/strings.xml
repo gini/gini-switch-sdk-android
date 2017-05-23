@@ -3,4 +3,5 @@
     <string name="analyzedText">Awesome Analyzed Text</string>
     <string name="exit_text">Wanna Quit?</string>
     <string name="custom_extractions_title">Check your extractions.</string>
+    <string name="custom_extractions_button_text">Do it</string>
 </resources>
