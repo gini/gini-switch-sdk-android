@@ -123,7 +123,7 @@ public class IntentFactoryTest {
     @Test
     @SmallTest
     public void custom_shouldHaveCustomTitleText() {
-        mTariffSdk.setAnalyzedText(12345);
+        mTariffSdk.setExtractionTitleText(12345);
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, 0);
