@@ -136,8 +136,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
-        final Button viewById = (Button) findViewById(R.id.button_finish);
-        viewById.setOnClickListener(new View.OnClickListener() {
+        final Button finishButton = (Button) findViewById(R.id.button_finish);
+        finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 mPresenter.onAllPicturesTaken();
@@ -175,14 +175,18 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             int customButtonStyle = getButtonStyleResourceIdFromBundle();
             deleteImageButton.setBackgroundResource(customButtonStyle);
             retakeImageButton.setBackgroundResource(customButtonStyle);
-            viewById.setBackgroundResource(customButtonStyle);
+            finishButton.setBackgroundResource(customButtonStyle);
+        } else {
+            finishButton.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryColor));
         }
 
         if (hasCustomButtonTextColor()) {
             int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
             int textColor = ContextCompat.getColor(this, customButtonTextColor);
             retakeImageButton.setTextColor(textColor);
-            viewById.setTextColor(textColor);
+            finishButton.setTextColor(textColor);
+        } else {
+            finishButton.setTextColor(getAccentColor());
         }
 
     }

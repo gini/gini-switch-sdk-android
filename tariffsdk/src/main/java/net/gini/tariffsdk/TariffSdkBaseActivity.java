@@ -70,19 +70,23 @@ class TariffSdkBaseActivity extends AppCompatActivity implements
     protected void colorToolbar(final Toolbar toolbar) {
         Drawable drawable = toolbar.getOverflowIcon();
         if (drawable != null) {
-
-            final TypedValue typedValue = new TypedValue();
-            final TypedArray typedArray = obtainStyledAttributes(typedValue.data,
-                    new int[]{R.attr.colorAccent});
-            try {
-                final int color = typedArray.getColor(0, 0);
                 drawable = DrawableCompat.wrap(drawable);
-                DrawableCompat.setTint(drawable.mutate(), color);
+            DrawableCompat.setTint(drawable.mutate(), getAccentColor());
                 toolbar.setOverflowIcon(drawable);
-            } finally {
-                typedArray.recycle();
-            }
         }
+    }
+
+    protected int getAccentColor() {
+        final TypedValue typedValue = new TypedValue();
+        final TypedArray typedArray = obtainStyledAttributes(typedValue.data,
+                new int[]{R.attr.colorAccent});
+        int color;
+        try {
+            color = typedArray.getColor(0, 0);
+        } finally {
+            typedArray.recycle();
+        }
+        return color;
     }
 
     protected int getButtonStyleResourceIdFromBundle() {
