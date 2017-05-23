@@ -32,6 +32,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
     static final String BUNDLE_EXTRA_EDIT_TEXT_COLOR = "BUNDLE_EXTRA_EDIT_TEXT_COLOR";
     static final String BUNDLE_EXTRA_HINT_COLOR = "BUNDLE_EXTRA_HINT_COLOR";
     static final String BUNDLE_EXTRA_LINE_COLOR = "BUNDLE_EXTRA_LINE_COLOR";
+    static final String BUNDLE_EXTRA_TITLE_TEXT = "BUNDLE_EXTRA_TITLE_TEXT";
     private ExtractionService mExtractionService;
     private LinearLayout mExtractionViewContainer;
 
@@ -66,6 +67,9 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         });
 
         styleConfirmButton(confirmButton);
+
+        TextView title = (TextView) findViewById(R.id.extractions_title);
+        title.setText(getTitleTextIdFromBundle());
     }
 
     private int getAnalyzedImageFromBundle() {
@@ -106,6 +110,10 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
     private int getLineColorFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_LINE_COLOR, R.color.primaryText);
+    }
+
+    private int getTitleTextIdFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, R.string.extractions_title);
     }
 
     private void setExtractions() {

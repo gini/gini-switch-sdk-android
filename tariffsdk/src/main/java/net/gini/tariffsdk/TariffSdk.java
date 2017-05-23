@@ -43,6 +43,7 @@ public class TariffSdk {
     private int mExtractionEditTextColor;
     private int mExtractionHintColor;
     private int mExtractionLineColor;
+    private int mExtractionTitleText;
     private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
@@ -68,6 +69,7 @@ public class TariffSdk {
         mExtractionLineColor = R.color.primaryText;
         mExtractionEditTextBackgroundColor = R.color.secondaryColor;
         mExtractionButtonText = R.string.button_extractions;
+        mExtractionTitleText = R.string.extractions_title;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -332,6 +334,21 @@ public class TariffSdk {
 
     ExtractionService getExtractionService() {
         return mExtractionService;
+    }
+
+    int getExtractionTitleText() {
+        return mExtractionTitleText;
+    }
+
+    /**
+     * Set the text for the title on the extraction Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionTitleText(@StringRes final int text) {
+        mExtractionTitleText = text;
+        return this;
     }
 
     int getNegativeColor() {

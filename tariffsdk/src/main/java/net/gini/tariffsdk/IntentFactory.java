@@ -10,6 +10,7 @@ import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_BACK
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_HINT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_LINE_COLOR;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_TITLE_TEXT;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
@@ -38,6 +39,7 @@ final class IntentFactory {
     private final int mExtractionEditTextColor;
     private final int mExtractionHintColor;
     private final int mExtractionLineColor;
+    private final int mExtractionTitleText;
     private final int mNegativeColor;
     private final int mPositiveColor;
     private final int mTheme;
@@ -59,6 +61,7 @@ final class IntentFactory {
         mExtractionLineColor = tariffSdk.getExtractionLineColor();
         mExtractionEditTextBackgroundColor = tariffSdk.getExtractionEditTextBackgroundColor();
         mExtractionButtonText = tariffSdk.getExtractionButtonText();
+        mExtractionTitleText = tariffSdk.getExtractionTitleText();
     }
 
     Intent createExtractionsActivity() {
@@ -73,6 +76,7 @@ final class IntentFactory {
         intent.putExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR,
                 mExtractionEditTextBackgroundColor);
         intent.putExtra(BUNDLE_EXTRA_BUTTON_TEXT, mExtractionButtonText);
+        intent.putExtra(BUNDLE_EXTRA_TITLE_TEXT, mExtractionTitleText);
         addDefaultExtras(intent);
         return intent;
     }

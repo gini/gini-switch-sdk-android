@@ -11,6 +11,7 @@ import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_BACK
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_HINT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_LINE_COLOR;
+import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_TITLE_TEXT;
 
 import android.content.Context;
 import android.content.Intent;
@@ -121,6 +122,16 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
+    public void custom_shouldHaveCustomTitleText() {
+        mTariffSdk.setAnalyzedText(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, 0);
+        assertEquals(12345, titleText);
+    }
+
+    @Test
+    @SmallTest
     public void default_shouldHaveDefaultButtonText() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
@@ -199,6 +210,15 @@ public class IntentFactoryTest {
         int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
         int defaultSize = mContext.getResources().getInteger(R.integer.analyzed_text_size);
         assertEquals(defaultSize, textSize);
+    }
+
+    @Test
+    @SmallTest
+    public void default_shouldHaveDefaultTitleText() {
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, 0);
+        assertEquals(R.string.extractions_title, titleText);
     }
 
     @Before
