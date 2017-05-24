@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -83,6 +82,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
         mCamera = getCameraInstance();
         mCameraInfo = getCameraInfo();
             mHolder.addCallback(this);
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     @Override
@@ -124,43 +124,22 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
                 mCamera.setParameters(parameters);
 
+                if (mOrientation != Orientation.DEFAULT) {
+                    mCamera.setDisplayOrientation(
+                            getOrientation(mOrientation, mCurrentOrientation));
+                }
+
                 mCamera.startPreview();
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d(TAG, "Error setting camera preview: " + e.getLocalizedMessage());
         }
     }
 
     @Override
     public void surfaceCreated(final SurfaceHolder surfaceHolder) {
-        if (mHolder.getSurface() == null || mCamera == null) {
-            // preview surface does not exist, or camera
-            return;
-        }
 
-        // stop preview before making changes
-        try {
-            mCamera.stopPreview();
-        } catch (Exception e) {
-            // ignore: tried to stop a non-existent preview
-        }
-
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
-
-        if (mOrientation != Orientation.DEFAULT) {
-            mCamera.setDisplayOrientation(getOrientation(mOrientation, mCurrentOrientation));
-        }
-
-        // start preview with new settings
-        try {
-            mCamera.setPreviewDisplay(mHolder);
-            mCamera.startPreview();
-
-        } catch (Exception e) {
-            Log.d(TAG, "Error starting camera preview: " + e.getLocalizedMessage());
-        }
     }
 
     @Override
