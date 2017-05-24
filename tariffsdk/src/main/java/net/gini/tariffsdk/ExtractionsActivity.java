@@ -26,6 +26,13 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR";
     static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE =
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
+    static final String BUNDLE_EXTRA_BUTTON_TEXT = "BUNDLE_EXTRA_BUTTON_TEXT";
+    static final String BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR =
+            "BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR";
+    static final String BUNDLE_EXTRA_EDIT_TEXT_COLOR = "BUNDLE_EXTRA_EDIT_TEXT_COLOR";
+    static final String BUNDLE_EXTRA_HINT_COLOR = "BUNDLE_EXTRA_HINT_COLOR";
+    static final String BUNDLE_EXTRA_LINE_COLOR = "BUNDLE_EXTRA_LINE_COLOR";
+    static final String BUNDLE_EXTRA_TITLE_TEXT = "BUNDLE_EXTRA_TITLE_TEXT";
     private ExtractionService mExtractionService;
     private LinearLayout mExtractionViewContainer;
 
@@ -49,8 +56,8 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         //TODO make this generic so we can set the showing fields via remote config
         setExtractionsInView(mExtractionService.getExtractions());
 
-        final Button viewById = (Button) findViewById(R.id.button_done);
-        viewById.setOnClickListener(new View.OnClickListener() {
+        final Button confirmButton = (Button) findViewById(R.id.button_done);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 setExtractions();
@@ -58,8 +65,11 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
                 finish();
             }
         });
-        viewById.setBackgroundResource(getButtonStyleResourceIdFromBundle());
 
+        styleConfirmButton(confirmButton);
+
+        TextView title = (TextView) findViewById(R.id.extractions_title);
+        title.setText(getTitleTextIdFromBundle());
     }
 
     private int getAnalyzedImageFromBundle() {
@@ -69,7 +79,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
     private int getAnalyzedTextColorFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
-                R.color.titleTextColor);
+                R.color.primaryText);
     }
 
     private int getAnalyzedTextFromBundle() {
@@ -79,6 +89,31 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
     private int getAnalyzedTextSizeFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
                 getResources().getInteger(R.integer.analyzed_text_size));
+    }
+
+    private int getButtonTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, R.string.button_extractions);
+    }
+
+    private int getEditTextBackgroundColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR,
+                R.color.secondaryColor);
+    }
+
+    private int getEditTextColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, R.color.primaryText);
+    }
+
+    private int getHintColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_HINT_COLOR, R.color.primaryText);
+    }
+
+    private int getLineColorFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_LINE_COLOR, R.color.primaryText);
+    }
+
+    private int getTitleTextIdFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, R.string.extractions_title);
     }
 
     private void setExtractions() {
@@ -93,6 +128,12 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         mExtractionViewContainer.removeAllViews();
         for (Extraction extraction : extractionSet) {
             SingleExtractionView view = new SingleExtractionView(this, extraction);
+            view.setTextColor(getEditTextColorFromBundle());
+
+            view.setHintColor(getHintColorFromBundle());
+            view.setLineColor(getLineColorFromBundle());
+            view.setBackgroundColor(getEditTextBackgroundColorFromBundle());
+            view.setNegativeColor(getNegativeColor());
             mExtractionViewContainer.addView(view);
         }
     }
@@ -101,7 +142,7 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         final View containerExtractions = findViewById(R.id.container_extractions);
         ViewCompat.animate(containerSplash)
                 .translationY(height)
-                .setDuration(500)
+                .setDuration(250)
                 .setStartDelay(3000)
                 .setListener(new ViewPropertyAnimatorListener() {
                     @Override
@@ -127,5 +168,19 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         analyzedText.setText(getAnalyzedTextFromBundle());
         analyzedText.setTextColor(ContextCompat.getColor(this, getAnalyzedTextColorFromBundle()));
         analyzedText.setTextSize(COMPLEX_UNIT_SP, getAnalyzedTextSizeFromBundle());
+    }
+
+    private void styleConfirmButton(final Button confirmButton) {
+        if (hasCustomButtonStyleSet()) {
+            confirmButton.setBackgroundResource(getButtonStyleResourceIdFromBundle());
+        } else {
+            confirmButton.setBackgroundColor(ContextCompat.getColor(this, R.color.button_confirm));
+        }
+        int customButtonTextColor =
+                hasCustomButtonTextColor() ? getButtonTextColorResourceIdFromBundle()
+                        : R.color.primaryText;
+        int textColor = ContextCompat.getColor(this, customButtonTextColor);
+        confirmButton.setTextColor(textColor);
+        confirmButton.setText(getButtonTextFromBundle());
     }
 }

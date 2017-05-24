@@ -38,6 +38,12 @@ public class TariffSdk {
     private int mButtonSelector;
     private int mButtonTextColor;
     private int mExitDialogText;
+    private int mExtractionButtonText;
+    private int mExtractionEditTextBackgroundColor;
+    private int mExtractionEditTextColor;
+    private int mExtractionHintColor;
+    private int mExtractionLineColor;
+    private int mExtractionTitleText;
     private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
@@ -56,8 +62,14 @@ public class TariffSdk {
         mExitDialogText = R.string.exit_dialog_text;
         mAnalyzedText = R.string.analyzed_text;
         mAnalyzedImage = R.drawable.ic_check_circle;
-        mAnalyzedTextColor = R.color.titleTextColor;
+        mAnalyzedTextColor = R.color.primaryText;
         mAnalyzedTextSize = context.getResources().getInteger(R.integer.analyzed_text_size);
+        mExtractionEditTextColor = R.color.primaryText;
+        mExtractionHintColor = R.color.secondaryText;
+        mExtractionLineColor = R.color.primaryText;
+        mExtractionEditTextBackgroundColor = R.color.secondaryColor;
+        mExtractionButtonText = R.string.button_extractions;
+        mExtractionTitleText = R.string.extractions_title;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -245,8 +257,98 @@ public class TariffSdk {
         return this;
     }
 
+    int getExtractionButtonText() {
+        return mExtractionButtonText;
+    }
+
+    /**
+     * Set the text for the button on the extraction Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionButtonText(@StringRes final int text) {
+        mExtractionButtonText = text;
+        return this;
+    }
+
+    int getExtractionEditTextBackgroundColor() {
+        return mExtractionEditTextBackgroundColor;
+    }
+
+    /**
+     * Set the background color of the edit text in the extraction Screen.
+     *
+     * @param color the resource id of the text color
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionEditTextBackgroundColor(@ColorRes final int color) {
+        mExtractionEditTextBackgroundColor = color;
+        return this;
+    }
+
+    int getExtractionEditTextColor() {
+        return mExtractionEditTextColor;
+    }
+
+    /**
+     * Set the edit text color for the extraction Screen.
+     *
+     * @param color the resource id of the text color
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionEditTextColor(@ColorRes final int color) {
+        mExtractionEditTextColor = color;
+        return this;
+    }
+
+    int getExtractionHintColor() {
+        return mExtractionHintColor;
+    }
+
+    /**
+     * Set the hint color of the edit text in the extraction Screen.
+     *
+     * @param color the resource id of the text color
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionHintColor(@ColorRes final int color) {
+        mExtractionHintColor = color;
+        return this;
+    }
+
+    int getExtractionLineColor() {
+        return mExtractionLineColor;
+    }
+
+    /**
+     * Set the line color of the edit text in the extraction Screen.
+     *
+     * @param color the resource id of the text color
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionLineColor(@ColorRes final int color) {
+        mExtractionLineColor = color;
+        return this;
+    }
+
     ExtractionService getExtractionService() {
         return mExtractionService;
+    }
+
+    int getExtractionTitleText() {
+        return mExtractionTitleText;
+    }
+
+    /**
+     * Set the text for the title on the extraction Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setExtractionTitleText(@StringRes final int text) {
+        mExtractionTitleText = text;
+        return this;
     }
 
     int getNegativeColor() {
