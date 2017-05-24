@@ -5,11 +5,15 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +22,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import net.gini.tariffsdk.camera.Camera1;
@@ -36,14 +41,40 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
+    private ImageView mImagePreviewState;
     private TakePictureContract.Presenter mPresenter;
     private View mPreviewButtonsContainer;
     private ProgressBar mProgressBar;
+    private Image mSelectedImage;
     private ImageButton mTakePictureButton;
     private View mTakePictureButtonsContainer;
 
     @Override
     public void cameraPermissionsDenied() {
+
+    }
+
+    @Override
+    public void displayImageProcessingState(final Image image) {
+        final Drawable drawable;
+        if (image.getProcessingState() != ImageState.PROCESSING) {
+            if (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED) {
+                drawable = ContextCompat.getDrawable(this, R.drawable.ic_check);
+            } else {
+                drawable = ContextCompat.getDrawable(this, R.drawable.ic_cross);
+            }
+            final int processingColor =
+                    (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED)
+                            ? ContextCompat.getColor(this, getPositiveColor())
+                            : ContextCompat.getColor(this, getNegativeColor());
+            drawable.setAlpha(255);
+            drawable.setColorFilter(
+                    new PorterDuffColorFilter(processingColor, PorterDuff.Mode.SRC_IN));
+            mImagePreviewState.setImageDrawable(drawable);
+            mImagePreviewState.setVisibility(View.VISIBLE);
+        } else {
+            mImagePreviewState.setVisibility(View.GONE);
+        }
 
     }
 
@@ -69,6 +100,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             @Override
             public void run() {
                 mAdapter.updateImageState(image);
+                if (mSelectedImage == image) {
+                    displayImageProcessingState(image);
+                }
             }
         });
     }
@@ -136,8 +170,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
-        final Button viewById = (Button) findViewById(R.id.button_finish);
-        viewById.setOnClickListener(new View.OnClickListener() {
+        final Button finishButton = (Button) findViewById(R.id.button_finish);
+        finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 mPresenter.onAllPicturesTaken();
@@ -146,7 +180,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
-
+        mImagePreviewState = (ImageView) findViewById(R.id.image_state);
 
         final RecyclerView imageRecyclerView = (RecyclerView) toolbar.getChildAt(0);
         imageRecyclerView.setLayoutManager(
@@ -175,14 +209,23 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             int customButtonStyle = getButtonStyleResourceIdFromBundle();
             deleteImageButton.setBackgroundResource(customButtonStyle);
             retakeImageButton.setBackgroundResource(customButtonStyle);
-            viewById.setBackgroundResource(customButtonStyle);
+            finishButton.setBackgroundResource(customButtonStyle);
+        } else {
+            ViewCompat.setBackgroundTintList(retakeImageButton,
+                    ContextCompat.getColorStateList(this, R.color.positiveColor));
+            ViewCompat.setBackgroundTintList(deleteImageButton,
+                    ContextCompat.getColorStateList(this, R.color.negativeColor));
+            ViewCompat.setBackgroundTintList(finishButton,
+                    ContextCompat.getColorStateList(this, R.color.primaryColor));
         }
 
         if (hasCustomButtonTextColor()) {
             int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
             int textColor = ContextCompat.getColor(this, customButtonTextColor);
             retakeImageButton.setTextColor(textColor);
-            viewById.setTextColor(textColor);
+            finishButton.setTextColor(textColor);
+        } else {
+            finishButton.setTextColor(getAccentColor());
         }
 
     }
@@ -245,8 +288,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void openTakePictureScreen() {
+        mSelectedImage = null;
         mCameraPreview.setVisibility(View.VISIBLE);
         mImagePreview.setVisibility(View.GONE);
+        mImagePreviewState.setVisibility(View.GONE);
+        mImagePreviewState.setVisibility(View.GONE);
     }
 
     @Override
@@ -269,6 +315,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void showImagePreview(final Image image) {
+        mSelectedImage = image;
         mImagePreview.displayImage(image.getUri());
         mCameraPreview.setVisibility(View.GONE);
         mImagePreview.setVisibility(View.VISIBLE);

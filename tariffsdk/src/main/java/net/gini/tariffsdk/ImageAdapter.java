@@ -117,9 +117,9 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Drawable getImageDrawableFromState(final ImageState state) {
         Drawable drawable;
         if (state == ImageState.SUCCESSFULLY_PROCESSED) {
-            drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_input_get);
+            drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_check);
         } else {
-            drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_delete);
+            drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_cross);
         }
         final int processingColor = getProcessingStateColor(state);
         drawable.setAlpha(255);

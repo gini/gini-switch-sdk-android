@@ -3,6 +3,7 @@
     <color name="primaryText">#FFFFFF</color>
     <color name="secondaryText">#9B9B9B</color>
     <color name="positiveColor">#20BAA7</color>
+    <color name="titleTextColor">#FFFFFF</color>
     <color name="negativeColor">#CC2166</color>
     <color name="primaryColor">#000000</color>
     <color name="primaryColorDark">#000000</color>

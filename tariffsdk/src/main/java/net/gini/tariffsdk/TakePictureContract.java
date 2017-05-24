@@ -31,6 +31,8 @@ interface TakePictureContract {
 
         void cameraPermissionsDenied();
 
+        void displayImageProcessingState(Image image);
+
         boolean hasCameraPermissions();
 
         void hidePreviewButtons();
