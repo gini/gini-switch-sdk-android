@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +72,12 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
             int customButtonStyle = getButtonStyleResourceIdFromBundle();
             discardButton.setBackgroundResource(customButtonStyle);
             keepButton.setBackgroundResource(customButtonStyle);
+        } else {
+            ViewCompat.setBackgroundTintList(keepButton,
+                    ContextCompat.getColorStateList(this, R.color.positiveColor));
+            ViewCompat.setBackgroundTintList(discardButton,
+                    ContextCompat.getColorStateList(this, R.color.negativeColor));
+
         }
 
         if (hasCustomButtonTextColor()) {

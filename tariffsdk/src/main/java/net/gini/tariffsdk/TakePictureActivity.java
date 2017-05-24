@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -209,6 +210,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             deleteImageButton.setBackgroundResource(customButtonStyle);
             retakeImageButton.setBackgroundResource(customButtonStyle);
             finishButton.setBackgroundResource(customButtonStyle);
+        } else {
+            ViewCompat.setBackgroundTintList(retakeImageButton,
+                    ContextCompat.getColorStateList(this, R.color.positiveColor));
+            ViewCompat.setBackgroundTintList(deleteImageButton,
+                    ContextCompat.getColorStateList(this, R.color.negativeColor));
+            ViewCompat.setBackgroundTintList(finishButton,
+                    ContextCompat.getColorStateList(this, R.color.primaryColor));
         }
 
         if (hasCustomButtonTextColor()) {
