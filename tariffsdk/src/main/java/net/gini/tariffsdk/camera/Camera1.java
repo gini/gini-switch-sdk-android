@@ -81,7 +81,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
         }
         mCamera = getCameraInstance();
         mCameraInfo = getCameraInfo();
-            mHolder.addCallback(this);
+        mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
@@ -139,7 +139,8 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(final SurfaceHolder surfaceHolder) {
-
+        //Initialisation of the preview in onSurfaceChanged, since older devices tend to have
+        // problems here.
     }
 
     @Override
