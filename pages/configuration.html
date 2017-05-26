@@ -92,7 +92,22 @@
 <li class="toctree-l2"><a class="reference internal" href="#mandatory-configurations">Mandatory Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#optional-configurations">Optional Configurations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#okhttpclient">OkHttpClient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#theme">Theme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accent-color">Accent Color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#button-style">Button Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#button-text-color">Button Text Color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#positive-color">Positive Color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#negative-color">Negative Color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exit-dialog-text">Exit Dialog Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-analyze-completed-screen">Text (Analyze Completed Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-color-analyze-completed-screen">Text Color (Analyze Completed Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image-analyze-completed-screen">Image (Analyze Completed Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-size-analyze-completed-screen">Text Size (Analyze Completed Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#title-text-extractions-screen">Title Text (Extractions Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#button-text-extractions-screen">Button Text (Extractions Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edit-text-color-extractions-screen">Edit Text Color (Extractions Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edit-text-line-color-extractions-screen">Edit Text Line Color (Extractions Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edit-text-background-color-extractions-screen">Edit Text Background Color (Extractions Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Edit Text Background Color (Extractions Screen)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#overview-of-configurations">Overview Of Configurations</a></li>
@@ -162,18 +177,156 @@
 <h3>OkHttpClient<a class="headerlink" href="#okhttpclient" title="Permalink to this headline">¶</a></h3>
 <p>Since the SDK uses the library okHttp for its network operations an okHttp client has to be used.
 OkHttp clients are encouraged to be singletons due to caching, joining and canceling of calls.
-Therefore the SDK provides the posibility to add a okHttpClient which is being reused in the SDK:</p>
+Therefore the SDK provides the possibility to add a okHttpClient which is being reused in the SDK:</p>
 <div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">TariffSdk</span> <span class="nf">withOkHttpClient</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">OkHttpClient</span> <span class="n">okHttpClient</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="theme">
-<h3>Theme<a class="headerlink" href="#theme" title="Permalink to this headline">¶</a></h3>
-<p>To style the screens of the SDK an Android theme can be provided to the SDK.
-The provided theme should extend the TariffSDKTheme and can overrite the following attributes:
-<code class="docutils literal"><span class="pre">TODO</span> <span class="pre">list</span> <span class="pre">attributes</span> <span class="pre">after</span> <span class="pre">design</span> <span class="pre">was</span> <span class="pre">specified</span></code>
-The theme can be set via:</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">TariffSdk</span> <span class="nf">withTheme</span><span class="o">(</span><span class="nd">@StyleRes</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">theme</span><span class="o">);</span>
+<div class="section" id="accent-color">
+<h3>Accent Color<a class="headerlink" href="#accent-color" title="Permalink to this headline">¶</a></h3>
+<p>To set an accent color for the SDK you can overwrite the <code class="docutils literal"><span class="pre">GiniTheme</span></code> style. This color is applied to the overflow menu icon, the dialog&#8217;s text color of their buttons and the color of the loading indicator. Overwritting other colors is being ignored and will not be processed by the SDK for now.
+This style can be applied to the SDK with the <code class="docutils literal"><span class="pre">setTheme()</span></code> method.</p>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&quot;CustomTheme&quot;</span> <span class="na">parent=</span><span class="s">&quot;GiniTheme&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;colorAccent&quot;</span><span class="nt">&gt;</span>#FFEB3B<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setTheme</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">style</span><span class="o">.</span><span class="na">CustomTheme</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="button-style">
+<h3>Button Style<a class="headerlink" href="#button-style" title="Permalink to this headline">¶</a></h3>
+<p>To set a custom button style a stateList drawable has to be created. This drawable should support all needed states of a button. e.g. pressed, focused. This drawable can be applied to the SDK with the <code class="docutils literal"><span class="pre">setButtonStyleSelector()</span></code> method and is used to style the buttons of the review screen, preview screen, take picture screen and show extractions screen.(TODO: add references to the screen pages)</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setButtonStyleSelector</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">custom_button</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">See <a class="reference external" href="https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList">official Android documentation</a> to StateList for more information.</p>
+</div>
+</div>
+<div class="section" id="button-text-color">
+<h3>Button Text Color<a class="headerlink" href="#button-text-color" title="Permalink to this headline">¶</a></h3>
+<p>To set the button text color use the <code class="docutils literal"><span class="pre">setButtonTextColor()</span></code> method. This color is applied to all buttons of the review screen, preview screen, take picture screen and show extractions screen.(TODO: add references to the screen pages)
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setButtonTextColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_color</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="positive-color">
+<h3>Positive Color<a class="headerlink" href="#positive-color" title="Permalink to this headline">¶</a></h3>
+<p>To set the positive color use the <code class="docutils literal"><span class="pre">setPositiveColor()</span></code> method. This color is used to indicate that that a process succeeded. It is shown in status indicator of the images.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setPositiveColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_positiveColor</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The color should indicate success and can therefore be something like green.</p>
+</div>
+</div>
+<div class="section" id="negative-color">
+<h3>Negative Color<a class="headerlink" href="#negative-color" title="Permalink to this headline">¶</a></h3>
+<p>To set the negative color use the <code class="docutils literal"><span class="pre">setNegativeColor()</span></code> method. This color is used to indicate that that a process failed or something went wrong. It is shown in the status indicator of the images.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setNegativeColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_negativeColor</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The color should indicate failure and can therefore be something like red.</p>
+</div>
+</div>
+<div class="section" id="exit-dialog-text">
+<h3>Exit Dialog Text<a class="headerlink" href="#exit-dialog-text" title="Permalink to this headline">¶</a></h3>
+<p>To set a title text for the exit dialog the <code class="docutils literal"><span class="pre">setExitDialogText()</span></code> method can be used. This dialog is shown when the user presses back or cancel.
+The text has to be a string resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExitDialogText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">exit_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-analyze-completed-screen">
+<h3>Text (Analyze Completed Screen)<a class="headerlink" href="#text-analyze-completed-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text in the analyze completed screen use the <code class="docutils literal"><span class="pre">setAnalyzedText()</span></code> method. This string is applied to the text seen in the analyze completed screen.
+The string has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setAnalyzedText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_string</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-color-analyze-completed-screen">
+<h3>Text Color (Analyze Completed Screen)<a class="headerlink" href="#text-color-analyze-completed-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text color use the <code class="docutils literal"><span class="pre">setAnalyzedTextColor()</span></code> method. This color is applied to the text seen in the analyze completed screen.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setAnalyzedTextColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_color</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="image-analyze-completed-screen">
+<h3>Image (Analyze Completed Screen)<a class="headerlink" href="#image-analyze-completed-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the image color use the <code class="docutils literal"><span class="pre">setAnalyzedImage()</span></code> method. This iamge is shown in the analyze completed screen.
+The image has to be a resource id of a drawable. The image will be displayed in a 96x96 dp size, therefore your drawable should be in this size, or you should use vector drawables.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setAnalyzedImage</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">your_analyzed_image</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-size-analyze-completed-screen">
+<h3>Text Size (Analyze Completed Screen)<a class="headerlink" href="#text-size-analyze-completed-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text size use the <code class="docutils literal"><span class="pre">setAnalyzedTextSize()</span></code> method. This size is applied to the text seen in the analyze completed screen.
+The size has to be in <code class="docutils literal"><span class="pre">sp</span></code>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setAnalyzedTextSize</span><span class="o">(</span><span class="mi">16</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">See <a class="reference external" href="https://developer.android.com/guide/topics/resources/more-resources.html#Dimension">official Android documentation</a> about dimensions for more information.</p>
+</div>
+</div>
+<div class="section" id="title-text-extractions-screen">
+<h3>Title Text (Extractions Screen)<a class="headerlink" href="#title-text-extractions-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the title in the extractions screen use the <code class="docutils literal"><span class="pre">setExtractionTitleText()</span></code> method. This text is shown in the extractions screen as a title and should hint your user to validate the fields.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExtractionTitleText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_title_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="button-text-extractions-screen">
+<h3>Button Text (Extractions Screen)<a class="headerlink" href="#button-text-extractions-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text of the button in the extractions screen use the <code class="docutils literal"><span class="pre">setExtractionButtonText()</span></code> method. This text is shown on the button in the extractions screen.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExtractionButtonText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_button_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="edit-text-color-extractions-screen">
+<h3>Edit Text Color (Extractions Screen)<a class="headerlink" href="#edit-text-color-extractions-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text color of the input field in the extraction screen use the <code class="docutils literal"><span class="pre">setExtractionEditTextColor()</span></code> method.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExtractionEditTextColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_input_text_color</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="edit-text-line-color-extractions-screen">
+<h3>Edit Text Line Color (Extractions Screen)<a class="headerlink" href="#edit-text-line-color-extractions-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the color of the line of the input field in the extraction screen use the <code class="docutils literal"><span class="pre">setExtractionLineColor()</span></code> method.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExtractionLineColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_input_text_line_color</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="edit-text-background-color-extractions-screen">
+<h3>Edit Text Background Color (Extractions Screen)<a class="headerlink" href="#edit-text-background-color-extractions-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the background color of the line of the input field in the extraction screen use the <code class="docutils literal"><span class="pre">setExtractionEditTextBackgroundColor()</span></code> method.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExtractionEditTextBackgroundColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_input_text_background_color</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>Edit Text Background Color (Extractions Screen)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>To set the text color of the hint of the input field in the extraction screen use the <code class="docutils literal"><span class="pre">setExtractionHintColor()</span></code> method. This color is applied to the input text field seen in the extraction screen.
+The color has to be a resource id.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setExtractionHintColor</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">color</span><span class="o">.</span><span class="na">your_input_text_hint_color</span><span class="o">);</span>
 </pre></div>
 </div>
 </div>
@@ -182,9 +335,9 @@ The theme can be set via:</p>
 <h2>Overview Of Configurations<a class="headerlink" href="#overview-of-configurations" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <colgroup>
-<col width="43%" />
-<col width="29%" />
-<col width="29%" />
+<col width="59%" />
+<col width="21%" />
+<col width="21%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Name</th>
@@ -213,7 +366,59 @@ The theme can be set via:</p>
 <td>OkHttpClient</td>
 <td>Yes</td>
 </tr>
-<tr class="row-odd"><td>Theme</td>
+<tr class="row-odd"><td>Accent Color</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Button Style</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Positive Color</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Negative Color</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Exit Dialog Text</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Text (ACS)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Text Color (ACS)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Text Size (ACS)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Image (ACS)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Title Text (ES)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Edit Text Color (ES)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Edit Text Line Color (ES)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Edit Text Hint Color (ES)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Edit Text Background Color (ES)</td>
 <td>int</td>
 <td>Yes</td>
 </tr>
