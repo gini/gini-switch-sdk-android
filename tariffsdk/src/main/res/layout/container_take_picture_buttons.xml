@@ -20,6 +20,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="Fertig" />
+        android:text="@string/take_picture_finish" />
 
 </RelativeLayout>

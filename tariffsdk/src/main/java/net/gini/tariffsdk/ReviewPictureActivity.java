@@ -16,7 +16,10 @@ import net.gini.tariffsdk.utils.AutoRotateImageView;
 final public class ReviewPictureActivity extends TariffSdkBaseActivity implements
         ReviewPictureContract.View {
 
+    static final String BUNDLE_EXTRA_BUTTON_DISCARD = "BUNDLE_EXTRA_BUTTON_DISCARD";
+    static final String BUNDLE_EXTRA_BUTTON_KEEP = "BUNDLE_EXTRA_BUTTON_KEEP";
     static final String BUNDLE_EXTRA_IMAGE_URI = "BUNDLE_EXTRA_IMAGE_URI";
+    static final String BUNDLE_EXTRA_TITLE = "BUNDLE_EXTRA_TITLE";
     private AutoRotateImageView mImagePreview;
     private ReviewPictureContract.Presenter mPresenter;
 
@@ -36,7 +39,7 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
         colorToolbar(toolbar);
 
         TextView title = (TextView) toolbar.getChildAt(0);
-        title.setText("TODO: Ist die Seite vollständing und in Leserichtung fotografiert?");
+        title.setText(getTitleFromBundle());
 
         checkForUriInBundle();
 
@@ -47,6 +50,7 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
                 mPresenter.discardImage();
             }
         });
+        discardButton.setText(getDiscardButtonTextFromBundle());
         final Button keepButton = (Button) findViewById(R.id.button_keep);
         keepButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +58,7 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
                 mPresenter.keepImage();
             }
         });
+        keepButton.setText(getKeepButtonTextFromBundle());
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_preview);
         final View rotateButton = findViewById(R.id.button_rotate);
         rotateButton.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +108,18 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
                 BUNDLE_EXTRA_IMAGE_URI)) {
             throw new IllegalArgumentException("Intent must contain an image Uri");
         }
+    }
+
+    private int getDiscardButtonTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_DISCARD, R.string.review_discard_button);
+    }
+
+    private int getKeepButtonTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_KEEP, R.string.review_keep_button);
+    }
+
+    private int getTitleFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_TITLE, R.string.review_screen_title);
     }
 
 }
