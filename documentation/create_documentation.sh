@@ -9,4 +9,5 @@ cp -a _build/html/ gh-pages/
 cd gh-pages/
 git commit -am "updated documentation"
 git push
+cd ..
 rm -rf gh-pages/
