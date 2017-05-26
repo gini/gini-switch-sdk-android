@@ -98,6 +98,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#positive-color">Positive Color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#negative-color">Negative Color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#exit-dialog-text">Exit Dialog Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#title-text-review-screen">Title Text (Review Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#discard-button-text-review-screen">Discard Button Text (Review Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keep-button-text-review-screen">Keep Button Text (Review Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#title-success-text-preview-screen">Title Success Text (Preview Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#title-failed-text-preview-screen">Title Failed Text (Preview Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#text-analyze-completed-screen">Text (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#text-color-analyze-completed-screen">Text Color (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#image-analyze-completed-screen">Image (Analyze Completed Screen)</a></li>
@@ -246,6 +251,46 @@ The text has to be a string resource id.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="title-text-review-screen">
+<h3>Title Text (Review Screen)<a class="headerlink" href="#title-text-review-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the title in the review screen use the <code class="docutils literal"><span class="pre">setReviewTitleText()</span></code> method. This text is shown in the review screen as a title and should hint your user to check if the image has the correct orientation and is readable.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setReviewTitleText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_title_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="discard-button-text-review-screen">
+<h3>Discard Button Text (Review Screen)<a class="headerlink" href="#discard-button-text-review-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text for the discard button in the review screen use the <code class="docutils literal"><span class="pre">setReviewDiscardText()</span></code> method.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setReviewDiscardText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_discard_button_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="keep-button-text-review-screen">
+<h3>Keep Button Text (Review Screen)<a class="headerlink" href="#keep-button-text-review-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the text for the keep button in the review screen use the <code class="docutils literal"><span class="pre">setReviewKeepText()</span></code> method.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setReviewKeepText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_keep_button_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="title-success-text-preview-screen">
+<h3>Title Success Text (Preview Screen)<a class="headerlink" href="#title-success-text-preview-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the success title in the preview screen use the <code class="docutils literal"><span class="pre">setPreviewSuccessText()</span></code> method. This text is shown in the preview screen as a title and should say that the analyzing of the image was successful.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setPreviewSuccessText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_success_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="title-failed-text-preview-screen">
+<h3>Title Failed Text (Preview Screen)<a class="headerlink" href="#title-failed-text-preview-screen" title="Permalink to this headline">¶</a></h3>
+<p>To set the failed title in the preview screen use the <code class="docutils literal"><span class="pre">setPreviewFailedText()</span></code> method. This text is shown in the preview screen as a title and should say that the analyzing of the image failed.
+The text should be a string resource.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">tariffSdk</span><span class="o">.</span><span class="na">setPreviewFailedText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_failed_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="text-analyze-completed-screen">
 <h3>Text (Analyze Completed Screen)<a class="headerlink" href="#text-analyze-completed-screen" title="Permalink to this headline">¶</a></h3>
 <p>To set the text in the analyze completed screen use the <code class="docutils literal"><span class="pre">setAnalyzedText()</span></code> method. This string is applied to the text seen in the analyze completed screen.
@@ -383,6 +428,14 @@ The color has to be a resource id.</p>
 <td>Yes</td>
 </tr>
 <tr class="row-odd"><td>Exit Dialog Text</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Title Success Text (PS)</td>
+<td>int</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Title Failed Text (PS)</td>
 <td>int</td>
 <td>Yes</td>
 </tr>
