@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
@@ -35,6 +36,8 @@ import java.util.List;
 final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
 
+    static final String BUNDLE_EXTRA_PREVIEW_FAILED_TEXT = "BUNDLE_EXTRA_PREVIEW_FAILED_TEXT";
+    static final String BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT = "BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT";
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private static final int REQUEST_CODE_EXTRACTIONS = 123;
     private ImageAdapter mAdapter;
@@ -44,6 +47,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private ImageView mImagePreviewState;
     private TakePictureContract.Presenter mPresenter;
     private View mPreviewButtonsContainer;
+    private TextView mPreviewTitle;
     private ProgressBar mProgressBar;
     private Image mSelectedImage;
     private ImageButton mTakePictureButton;
@@ -60,8 +64,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         if (image.getProcessingState() != ImageState.PROCESSING) {
             if (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED) {
                 drawable = ContextCompat.getDrawable(this, R.drawable.ic_check);
+                mPreviewTitle.setText(getAnalyzeSuccessTextFromBundle());
             } else {
                 drawable = ContextCompat.getDrawable(this, R.drawable.ic_cross);
+                mPreviewTitle.setText(getAnalyzeFailedTextFromBundle());
             }
             final int processingColor =
                     (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED)
@@ -74,6 +80,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             mImagePreviewState.setVisibility(View.VISIBLE);
         } else {
             mImagePreviewState.setVisibility(View.GONE);
+            mPreviewTitle.setText(null);
         }
 
     }
@@ -181,6 +188,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
         mImagePreviewState = (ImageView) findViewById(R.id.image_state);
+        mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
         final RecyclerView imageRecyclerView = (RecyclerView) toolbar.getChildAt(0);
         imageRecyclerView.setLayoutManager(
@@ -218,28 +226,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
-        if (hasCustomButtonStyleSet()) {
-            int customButtonStyle = getButtonStyleResourceIdFromBundle();
-            deleteImageButton.setBackgroundResource(customButtonStyle);
-            retakeImageButton.setBackgroundResource(customButtonStyle);
-            finishButton.setBackgroundResource(customButtonStyle);
-        } else {
-            ViewCompat.setBackgroundTintList(retakeImageButton,
-                    ContextCompat.getColorStateList(this, R.color.positiveColor));
-            ViewCompat.setBackgroundTintList(deleteImageButton,
-                    ContextCompat.getColorStateList(this, R.color.negativeColor));
-            ViewCompat.setBackgroundTintList(finishButton,
-                    ContextCompat.getColorStateList(this, R.color.primaryColor));
-        }
-
-        if (hasCustomButtonTextColor()) {
-            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
-            int textColor = ContextCompat.getColor(this, customButtonTextColor);
-            retakeImageButton.setTextColor(textColor);
-            finishButton.setTextColor(textColor);
-        } else {
-            finishButton.setTextColor(getAccentColor());
-        }
+        styleButtons(finishButton, deleteImageButton, retakeImageButton);
 
     }
 
@@ -347,5 +334,41 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void showTakePictureButtons() {
         mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
+    }
+
+    private int getAnalyzeFailedTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT,
+                R.string.preview_analyze_failed);
+    }
+
+    private int getAnalyzeSuccessTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT,
+                R.string.preview_analyze_success);
+    }
+
+    private void styleButtons(final Button finishButton, final ImageButton deleteImageButton,
+            final Button retakeImageButton) {
+        if (hasCustomButtonStyleSet()) {
+            int customButtonStyle = getButtonStyleResourceIdFromBundle();
+            deleteImageButton.setBackgroundResource(customButtonStyle);
+            retakeImageButton.setBackgroundResource(customButtonStyle);
+            finishButton.setBackgroundResource(customButtonStyle);
+        } else {
+            ViewCompat.setBackgroundTintList(retakeImageButton,
+                    ContextCompat.getColorStateList(this, R.color.positiveColor));
+            ViewCompat.setBackgroundTintList(deleteImageButton,
+                    ContextCompat.getColorStateList(this, R.color.negativeColor));
+            ViewCompat.setBackgroundTintList(finishButton,
+                    ContextCompat.getColorStateList(this, R.color.primaryColor));
+        }
+
+        if (hasCustomButtonTextColor()) {
+            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
+            int textColor = ContextCompat.getColor(this, customButtonTextColor);
+            retakeImageButton.setTextColor(textColor);
+            finishButton.setTextColor(textColor);
+        } else {
+            finishButton.setTextColor(getAccentColor());
+        }
     }
 }

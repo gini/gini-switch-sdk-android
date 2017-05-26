@@ -15,6 +15,8 @@ import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_DISCA
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_KEEP;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_TITLE;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_FAILED_TEXT;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_EXIT_DIALOG_TEXT;
@@ -45,6 +47,8 @@ final class IntentFactory {
     private final int mExtractionTitleText;
     private final int mNegativeColor;
     private final int mPositiveColor;
+    private final int mPreviewFailedText;
+    private final int mPreviewSuccessText;
     private final int mReviewDiscardText;
     private final int mReviewKeepText;
     private final int mReviewTitle;
@@ -71,6 +75,8 @@ final class IntentFactory {
         mReviewTitle = tariffSdk.getReviewTitleText();
         mReviewDiscardText = tariffSdk.getReviewDiscardText();
         mReviewKeepText = tariffSdk.getReviewKeepText();
+        mPreviewSuccessText = tariffSdk.getPreviewSuccessText();
+        mPreviewFailedText = tariffSdk.getPreviewFailedText();
     }
 
     Intent createExtractionsActivity() {
@@ -103,6 +109,8 @@ final class IntentFactory {
     Intent createTariffSdkIntent() {
         final Intent intent = new Intent(mContext, TakePictureActivity.class);
         addDefaultExtras(intent);
+        intent.putExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, mPreviewSuccessText);
+        intent.putExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, mPreviewFailedText);
         return intent;
     }
 

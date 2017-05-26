@@ -11,4 +11,8 @@
     <string name="review_screen_title">Ist die Seite vollständing und in Leserichtung fotografiert?</string>
     <string name="review_discard_button">Neues Bild</string>
     <string name="review_keep_button">Ja, verwenden</string>
+    <string name="preview_button_retake">Neu Aufnehmen</string>
+    <string name="take_picture_finish">Fertig</string>
+    <string name="preview_analyze_success">Sehr gut, wir konnten alle Daten aus diesem Foto erfolgreich analysieren.</string>
+    <string name="preview_analyze_failed">Leider ist die Qualität dieser Seite nicht ausreichend. Bitte foto grafiere diese Seite nochmal neu.</string>
 </resources>

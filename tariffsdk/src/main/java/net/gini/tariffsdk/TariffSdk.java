@@ -47,6 +47,8 @@ public class TariffSdk {
     private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
+    private int mPreviewFailedText;
+    private int mPreviewSuccessText;
     private int mReviewDiscardText;
     private int mReviewKeepText;
     private int mReviewTitleText;
@@ -76,6 +78,8 @@ public class TariffSdk {
         mReviewTitleText = R.string.review_screen_title;
         mReviewDiscardText = R.string.review_discard_button;
         mReviewKeepText = R.string.review_keep_button;
+        mPreviewSuccessText = R.string.preview_analyze_success;
+        mPreviewFailedText = R.string.preview_analyze_failed;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -386,6 +390,36 @@ public class TariffSdk {
      */
     public TariffSdk setPositiveColor(@ColorRes final int color) {
         mPositiveColor = color;
+        return this;
+    }
+
+    int getPreviewFailedText() {
+        return mPreviewFailedText;
+    }
+
+    /**
+     * Set the title text when the analyzing failed for the Preview Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setPreviewFailedText(@StringRes final int text) {
+        mPreviewFailedText = text;
+        return this;
+    }
+
+    int getPreviewSuccessText() {
+        return mPreviewSuccessText;
+    }
+
+    /**
+     * Set the title text when the analyzing was successful for the Preview Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setPreviewSuccessText(@StringRes final int text) {
+        mPreviewSuccessText = text;
         return this;
     }
 

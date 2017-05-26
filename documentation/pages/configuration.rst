@@ -150,6 +150,28 @@ The text should be a string resource.
   tariffSdk.setReviewKeepText(R.string.your_keep_button_text);
 
 
+Title Success Text (Preview Screen)
+--------------------------------
+
+To set the success title in the preview screen use the ``setPreviewSuccessText()`` method. This text is shown in the preview screen as a title and should say that the analyzing of the image was successful.
+The text should be a string resource.
+
+.. code-block:: java
+
+  tariffSdk.setPreviewSuccessText(R.string.your_success_text);
+
+
+Title Failed Text (Preview Screen)
+--------------------------------
+
+To set the failed title in the preview screen use the ``setPreviewFailedText()`` method. This text is shown in the preview screen as a title and should say that the analyzing of the image failed.
+The text should be a string resource.
+
+.. code-block:: java
+
+  tariffSdk.setPreviewFailedText(R.string.your_failed_text);
+
+
 Text (Analyze Completed Screen)
 -------------------------------
 
@@ -280,6 +302,8 @@ Button Style                         int            Yes
 Positive Color                       int            Yes
 Negative Color                       int            Yes
 Exit Dialog Text                     int            Yes
+Title Success Text (PS)              int            Yes
+Title Failed Text (PS)               int            Yes
 Text (ACS)                           int            Yes
 Text Color (ACS)                     int            Yes
 Text Size (ACS)                      int            Yes

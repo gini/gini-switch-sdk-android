@@ -15,6 +15,8 @@ import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_TITLE_TEXT;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_DISCARD;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_KEEP;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_TITLE;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_FAILED_TEXT;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT;
 
 import android.content.Context;
 import android.content.Intent;
@@ -207,6 +209,40 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
+    public void previewIntent_shouldHaveCustomFailedText() {
+        mTariffSdk.setPreviewFailedText(12345);
+        Intent previewActivity = getPreviewIntent();
+        int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, 0);
+        assertEquals(12345, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveCustomSuccessText() {
+        mTariffSdk.setPreviewSuccessText(12345);
+        Intent previewActivity = getPreviewIntent();
+        int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, 0);
+        assertEquals(12345, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveDefaultFailedText() {
+        Intent previewActivity = getPreviewIntent();
+        int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, 0);
+        assertEquals(R.string.preview_analyze_failed, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveDefaultSuccessText() {
+        Intent previewActivity = getPreviewIntent();
+        int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, 0);
+        assertEquals(R.string.preview_analyze_success, titleText);
+    }
+
+    @Test
+    @SmallTest
     public void reviewIntent_shouldHaveCustomDiscardText() {
         mTariffSdk.setReviewDiscardText(12345);
         Intent extractionsActivity = getReviewIntent();
@@ -270,6 +306,11 @@ public class IntentFactoryTest {
     private Intent getExtractionIntent() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         return intentFactory.createExtractionsActivity();
+    }
+
+    private Intent getPreviewIntent() {
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        return intentFactory.createTariffSdkIntent();
     }
 
     private Intent getReviewIntent() {
