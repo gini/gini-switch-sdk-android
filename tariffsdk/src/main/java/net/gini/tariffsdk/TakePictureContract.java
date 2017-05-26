@@ -9,6 +9,8 @@ interface TakePictureContract {
 
     interface Presenter {
 
+        void deleteSelectedImage();
+
         void onAllPicturesTaken();
 
         void onImageSelected(final Image image);
@@ -46,6 +48,8 @@ interface TakePictureContract {
         void openImageReview(@NonNull final Image image);
 
         void openTakePictureScreen();
+
+        void removeImageFromList(@NonNull final Image selectedImage);
 
         void requestPermissions();
 
