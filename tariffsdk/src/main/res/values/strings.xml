@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="analyzed_text">Wir haben alles, was wir für Deinen Stromanbieter Wechsel benötigen.</string>
+    <string name="confirm">Yes</string>
+    <string name="cancel">No</string>
+    <string name="exit_dialog_text">Abort Scanning Process?</string>
+    <string name="menu_entry_cancel">Cancel</string>
+    <string name="extractions_title">Fast geschafft. Bitte prüfe noch kurz ob all Deine Daten korrekt ausgelesen wurden.</string>
+    <string name="button_extractions">Jetzt wechseln</string>
+    <string name="extractions_error_empty_input">Darf nicht leer sein!</string>
+    <string name="review_screen_title">Ist die Seite vollständing und in Leserichtung fotografiert?</string>
+    <string name="review_discard_button">Neues Bild</string>
+    <string name="review_keep_button">Ja, verwenden</string>
+    <string name="preview_button_retake">Neu Aufnehmen</string>
+    <string name="take_picture_finish">Fertig</string>
+    <string name="preview_analyze_success">Sehr gut, wir konnten alle Daten aus diesem Foto erfolgreich analysieren.</string>
+    <string name="preview_analyze_failed">Leider ist die Qualität dieser Seite nicht ausreichend. Bitte foto grafiere diese Seite nochmal neu.</string>
+</resources>

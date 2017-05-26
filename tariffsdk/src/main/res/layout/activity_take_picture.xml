@@ -4,82 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#000000">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/primaryColor"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/image_overview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:scrollbars="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:visibility="gone">
+        tools:visibility="gone" />
 
-    </android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.Toolbar>
+
+    <include
+        layout="@layout/container_display_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/toolbar" />
 
     <SurfaceView
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
-        android:layout_below="@+id/image_overview"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_below="@+id/toolbar"
         android:visibility="invisible" />
-
 
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
-        android:gravity="end|right"
-        android:orientation="horizontal">
+        android:background="@color/primaryColor">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/colorPrimaryDark" />
+        <include
+            android:id="@+id/container_take_picture_buttons"
+            layout="@layout/container_take_picture_buttons" />
 
-        <LinearLayout
-            android:id="@+id/button_finish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingEnd="24dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingStart="24dp"
-            android:paddingTop="8dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_agenda" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Next"
-                android:textColor="?attr/colorAccent" />
-        </LinearLayout>
+        <include
+            android:id="@+id/container_preview_buttons"
+            layout="@layout/container_preview_buttons"
+            android:visibility="gone" />
 
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_take_picture"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_above="@+id/footer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-28dp"
-        android:src="@android:drawable/ic_menu_camera" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
