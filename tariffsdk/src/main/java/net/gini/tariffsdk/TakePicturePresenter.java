@@ -1,6 +1,7 @@
 package net.gini.tariffsdk;
 
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
@@ -20,6 +21,18 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
         mView = view;
         mDocumentService = documentService;
+    }
+
+    @Override
+    public void deleteSelectedImage() {
+        if (mSelectedImage != null) {
+            final Uri uri = mSelectedImage.getUri();
+            mDocumentService.deleteImage(uri);
+            mView.removeImageFromList(mSelectedImage);
+            mView.openTakePictureScreen();
+            mSelectedImage = null;
+        }
+        mView.showTakePictureButtons();
     }
 
     @Override

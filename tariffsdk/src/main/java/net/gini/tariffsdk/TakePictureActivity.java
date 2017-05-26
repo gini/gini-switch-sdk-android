@@ -203,7 +203,20 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
 
         ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
+        deleteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mPresenter.deleteSelectedImage();
+            }
+        });
         Button retakeImageButton = (Button) findViewById(R.id.button_take_new_image);
+        retakeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                //TODO implement retake logic
+                mPresenter.deleteSelectedImage();
+            }
+        });
 
         if (hasCustomButtonStyleSet()) {
             int customButtonStyle = getButtonStyleResourceIdFromBundle();
@@ -293,6 +306,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreview.setVisibility(View.GONE);
         mImagePreviewState.setVisibility(View.GONE);
         mImagePreviewState.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void removeImageFromList(@NonNull final Image selectedImage) {
+        mAdapter.deleteImage(selectedImage);
     }
 
     @Override
