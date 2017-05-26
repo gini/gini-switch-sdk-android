@@ -213,6 +213,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         retakeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+                //TODO implement retake logic
                 mPresenter.deleteSelectedImage();
             }
         });
