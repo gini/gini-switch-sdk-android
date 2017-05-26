@@ -117,6 +117,38 @@ The text has to be a string resource id.
   tariffSdk.setExitDialogText(R.string.exit_text);
 
 
+Title Text (Review Screen)
+--------------------------------
+
+To set the title in the review screen use the ``setReviewTitleText()`` method. This text is shown in the review screen as a title and should hint your user to check if the image has the correct orientation and is readable.
+The text should be a string resource.
+
+.. code-block:: java
+
+  tariffSdk.setReviewTitleText(R.string.your_title_text);
+
+
+Discard Button Text (Review Screen)
+--------------------------------
+
+To set the text for the discard button in the review screen use the ``setReviewDiscardText()`` method.
+The text should be a string resource.
+
+.. code-block:: java
+
+  tariffSdk.setReviewDiscardText(R.string.your_discard_button_text);
+
+
+Keep Button Text (Review Screen)
+--------------------------------
+
+To set the text for the keep button in the review screen use the ``setReviewKeepText()`` method.
+The text should be a string resource.
+
+.. code-block:: java
+
+  tariffSdk.setReviewKeepText(R.string.your_keep_button_text);
+
 
 Text (Analyze Completed Screen)
 -------------------------------

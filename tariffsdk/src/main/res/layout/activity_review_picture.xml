@@ -52,7 +52,7 @@
             android:layout_margin="4dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="Neues Bild"
+            android:text="@string/review_discard_button"
             android:textColor="@color/titleTextColor" />
 
         <Button
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="Use this Picture"
+            android:text="@string/review_keep_button"
             android:textColor="@color/titleTextColor" />
 
     </LinearLayout>

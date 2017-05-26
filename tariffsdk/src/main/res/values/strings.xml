@@ -8,4 +8,7 @@
     <string name="extractions_title">Fast geschafft. Bitte prüfe noch kurz ob all Deine Daten korrekt ausgelesen wurden.</string>
     <string name="button_extractions">Jetzt wechseln</string>
     <string name="extractions_error_empty_input">Darf nicht leer sein!</string>
+    <string name="review_screen_title">Ist die Seite vollständing und in Leserichtung fotografiert?</string>
+    <string name="review_discard_button">Neues Bild</string>
+    <string name="review_keep_button">Ja, verwenden</string>
 </resources>

@@ -12,9 +12,13 @@ import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_COLO
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_HINT_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_LINE_COLOR;
 import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_TITLE_TEXT;
+import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_DISCARD;
+import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_KEEP;
+import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_TITLE;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
@@ -32,76 +36,6 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void custom_shouldHaveCustomButtonText() {
-        mTariffSdk.setExtractionButtonText(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int buttonText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
-        assertEquals(12345, buttonText);
-    }
-
-    @Test
-    @SmallTest
-    public void custom_shouldHaveCustomEditTextBackgroundColor() {
-        mTariffSdk.setExtractionEditTextBackgroundColor(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void custom_shouldHaveCustomEditTextColor() {
-        mTariffSdk.setExtractionEditTextColor(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void custom_shouldHaveCustomHintTextColor() {
-        mTariffSdk.setExtractionHintColor(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_HINT_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void custom_shouldHaveCustomImage() {
-        mTariffSdk.setAnalyzedImage(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(12345, image);
-    }
-
-    @Test
-    @SmallTest
-    public void custom_shouldHaveCustomLineColor() {
-        mTariffSdk.setExtractionLineColor(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_LINE_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void custom_shouldHaveCustomText() {
-        mTariffSdk.setAnalyzedText(12345);
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        Intent extractionsActivity = intentFactory.createExtractionsActivity();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
-        assertEquals(12345, analyzedText);
-    }
-
-    @Test
-    @SmallTest
     public void custom_shouldHaveCustomTextColor() {
         mTariffSdk.setAnalyzedTextColor(12345);
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
@@ -112,7 +46,77 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void custom_shouldHaveCustomTextSize() {
+    public void extractionsIntent_shouldHaveCustomButtonText() {
+        mTariffSdk.setExtractionButtonText(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int buttonText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
+        assertEquals(12345, buttonText);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomEditTextBackgroundColor() {
+        mTariffSdk.setExtractionEditTextBackgroundColor(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR, 0);
+        assertEquals(12345, textColor);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomEditTextColor() {
+        mTariffSdk.setExtractionEditTextColor(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, 0);
+        assertEquals(12345, textColor);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomHintTextColor() {
+        mTariffSdk.setExtractionHintColor(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_HINT_COLOR, 0);
+        assertEquals(12345, textColor);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomImage() {
+        mTariffSdk.setAnalyzedImage(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
+        assertEquals(12345, image);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomLineColor() {
+        mTariffSdk.setExtractionLineColor(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_LINE_COLOR, 0);
+        assertEquals(12345, textColor);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomText() {
+        mTariffSdk.setAnalyzedText(12345);
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        Intent extractionsActivity = intentFactory.createExtractionsActivity();
+        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
+        assertEquals(12345, analyzedText);
+    }
+
+    @Test
+    @SmallTest
+    public void extractionsIntent_shouldHaveCustomTextSize() {
         mTariffSdk.setAnalyzedTextSize(16);
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
@@ -122,7 +126,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void custom_shouldHaveCustomTitleText() {
+    public void extractionsIntent_shouldHaveCustomTitleText() {
         mTariffSdk.setExtractionTitleText(12345);
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
@@ -132,7 +136,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultButtonText() {
+    public void extractionsIntent_shouldHaveDefaultButtonText() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
@@ -141,7 +145,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultEditTextBackgroundColor() {
+    public void extractionsIntent_shouldHaveDefaultEditTextBackgroundColor() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR, 0);
@@ -150,7 +154,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultEditTextColor() {
+    public void extractionsIntent_shouldHaveDefaultEditTextColor() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, 0);
@@ -159,7 +163,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultHintTextColor() {
+    public void extractionsIntent_shouldHaveDefaultHintTextColor() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_HINT_COLOR, 0);
@@ -168,7 +172,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultImage() {
+    public void extractionsIntent_shouldHaveDefaultImage() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
@@ -177,7 +181,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultLineColor() {
+    public void extractionsIntent_shouldHaveDefaultLineColor() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_LINE_COLOR, 0);
@@ -186,7 +190,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultText() {
+    public void extractionsIntent_shouldHaveDefaultText() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
@@ -195,7 +199,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultTextColor() {
+    public void extractionsIntent_shouldHaveDefaultTextColor() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
@@ -204,7 +208,7 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultTextSize() {
+    public void extractionsIntent_shouldHaveDefaultTextSize() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
@@ -214,11 +218,62 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void default_shouldHaveDefaultTitleText() {
+    public void extractionsIntent_shouldHaveDefaultTitleText() {
         final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
         Intent extractionsActivity = intentFactory.createExtractionsActivity();
         int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, 0);
         assertEquals(R.string.extractions_title, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void reviewIntent_shouldHaveCustomDiscardText() {
+        mTariffSdk.setReviewDiscardText(12345);
+        Intent extractionsActivity = getReviewIntent();
+        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_DISCARD, 0);
+        assertEquals(12345, analyzedText);
+    }
+
+    @Test
+    @SmallTest
+    public void reviewIntent_shouldHaveCustomKeepText() {
+        mTariffSdk.setReviewKeepText(12345);
+        Intent extractionsActivity = getReviewIntent();
+        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_KEEP, 0);
+        assertEquals(12345, analyzedText);
+    }
+
+    @Test
+    @SmallTest
+    public void reviewIntent_shouldHaveCustomTitleText() {
+        mTariffSdk.setReviewTitleText(12345);
+        Intent extractionsActivity = getReviewIntent();
+        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE, 0);
+        assertEquals(12345, analyzedText);
+    }
+
+    @Test
+    @SmallTest
+    public void reviewIntent_shouldHaveDefaultDiscardText() {
+        Intent extractionsActivity = getReviewIntent();
+        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_DISCARD, 0);
+        assertEquals(R.string.review_discard_button, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void reviewIntent_shouldHaveDefaultKeepText() {
+        Intent extractionsActivity = getReviewIntent();
+        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_KEEP, 0);
+        assertEquals(R.string.review_keep_button, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void reviewIntent_shouldHaveDefaultTitleText() {
+        Intent extractionsActivity = getReviewIntent();
+        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE, 0);
+        assertEquals(R.string.review_screen_title, titleText);
     }
 
     @Before
@@ -230,5 +285,10 @@ public class IntentFactoryTest {
     @After
     public void tearDown() {
         TariffSdk.mSingleton = null;
+    }
+
+    private Intent getReviewIntent() {
+        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
+        return intentFactory.createReviewActivity(Uri.EMPTY);
     }
 }

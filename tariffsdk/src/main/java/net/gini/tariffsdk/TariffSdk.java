@@ -47,6 +47,9 @@ public class TariffSdk {
     private int mNegativeColor;
     private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
+    private int mReviewDiscardText;
+    private int mReviewKeepText;
+    private int mReviewTitleText;
     private int mTheme;
 
     private TariffSdk(final Context context, final String clientId, final String clientPw,
@@ -70,6 +73,9 @@ public class TariffSdk {
         mExtractionEditTextBackgroundColor = R.color.secondaryColor;
         mExtractionButtonText = R.string.button_extractions;
         mExtractionTitleText = R.string.extractions_title;
+        mReviewTitleText = R.string.review_screen_title;
+        mReviewDiscardText = R.string.review_discard_button;
+        mReviewKeepText = R.string.review_keep_button;
     }
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -380,6 +386,51 @@ public class TariffSdk {
      */
     public TariffSdk setPositiveColor(@ColorRes final int color) {
         mPositiveColor = color;
+        return this;
+    }
+
+    int getReviewDiscardText() {
+        return mReviewDiscardText;
+    }
+
+    /**
+     * Set the text for the button to discard the taken image in the Review Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setReviewDiscardText(@StringRes final int text) {
+        mReviewDiscardText = text;
+        return this;
+    }
+
+    int getReviewKeepText() {
+        return mReviewKeepText;
+    }
+
+    /**
+     * Set the text for the button to keep the taken image in the Review Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setReviewKeepText(@StringRes final int text) {
+        mReviewKeepText = text;
+        return this;
+    }
+
+    int getReviewTitleText() {
+        return mReviewTitleText;
+    }
+
+    /**
+     * Set the text for the Review Screen.
+     *
+     * @param text the resource id of the text
+     * @return the instance of the available SDK
+     */
+    public TariffSdk setReviewTitleText(@StringRes final int text) {
+        mReviewTitleText = text;
         return this;
     }
 
