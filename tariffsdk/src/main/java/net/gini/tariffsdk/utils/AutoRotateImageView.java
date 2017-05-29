@@ -51,6 +51,13 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
+    public void displayImage(@Nullable final Uri uri) {
+        mDegrees = getRequiredRotationDegrees(uri);
+        mUri = uri;
+        setImageBitmap();
+        rotateImage();
+    }
+
     public void setImageURI(@Nullable final Uri uri) {
         mDegrees = getRequiredRotationDegrees(uri);
         mUri = uri;
@@ -113,8 +120,8 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
 
     private void setImageBitmap() {
         if (mUri != null) {
-            BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, mImageView.getHeight(),
-                    mImageView.getWidth(), getContext(), this);
+            BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, getHeight(), getWidth(),
+                    getContext(), this);
 
         } else {
             bitmapLoaded(null);

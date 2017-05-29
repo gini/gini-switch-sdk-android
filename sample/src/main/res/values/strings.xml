@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Gini Tariff Sdk Sample</string>
+    <string name="analyzedText">Awesome Analyzed Text</string>
+    <string name="exit_text">Wanna Quit?</string>
+    <string name="custom_extractions_title">Check your extractions.</string>
+    <string name="custom_extractions_button_text">Do it</string>
+    <string name="custom_review_text">Custom Review Text</string>
+    <string name="custom_review_keep_text">Custom Keep</string>
+    <string name="custom_review_discard_text">Custom Discard</string>
+    <string name="custom_preview_success_text">Custom Success Text</string>
+    <string name="custom_preview_failed_text">Custom failed text</string>
 </resources>

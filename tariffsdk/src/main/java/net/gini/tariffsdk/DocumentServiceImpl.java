@@ -73,7 +73,7 @@ class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void keepImage(@NonNull final Uri uri) {
-        //TODO - start processing
+        //TODO - start processing, the whole thing is just a mock.
         final Image image = new Image(uri, ImageState.PROCESSING);
         if (!mImageList.contains(image)) {
             new Thread(new Runnable() {
@@ -84,11 +84,13 @@ class DocumentServiceImpl implements DocumentService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    //Pseudo mock states
-                    image.setProcessingState(
-                            new Random().nextBoolean() ? ImageState.SUCCESSFULLY_PROCESSED
-                                    : ImageState.FAILED);
-                    imageProcessed(image);
+                    if (mImageList.contains(image)) {
+                        //Pseudo mock states
+                        image.setProcessingState(
+                                new Random().nextBoolean() ? ImageState.SUCCESSFULLY_PROCESSED
+                                        : ImageState.FAILED);
+                        imageProcessed(image);
+                    }
                 }
             }).start();
 

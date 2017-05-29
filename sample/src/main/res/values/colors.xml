@@ -3,4 +3,8 @@
     <color name="colorPrimary">#009edc</color>
     <color name="colorPrimaryDark">#1976d2</color>
     <color name="colorAccent">#1ae2ae</color>
+    <color name="white">#ffffff</color>
+    <color name="custom_positiveColor">#007500</color>
+    <color name="custom_negativeColor">#750000</color>
+    <color name="analyzedTextColor">#ff00ff</color>
 </resources>

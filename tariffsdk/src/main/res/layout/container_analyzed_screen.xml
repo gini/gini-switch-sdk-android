@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryColor">
+
+    <ImageView
+        android:id="@+id/analyzed_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_above="@+id/analyzed_text"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_check_circle" />
+
+    <TextView
+        android:id="@+id/analyzed_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textColor="@color/primaryText"
+        android:textSize="24sp"
+        tools:text="Wir haben Alles was wir für einen Anbieterwechsel brauchen. Tralala" />
+
+</RelativeLayout>

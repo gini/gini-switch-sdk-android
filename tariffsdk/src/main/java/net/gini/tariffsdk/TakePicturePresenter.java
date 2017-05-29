@@ -1,6 +1,7 @@
 package net.gini.tariffsdk;
 
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
@@ -13,6 +14,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private final TakePictureContract.View mView;
     @VisibleForTesting
     int mBuildVersion = android.os.Build.VERSION.SDK_INT;
+    private Image mSelectedImage = null;
 
     TakePicturePresenter(final TakePictureContract.View view,
             final DocumentService documentService) {
@@ -22,8 +24,29 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
+    public void deleteSelectedImage() {
+        if (mSelectedImage != null) {
+            final Uri uri = mSelectedImage.getUri();
+            mDocumentService.deleteImage(uri);
+            mView.removeImageFromList(mSelectedImage);
+            mView.openTakePictureScreen();
+            mSelectedImage = null;
+        }
+        mView.showTakePictureButtons();
+    }
+
+    @Override
     public void onAllPicturesTaken() {
         mView.showFoundExtractions();
+    }
+
+    @Override
+    public void onImageSelected(final Image image) {
+        mSelectedImage = image;
+        mView.showImagePreview(image);
+        mView.displayImageProcessingState(image);
+        mView.showPreviewButtons();
+        mView.hideTakePictureButtons();
     }
 
     @Override
@@ -35,6 +58,14 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     public void onPictureTaken(@NonNull final byte[] data) {
         final Image image = mDocumentService.saveImage(data);
         mView.openImageReview(image);
+    }
+
+    @Override
+    public void onTakePictureSelected() {
+        mSelectedImage = null;
+        mView.openTakePictureScreen();
+        mView.showTakePictureButtons();
+        mView.hidePreviewButtons();
     }
 
     @Override

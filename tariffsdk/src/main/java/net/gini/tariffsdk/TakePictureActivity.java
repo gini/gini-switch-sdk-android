@@ -2,45 +2,86 @@ package net.gini.tariffsdk;
 
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
-import net.gini.tariffsdk.utils.ExitDialogFragment;
+import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 import java.util.List;
 
 final public class TakePictureActivity extends TariffSdkBaseActivity implements
-        TakePictureContract.View, ExitDialogFragment.ExitDialogListener {
+        TakePictureContract.View {
 
+    static final String BUNDLE_EXTRA_PREVIEW_FAILED_TEXT = "BUNDLE_EXTRA_PREVIEW_FAILED_TEXT";
+    static final String BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT = "BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT";
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private static final int REQUEST_CODE_EXTRACTIONS = 123;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private SurfaceView mCameraPreview;
+    private AutoRotateImageView mImagePreview;
+    private ImageView mImagePreviewState;
     private TakePictureContract.Presenter mPresenter;
+    private View mPreviewButtonsContainer;
+    private TextView mPreviewTitle;
     private ProgressBar mProgressBar;
+    private Image mSelectedImage;
     private ImageButton mTakePictureButton;
+    private View mTakePictureButtonsContainer;
 
     @Override
     public void cameraPermissionsDenied() {
+
+    }
+
+    @Override
+    public void displayImageProcessingState(final Image image) {
+        final Drawable drawable;
+        if (image.getProcessingState() != ImageState.PROCESSING) {
+            if (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED) {
+                drawable = ContextCompat.getDrawable(this, R.drawable.ic_check);
+                mPreviewTitle.setText(getAnalyzeSuccessTextFromBundle());
+            } else {
+                drawable = ContextCompat.getDrawable(this, R.drawable.ic_cross);
+                mPreviewTitle.setText(getAnalyzeFailedTextFromBundle());
+            }
+            final int processingColor =
+                    (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED)
+                            ? ContextCompat.getColor(this, getPositiveColor())
+                            : ContextCompat.getColor(this, getNegativeColor());
+            drawable.setAlpha(255);
+            drawable.setColorFilter(
+                    new PorterDuffColorFilter(processingColor, PorterDuff.Mode.SRC_IN));
+            mImagePreviewState.setImageDrawable(drawable);
+            mImagePreviewState.setVisibility(View.VISIBLE);
+        } else {
+            mImagePreviewState.setVisibility(View.GONE);
+            mPreviewTitle.setText(null);
+        }
 
     }
 
@@ -51,11 +92,24 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void hidePreviewButtons() {
+        mPreviewButtonsContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideTakePictureButtons() {
+        mTakePictureButtonsContainer.setVisibility(View.GONE);
+    }
+
+    @Override
     public void imageStateChanged(@NonNull final Image image) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mAdapter.updateImageState(image);
+                if (mSelectedImage == image) {
+                    displayImageProcessingState(image);
+                }
             }
         });
     }
@@ -82,8 +136,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void onBackPressed() {
-        DialogFragment dialog = new ExitDialogFragment();
-        dialog.show(getFragmentManager(), "ExitDialogFragment");
+        showAbortDialog();
     }
 
     @Override
@@ -98,11 +151,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         setContentView(R.layout.activity_take_picture);
 
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        colorToolbar(toolbar);
 
         final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
         mPresenter = new TakePicturePresenter(this, documentService);
@@ -126,7 +177,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
-        findViewById(R.id.button_finish).setOnClickListener(new View.OnClickListener() {
+        final Button finishButton = (Button) findViewById(R.id.button_finish);
+        finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 mPresenter.onAllPicturesTaken();
@@ -134,23 +186,48 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         });
 
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
+        mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
+        mImagePreviewState = (ImageView) findViewById(R.id.image_state);
+        mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
-
-        final RecyclerView imageRecyclerView = (RecyclerView) findViewById(R.id.image_overview);
+        final RecyclerView imageRecyclerView = (RecyclerView) toolbar.getChildAt(0);
         imageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
+            public void onCameraClicked() {
+                mPresenter.onTakePictureSelected();
+            }
+
+            @Override
             public void onImageClicked(final Image image) {
-                openImageReview(image);
+                mPresenter.onImageSelected(image);
+            }
+        }, getPositiveColor(), getNegativeColor());
+
+        imageRecyclerView.setAdapter(mAdapter);
+
+        mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
+        mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
+
+        ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
+        deleteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mPresenter.deleteSelectedImage();
             }
         });
-        imageRecyclerView.setAdapter(mAdapter);
-    }
+        Button retakeImageButton = (Button) findViewById(R.id.button_take_new_image);
+        retakeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                //TODO implement retake logic
+                mPresenter.deleteSelectedImage();
+            }
+        });
 
-    @Override
-    public void onNegative() {
-        //TODO track etc.
+        styleButtons(finishButton, deleteImageButton, retakeImageButton);
+
     }
 
     @Override
@@ -160,13 +237,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             mCamera.stop();
             mCameraPreview.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onPositive() {
-        //TODO track etc.
-        TariffSdk.getSdk().cleanUp();
-        finishAffinity();
     }
 
     @Override
@@ -217,6 +287,20 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void openTakePictureScreen() {
+        mSelectedImage = null;
+        mCameraPreview.setVisibility(View.VISIBLE);
+        mImagePreview.setVisibility(View.GONE);
+        mImagePreviewState.setVisibility(View.GONE);
+        mImagePreviewState.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void removeImageFromList(@NonNull final Image selectedImage) {
+        mAdapter.deleteImage(selectedImage);
+    }
+
+    @Override
     public void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 PERMISSIONS_REQUEST_CAMERA);
@@ -232,5 +316,59 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         IntentFactory intentFactory = new IntentFactory(TariffSdk.getSdk());
         Intent intent = intentFactory.createExtractionsActivity();
         startActivityForResult(intent, REQUEST_CODE_EXTRACTIONS);
+    }
+
+    @Override
+    public void showImagePreview(final Image image) {
+        mSelectedImage = image;
+        mImagePreview.displayImage(image.getUri());
+        mCameraPreview.setVisibility(View.GONE);
+        mImagePreview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPreviewButtons() {
+        mPreviewButtonsContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showTakePictureButtons() {
+        mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
+    }
+
+    private int getAnalyzeFailedTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT,
+                R.string.preview_analyze_failed);
+    }
+
+    private int getAnalyzeSuccessTextFromBundle() {
+        return getIntent().getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT,
+                R.string.preview_analyze_success);
+    }
+
+    private void styleButtons(final Button finishButton, final ImageButton deleteImageButton,
+            final Button retakeImageButton) {
+        if (hasCustomButtonStyleSet()) {
+            int customButtonStyle = getButtonStyleResourceIdFromBundle();
+            deleteImageButton.setBackgroundResource(customButtonStyle);
+            retakeImageButton.setBackgroundResource(customButtonStyle);
+            finishButton.setBackgroundResource(customButtonStyle);
+        } else {
+            ViewCompat.setBackgroundTintList(retakeImageButton,
+                    ContextCompat.getColorStateList(this, R.color.positiveColor));
+            ViewCompat.setBackgroundTintList(deleteImageButton,
+                    ContextCompat.getColorStateList(this, R.color.negativeColor));
+            ViewCompat.setBackgroundTintList(finishButton,
+                    ContextCompat.getColorStateList(this, R.color.primaryColor));
+        }
+
+        if (hasCustomButtonTextColor()) {
+            int customButtonTextColor = getButtonTextColorResourceIdFromBundle();
+            int textColor = ContextCompat.getColor(this, customButtonTextColor);
+            retakeImageButton.setTextColor(textColor);
+            finishButton.setTextColor(textColor);
+        } else {
+            finishButton.setTextColor(getAccentColor());
+        }
     }
 }
