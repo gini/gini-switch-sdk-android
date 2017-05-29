@@ -36,11 +36,26 @@
 
     <SurfaceView
         android:id="@+id/camera_preview"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
         android:visibility="invisible" />
+
+    <net.gini.tariffsdk.utils.FrameView
+        android:id="@+id/camera_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/footer"
+        android:layout_alignBottom="@+id/camera_preview"
+        android:layout_alignEnd="@+id/camera_preview"
+        android:layout_alignLeft="@+id/camera_preview"
+        android:layout_alignParentTop="@+id/camera_preview"
+        android:layout_alignRight="@+id/camera_preview"
+        android:layout_alignStart="@+id/camera_preview"
+        android:layout_alignTop="@+id/camera_preview"
+        android:layout_below="@+id/toolbar" />
 
     <LinearLayout
         android:id="@+id/footer"
