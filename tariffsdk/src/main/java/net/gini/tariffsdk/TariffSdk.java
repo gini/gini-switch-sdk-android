@@ -106,9 +106,7 @@ public class TariffSdk {
 
                     TariffApi tariffApi = new TariffApiImpl(okHttpClient, authenticationService);
 
-                    RemoteConfigStore remoteConfigStore = new RemoteConfigStore(context);
-                    RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi,
-                            remoteConfigStore);
+                    RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
 
                     mSingleton = new TariffSdk(context, clientId, clientPw,
                             new DocumentServiceImpl(context),

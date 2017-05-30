@@ -3,29 +3,25 @@ package net.gini.tariffsdk;
 
 import android.support.annotation.VisibleForTesting;
 
+import net.gini.tariffsdk.configuration.models.ClientParameter;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
 class RemoteConfigManager {
 
+    private final ClientParameter mClientParameter;
     private Configuration mConfiguration;
-    private RemoteConfigStore mRemoteConfigStore;
     private TariffApi mTariffApi;
 
-    RemoteConfigManager(final TariffApi tariffApi,
-            final RemoteConfigStore remoteConfigStore) {
+    RemoteConfigManager(final TariffApi tariffApi) {
         mTariffApi = tariffApi;
-        mRemoteConfigStore = remoteConfigStore;
-    }
-
-    Configuration getConfiguration() {
-        return mConfiguration;
+        mClientParameter = new ClientParameter(getOsVersion(), getSdkVersion(), getDeviceModel());
     }
 
     @VisibleForTesting
     void requestRemoteConfig() {
-        mTariffApi.requestConfiguration(new NetworkCallback<Configuration>() {
+        mTariffApi.requestConfiguration(mClientParameter, new NetworkCallback<Configuration>() {
             @Override
             public void onError(final Exception e) {
                 //TODO
@@ -34,25 +30,21 @@ class RemoteConfigManager {
             @Override
             public void onSuccess(final Configuration configuration) {
                 mConfiguration = configuration;
-                persistConfiguration(mConfiguration);
             }
         });
     }
 
-    private Configuration getConfigurationFromPreferences() {
-        final int flashMode = mRemoteConfigStore.getFlashMode();
-        final long cameraResolution = mRemoteConfigStore.getMaximalCameraResolution();
-        return new Configuration(cameraResolution, flashMode);
+    private String getDeviceModel() {
+        return android.os.Build.MODEL;
     }
 
-    private void persistConfiguration(final Configuration configuration) {
-        mRemoteConfigStore.storeMaximalCameraResolution(configuration.getResolution());
-        mRemoteConfigStore.storeUseFlash(configuration.getFlashMode());
-        //TODO maybe persist timestamp
+    private int getOsVersion() {
+        return android.os.Build.VERSION.SDK_INT;
     }
 
-    private boolean shouldRequestRemoteConfig() {
-        //TODO check timestamp or so
-        return true;
+    private String getSdkVersion() {
+        return BuildConfig.VERSION_NAME;
     }
+
+
 }

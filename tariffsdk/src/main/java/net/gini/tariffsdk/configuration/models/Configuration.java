@@ -3,21 +3,15 @@ package net.gini.tariffsdk.configuration.models;
 
 public class Configuration {
 
-    private final long mResolution;
+    public static final String FLASH_MODE = "flashMode";
+    private final FlashMode mFlashMode;
 
-    private final int mFlashMode;
+    public Configuration(final FlashMode flashMode) {
 
-    public Configuration(final long resolution, final int flashMode) {
-
-        mResolution = resolution;
         mFlashMode = flashMode;
     }
 
-    public int getFlashMode() {
+    public FlashMode getFlashMode() {
         return mFlashMode;
-    }
-
-    public long getResolution() {
-        return mResolution;
     }
 }

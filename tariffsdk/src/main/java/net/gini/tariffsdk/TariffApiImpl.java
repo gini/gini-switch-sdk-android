@@ -9,7 +9,9 @@ import android.support.annotation.VisibleForTesting;
 import net.gini.tariffsdk.authentication.AuthenticationInterceptor;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.BearerAuthenticator;
+import net.gini.tariffsdk.configuration.models.ClientParameter;
 import net.gini.tariffsdk.configuration.models.Configuration;
+import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
@@ -47,9 +49,14 @@ class TariffApiImpl implements TariffApi {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
-    public void requestConfiguration(@NonNull final NetworkCallback<Configuration> callback) {
+    public void requestConfiguration(@NonNull final ClientParameter clientParameter,
+            @NonNull final NetworkCallback<Configuration> callback) {
         final HttpUrl url = mTariffApiUrl.newBuilder()
-                .addEncodedPathSegment("TODO")
+                .addEncodedPathSegment("config")
+                .addQueryParameter(ClientParameter.PLATFORM_NAME, clientParameter.getPlatformName())
+                .addQueryParameter(ClientParameter.OSVERSION_NAME, clientParameter.getOsVersion())
+                .addQueryParameter(ClientParameter.DEVICE_NAME, clientParameter.getDeviceModel())
+                .addQueryParameter(ClientParameter.SDKVERSION_NAME, clientParameter.getSdkVersion())
                 .build();
         final Request request = createGetRequest(url);
         mOkHttpClient.newCall(request).enqueue(new Callback() {
@@ -83,8 +90,8 @@ class TariffApiImpl implements TariffApi {
 
     private Configuration getConfigurationFromJson(final JSONObject object) throws JSONException {
 
-        long resolution = object.optLong("resolution");
-        final int flashMode = object.optInt("flashmode");
-        return new Configuration(resolution, flashMode);
+        final FlashMode flashMode = FlashMode.valueOf(
+                object.optString(Configuration.FLASH_MODE, FlashMode.ON.name()));
+        return new Configuration(flashMode);
     }
 }
