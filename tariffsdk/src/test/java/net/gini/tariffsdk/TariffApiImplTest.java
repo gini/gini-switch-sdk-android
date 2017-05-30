@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.network;
+package net.gini.tariffsdk;
 
 import static junit.framework.Assert.assertFalse;
 
@@ -10,6 +10,7 @@ import android.accounts.NetworkErrorException;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.configuration.models.Configuration;
+import net.gini.tariffsdk.network.NetworkCallback;
 import net.jodah.concurrentunit.Waiter;
 
 import org.json.JSONException;

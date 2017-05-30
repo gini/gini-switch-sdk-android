@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.network;
+package net.gini.tariffsdk;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
+import net.gini.tariffsdk.network.NetworkCallback;
+import net.gini.tariffsdk.network.UserApi;
 import net.jodah.concurrentunit.Waiter;
 
 import org.json.JSONException;

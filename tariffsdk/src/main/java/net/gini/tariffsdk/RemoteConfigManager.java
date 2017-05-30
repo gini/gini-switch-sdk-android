@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.configuration;
+package net.gini.tariffsdk;
 
 
 import android.support.annotation.VisibleForTesting;
@@ -7,19 +7,19 @@ import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
-public class RemoteConfigManager {
+class RemoteConfigManager {
 
     private Configuration mConfiguration;
     private RemoteConfigStore mRemoteConfigStore;
     private TariffApi mTariffApi;
 
-    public RemoteConfigManager(final TariffApi tariffApi,
+    RemoteConfigManager(final TariffApi tariffApi,
             final RemoteConfigStore remoteConfigStore) {
         mTariffApi = tariffApi;
         mRemoteConfigStore = remoteConfigStore;
     }
 
-    public Configuration getConfiguration() {
+    Configuration getConfiguration() {
         return mConfiguration;
     }
 

@@ -1,14 +1,15 @@
-package net.gini.tariffsdk.network;
+package net.gini.tariffsdk;
 
 
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
+import net.gini.tariffsdk.network.NetworkCallback;
+import net.gini.tariffsdk.network.UserApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -169,15 +170,6 @@ public class UserApiImpl implements UserApi {
         throw new IOException();
     }
 
-    @NonNull
-    private HttpUrl createTokenUrl(final String value) {
-        return mBaseUrl.newBuilder()
-                .addPathSegment("oauth")
-                .addPathSegment("token")
-                .addQueryParameter("grant_type", value)
-                .build();
-    }
-
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -216,6 +208,15 @@ public class UserApiImpl implements UserApi {
                 .url(url)
                 .addHeader("Accept", "application/json")
                 .post(body)
+                .build();
+    }
+
+    @NonNull
+    private HttpUrl createTokenUrl(final String value) {
+        return mBaseUrl.newBuilder()
+                .addPathSegment("oauth")
+                .addPathSegment("token")
+                .addQueryParameter("grant_type", value)
                 .build();
     }
 

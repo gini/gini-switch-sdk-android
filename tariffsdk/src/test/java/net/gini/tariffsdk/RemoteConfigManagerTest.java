@@ -1,4 +1,4 @@
-package net.gini.tariffsdk.configuration;
+package net.gini.tariffsdk;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;

@@ -15,11 +15,7 @@ import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.user.UserManager;
-import net.gini.tariffsdk.configuration.RemoteConfigManager;
-import net.gini.tariffsdk.configuration.RemoteConfigStore;
 import net.gini.tariffsdk.network.TariffApi;
-import net.gini.tariffsdk.network.TariffApiImpl;
-import net.gini.tariffsdk.network.UserApiImpl;
 
 import java.util.Set;
 

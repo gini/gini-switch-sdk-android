@@ -1,15 +1,16 @@
-package net.gini.tariffsdk.network;
+package net.gini.tariffsdk;
 
 
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.AuthenticationInterceptor;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.BearerAuthenticator;
 import net.gini.tariffsdk.configuration.models.Configuration;
+import net.gini.tariffsdk.network.NetworkCallback;
+import net.gini.tariffsdk.network.TariffApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
