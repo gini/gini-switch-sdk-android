@@ -42,6 +42,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private static final int REQUEST_CODE_EXTRACTIONS = 123;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
+    private View mCameraFrame;
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
@@ -186,6 +187,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         });
 
         mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
+        mCameraFrame = findViewById(R.id.camera_frame);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
         mImagePreviewState = (ImageView) findViewById(R.id.image_state);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
@@ -235,7 +237,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         super.onPause();
         if (hasCameraPermissions() && mCamera != null) {
             mCamera.stop();
-            mCameraPreview.setVisibility(View.GONE);
+            hideCameraPreview();
         }
     }
 
@@ -258,7 +260,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     protected void onResume() {
         if (hasCameraPermissions() && mCamera != null) {
             mCamera.start();
-            mCameraPreview.setVisibility(View.VISIBLE);
+            showCameraPreview();
             mTakePictureButton.setEnabled(true);
             mProgressBar.setVisibility(View.GONE);
         }
@@ -289,9 +291,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void openTakePictureScreen() {
         mSelectedImage = null;
-        mCameraPreview.setVisibility(View.VISIBLE);
+        showCameraPreview();
         mImagePreview.setVisibility(View.GONE);
-        mImagePreviewState.setVisibility(View.GONE);
         mImagePreviewState.setVisibility(View.GONE);
     }
 
@@ -322,7 +323,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public void showImagePreview(final Image image) {
         mSelectedImage = image;
         mImagePreview.displayImage(image.getUri());
-        mCameraPreview.setVisibility(View.GONE);
+        hideCameraPreview();
         mImagePreview.setVisibility(View.VISIBLE);
     }
 
@@ -344,6 +345,16 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private int getAnalyzeSuccessTextFromBundle() {
         return getIntent().getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT,
                 R.string.preview_analyze_success);
+    }
+
+    private void hideCameraPreview() {
+        mCameraPreview.setVisibility(View.GONE);
+        mCameraFrame.setVisibility(View.GONE);
+    }
+
+    private void showCameraPreview() {
+        mCameraPreview.setVisibility(View.VISIBLE);
+        mCameraFrame.setVisibility(View.VISIBLE);
     }
 
     private void styleButtons(final Button finishButton, final ImageButton deleteImageButton,
