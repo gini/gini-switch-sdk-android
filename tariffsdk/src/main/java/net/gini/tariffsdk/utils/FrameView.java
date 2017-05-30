@@ -11,6 +11,11 @@ import android.view.View;
 
 public class FrameView extends View {
 
+    public static final int LINE_LENGTH = 56;
+    //default values, can be changed via corresponding setters
+    public static final int LINE_WIDTH = 1;
+    public static final int WALL_OFFSET = 24;
+
     private int mHeight;
     private float mLineLength;
     private Paint mPaintLine;
@@ -35,9 +40,9 @@ public class FrameView extends View {
         mPaintRectangle.setColor(Color.BLACK);
         mPaintRectangle.setAlpha(100);
 
-        setLineWidth(1);
-        setLineLength(56);
-        setWallOffset(24);
+        setLineWidth(LINE_WIDTH);
+        setLineLength(LINE_LENGTH);
+        setWallOffset(WALL_OFFSET);
     }
 
     @Override
