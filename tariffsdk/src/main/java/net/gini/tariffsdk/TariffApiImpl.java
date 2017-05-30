@@ -3,6 +3,7 @@ package net.gini.tariffsdk;
 
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
 
 import net.gini.tariffsdk.authentication.AuthenticationInterceptor;
@@ -44,6 +45,7 @@ class TariffApiImpl implements TariffApi {
                 .build();
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void requestConfiguration(@NonNull final NetworkCallback<Configuration> callback) {
         final HttpUrl url = mTariffApiUrl.newBuilder()

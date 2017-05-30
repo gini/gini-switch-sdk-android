@@ -8,6 +8,7 @@ import static android.support.media.ExifInterface.ORIENTATION_ROTATE_90;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import android.support.media.ExifInterface;
 
 import java.io.File;
@@ -34,11 +35,13 @@ class DocumentServiceImpl implements DocumentService {
         mDocumentListeners = new CopyOnWriteArraySet<>();
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void addDocumentListener(@NonNull final DocumentListener listener) {
         mDocumentListeners.add(listener);
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void cleanup() {
         mDocumentListeners.clear();
@@ -55,6 +58,7 @@ class DocumentServiceImpl implements DocumentService {
 
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void deleteImage(@NonNull final Uri uri) {
 
@@ -66,11 +70,13 @@ class DocumentServiceImpl implements DocumentService {
         notifyListeners(image);
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public List<Image> getImageList() {
         return mImageList;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void keepImage(@NonNull final Uri uri) {
         //TODO - start processing, the whole thing is just a mock.
@@ -98,11 +104,13 @@ class DocumentServiceImpl implements DocumentService {
         }
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void removeDocumentListener(@NonNull final DocumentListener listener) {
         mDocumentListeners.remove(listener);
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public Image saveImage(@NonNull final byte[] data) {
         final File directory = mContext.getDir("tariffsdk", Context.MODE_PRIVATE);

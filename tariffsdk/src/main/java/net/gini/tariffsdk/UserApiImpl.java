@@ -3,6 +3,7 @@ package net.gini.tariffsdk;
 
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
 
 import net.gini.tariffsdk.authentication.models.AccessToken;
@@ -49,6 +50,7 @@ public class UserApiImpl implements UserApi {
         mBaseUrl = url;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createUser(@NonNull final UserCredentials userCredentials,
             @NonNull final AccessToken accessToken, @NonNull final NetworkCallback<Void> callback) {
@@ -82,6 +84,7 @@ public class UserApiImpl implements UserApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
         final HttpUrl url = createTokenUrl("client_credentials");
@@ -111,6 +114,7 @@ public class UserApiImpl implements UserApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void requestUserToken(@NonNull final UserCredentials userCredentials,
             @NonNull final NetworkCallback<AccessToken> callback) {
@@ -146,6 +150,7 @@ public class UserApiImpl implements UserApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public AccessToken requestUserTokenSync(@NonNull final UserCredentials userCredentials)
             throws IOException {
