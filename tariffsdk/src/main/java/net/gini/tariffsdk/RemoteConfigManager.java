@@ -1,10 +1,9 @@
 package net.gini.tariffsdk;
 
 
-import android.support.annotation.VisibleForTesting;
-
 import net.gini.tariffsdk.configuration.models.ClientParameter;
 import net.gini.tariffsdk.configuration.models.Configuration;
+import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
@@ -19,7 +18,10 @@ class RemoteConfigManager {
         mClientParameter = new ClientParameter(getOsVersion(), getSdkVersion(), getDeviceModel());
     }
 
-    @VisibleForTesting
+    FlashMode getFlashMode() {
+        return mConfiguration != null ? mConfiguration.getFlashMode() : FlashMode.ON;
+    }
+
     void requestRemoteConfig() {
         mTariffApi.requestConfiguration(mClientParameter, new NetworkCallback<Configuration>() {
             @Override

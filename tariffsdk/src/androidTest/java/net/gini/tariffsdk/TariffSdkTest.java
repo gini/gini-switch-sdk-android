@@ -11,9 +11,15 @@ import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_THEME;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
+
+import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.Configuration;
+import net.gini.tariffsdk.network.NetworkCallback;
+import net.gini.tariffsdk.network.TariffApi;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +30,7 @@ import org.junit.runner.RunWith;
 public class TariffSdkTest {
 
     private Context mContext;
+    private RemoteConfigManager mMockRemoteConfigManager;
     private TariffSdk mTariffSdk;
 
     @Test
@@ -131,7 +138,14 @@ public class TariffSdkTest {
     @Before
     public void setUp() throws Exception {
         mContext = InstrumentationRegistry.getTargetContext();
-        mTariffSdk = TariffSdk.init(mContext, "", "", "");
+        mTariffSdk = TariffSdk.create(mContext, null, null, new RemoteConfigManager(
+                new TariffApi() {
+                    @Override
+                    public void requestConfiguration(@NonNull final ClientParameter clientParameter,
+                            @NonNull final NetworkCallback<Configuration> callback) {
+
+                    }
+                }));
     }
 
     @Test
