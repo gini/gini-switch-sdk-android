@@ -98,6 +98,8 @@ public class BearerAuthenticatorTest {
         mServer.enqueue(new MockResponse().setResponseCode(401));
         client.newCall(request).enqueue(mMockCallback);
         mServer.takeRequest();
+        //since this is async we want to be sure the client has enough time to handle the response.
+        Thread.sleep(5);
         verify(mMockAuthenticationService).requestNewUserToken();
     }
 
