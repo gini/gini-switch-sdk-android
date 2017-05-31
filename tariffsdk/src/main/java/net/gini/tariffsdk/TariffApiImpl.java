@@ -2,7 +2,6 @@ package net.gini.tariffsdk;
 
 
 import android.accounts.NetworkErrorException;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
@@ -20,6 +19,7 @@ import net.gini.tariffsdk.network.TariffApi;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -52,9 +52,30 @@ class TariffApiImpl implements TariffApi {
     }
 
     @Override
-    public void addPage(@NonNull final String pagesUrl, @NonNull final Uri uri,
+    public void addPage(@NonNull final String pagesUrl, @NonNull final File file,
             final NetworkCallback<Void> callback) {
-        //TODO
+        final HttpUrl url = HttpUrl.parse(pagesUrl);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
+                file);
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/hal+json")
+                .post(requestBody)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                callback.onSuccess(null);
+            }
+        });
+
     }
 
     @Override

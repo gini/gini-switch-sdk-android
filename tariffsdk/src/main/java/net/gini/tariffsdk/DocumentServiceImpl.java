@@ -145,7 +145,13 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void deleteFileFromStorage(final @NonNull Uri uri) {
-        new File(uri.getPath()).delete();
+        final File file = getFileFromUri(uri);
+        file.delete();
+    }
+
+    @NonNull
+    private File getFileFromUri(final @NonNull Uri uri) {
+        return new File(uri.getPath());
     }
 
     private String getNewRotation(String orientation) {
@@ -193,7 +199,8 @@ class DocumentServiceImpl implements DocumentService {
                 }
             });
         } else {
-            mTariffApi.addPage(mExtractionOrder.getPages(), image.getUri(),
+            File imageFile = getFileFromUri(image.getUri());
+            mTariffApi.addPage(mExtractionOrder.getPages(), imageFile,
                     new NetworkCallback<Void>() {
                         @Override
                         public void onError(final Exception e) {
@@ -203,6 +210,8 @@ class DocumentServiceImpl implements DocumentService {
                         @Override
                         public void onSuccess(final Void aVoid) {
                             //TODO
+
+
                         }
                     });
         }
