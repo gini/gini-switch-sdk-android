@@ -104,7 +104,8 @@ public class TariffSdk {
         TariffApi tariffApi = createTariffApi(context, clientId, clientPw, domain);
         RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
 
-        return create(context, new DocumentServiceImpl(context), new ExtractionServiceImpl(),
+        return create(context, new DocumentServiceImpl(context, tariffApi),
+                new ExtractionServiceImpl(),
                 remoteConfigManager);
     }
 

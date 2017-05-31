@@ -2,6 +2,7 @@ package net.gini.tariffsdk;
 
 
 import android.accounts.NetworkErrorException;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
@@ -12,6 +13,7 @@ import net.gini.tariffsdk.authentication.BearerAuthenticator;
 import net.gini.tariffsdk.configuration.models.ClientParameter;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.configuration.models.FlashMode;
+import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
@@ -23,8 +25,10 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 class TariffApiImpl implements TariffApi {
@@ -45,6 +49,56 @@ class TariffApiImpl implements TariffApi {
                 .authenticator(new BearerAuthenticator(authenticationService))
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
                 .build();
+    }
+
+    @Override
+    public void addPage(@NonNull final String pagesUrl, @NonNull final Uri uri,
+            final NetworkCallback<Void> callback) {
+        //TODO
+    }
+
+    @Override
+    public void createExtractionOrder(@NonNull final NetworkCallback<ExtractionOrder> callback) {
+        final HttpUrl url = mTariffApiUrl.newBuilder()
+                .addPathSegment("extractionOrders")
+                .build();
+
+        RequestBody requestBody = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"), "{ }");
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .post(requestBody)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                //TODO
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject obj = new JSONObject(response.body().string());
+                        final JSONObject links = obj.getJSONObject("_links");
+                        final String selfUrl = links.getJSONObject("self").getString("href");
+                        final String pagesUrl = links.getJSONObject("pages").getString("href");
+
+                        ExtractionOrder extractionOrder = new ExtractionOrder(selfUrl, pagesUrl);
+
+                        callback.onSuccess(extractionOrder);
+                    } catch (JSONException e) {
+                        callback.onError(e);
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        });
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
