@@ -13,13 +13,13 @@ import net.gini.tariffsdk.configuration.models.ClientParameter;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.ExtractionOrder;
+import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -52,12 +52,12 @@ class TariffApiImpl implements TariffApi {
     }
 
     @Override
-    public void addPage(@NonNull final String pagesUrl, @NonNull final File file,
-            final NetworkCallback<Void> callback) {
+    public void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
+            final NetworkCallback<ExtractionOrderPage> callback) {
         final HttpUrl url = HttpUrl.parse(pagesUrl);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
-                file);
+                page);
         final Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/hal+json")
@@ -72,7 +72,22 @@ class TariffApiImpl implements TariffApi {
 
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
-                callback.onSuccess(null);
+
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject obj = new JSONObject(response.body().string());
+                        final JSONObject links = obj.getJSONObject("_links");
+                        final String selfUrl = links.getJSONObject("self").getString("href");
+                        final ExtractionOrderPage.Status status =
+                                ExtractionOrderPage.Status.valueOf(obj.getString("status"));
+                        ExtractionOrderPage page = new ExtractionOrderPage(selfUrl, status);
+                        callback.onSuccess(page);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
             }
         });
 
