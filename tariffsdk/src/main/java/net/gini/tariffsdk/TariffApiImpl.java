@@ -14,13 +14,16 @@ import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
+import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,7 +56,7 @@ class TariffApiImpl implements TariffApi {
 
     @Override
     public void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
-            final NetworkCallback<ExtractionOrderPage> callback) {
+            @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
         final HttpUrl url = HttpUrl.parse(pagesUrl);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
@@ -76,11 +79,7 @@ class TariffApiImpl implements TariffApi {
                 if (response.isSuccessful()) {
                     try {
                         final JSONObject obj = new JSONObject(response.body().string());
-                        final JSONObject links = obj.getJSONObject("_links");
-                        final String selfUrl = links.getJSONObject("self").getString("href");
-                        final ExtractionOrderPage.Status status =
-                                ExtractionOrderPage.Status.valueOf(obj.getString("status"));
-                        ExtractionOrderPage page = new ExtractionOrderPage(selfUrl, status);
+                        ExtractionOrderPage page = createExtractionOrderPageFromJson(obj);
                         callback.onSuccess(page);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -120,16 +119,55 @@ class TariffApiImpl implements TariffApi {
                 if (response.isSuccessful()) {
                     try {
                         final JSONObject obj = new JSONObject(response.body().string());
-                        final JSONObject links = obj.getJSONObject("_links");
-                        final String selfUrl = links.getJSONObject("self").getString("href");
-                        final String pagesUrl = links.getJSONObject("pages").getString("href");
-
-                        ExtractionOrder extractionOrder = new ExtractionOrder(selfUrl, pagesUrl);
+                        ExtractionOrder extractionOrder = createExtractionOrderFromJson(obj);
 
                         callback.onSuccess(extractionOrder);
                     } catch (JSONException e) {
                         callback.onError(e);
                     }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getOrderState(@NonNull final String orderUrl,
+            @NonNull final NetworkCallback<ExtractionOrderState> callback) {
+        Request request = createGetRequest(HttpUrl.parse(orderUrl));
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                if (response.isSuccessful()) {
+
+                    final JSONObject obj;
+                    try {
+                        obj = new JSONObject(response.body().string());
+                        ExtractionOrder extractionOrder = createExtractionOrderFromJson(obj);
+
+                        ArrayList<ExtractionOrderPage> orderPages = new ArrayList<>();
+                        JSONArray pagesJSONArray = obj.getJSONObject("_embedded").getJSONArray(
+                                "pages");
+                        for (int i = 0; i < pagesJSONArray.length(); i++) {
+                            JSONObject jsonPage = pagesJSONArray.getJSONObject(i);
+                            ExtractionOrderPage page = createExtractionOrderPageFromJson(jsonPage);
+                            orderPages.add(page);
+                        }
+
+
+                        callback.onSuccess(new ExtractionOrderState(orderPages, extractionOrder));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else {
                     callback.onError(new NetworkErrorException("TODO SOME ERROR"));
                 }
@@ -170,6 +208,26 @@ class TariffApiImpl implements TariffApi {
                 }
             }
         });
+    }
+
+    @NonNull
+    private ExtractionOrder createExtractionOrderFromJson(final JSONObject obj)
+            throws JSONException {
+        final JSONObject links = obj.getJSONObject("_links");
+        final String selfUrl = links.getJSONObject("self").getString("href");
+        final String pagesUrl = links.getJSONObject("pages").getString("href");
+        return new ExtractionOrder(selfUrl, pagesUrl);
+    }
+
+    @NonNull
+    private ExtractionOrderPage createExtractionOrderPageFromJson(final JSONObject jsonPage)
+            throws JSONException {
+        final String self = jsonPage.getJSONObject("_links").getJSONObject("self").getString
+                ("href");
+        final ExtractionOrderPage.Status status =
+                ExtractionOrderPage.Status.valueOf(jsonPage.getString("status"
+                        + ""));
+        return new ExtractionOrderPage(self, status);
     }
 
     private Request createGetRequest(final HttpUrl url) {

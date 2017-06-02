@@ -23,9 +23,9 @@ import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -35,6 +35,7 @@ class DocumentServiceImpl implements DocumentService {
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
     private final TariffApi mTariffApi;
+    private final HashSet<Image> mUploadedImages;
     private ExtractionOrder mExtractionOrder;
 
     DocumentServiceImpl(final Context context, final TariffApi tariffApi) {
@@ -42,6 +43,7 @@ class DocumentServiceImpl implements DocumentService {
         mTariffApi = tariffApi;
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
+        mUploadedImages = new HashSet<>();
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -77,6 +79,10 @@ class DocumentServiceImpl implements DocumentService {
         mImageList.remove(image);
 
         notifyListeners(image);
+        if (mUploadedImages.contains(image)) {
+            //TODO when specified by the backend
+//            mTariffApi.deletePage(image);
+        }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -88,29 +94,8 @@ class DocumentServiceImpl implements DocumentService {
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void keepImage(@NonNull final Uri uri) {
-        //TODO - start processing, the whole thing is just a mock.
         final Image image = new Image(uri, ImageState.PROCESSING);
-        if (!mImageList.contains(image)) {
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        //Artificial delay for mocking, later we process correct
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (mImageList.contains(image)) {
-                        //Pseudo mock states
-                        image.setProcessingState(
-                                new Random().nextBoolean() ? ImageState.SUCCESSFULLY_PROCESSED
-                                        : ImageState.FAILED);
-                        imageProcessed(image);
-                    }
-                }
-            }).start();
-
-            mImageList.add(image);
-        }
+        mImageList.add(image);
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -202,6 +187,10 @@ class DocumentServiceImpl implements DocumentService {
         }
     }
 
+    private void pollStatePeriodically() {
+
+    }
+
     private void uploadImage(final Image image) {
         if (mExtractionOrder == null) {
             mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
@@ -238,9 +227,11 @@ class DocumentServiceImpl implements DocumentService {
 
                         @Override
                         public void onSuccess(final ExtractionOrderPage page) {
-                            //TODO
+                            if (page.getStatus() != ExtractionOrderPage.Status.failed) {
+                                mUploadedImages.add(image);
+                            } else {
 
-
+                            }
                         }
                     });
         }

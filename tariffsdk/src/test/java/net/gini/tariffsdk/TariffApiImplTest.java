@@ -16,6 +16,7 @@ import net.gini.tariffsdk.configuration.models.ClientParameter;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
+import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.jodah.concurrentunit.Waiter;
 
@@ -27,6 +28,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
 
@@ -50,6 +54,8 @@ public class TariffApiImplTest {
     private NetworkCallback<ExtractionOrder> mMockExtractionOrderNetworkCallback;
     @Mock
     private File mMockFile;
+    @Mock
+    private NetworkCallback<ExtractionOrderState> mMockOrderStateNetworkCallback;
     @Mock
     private NetworkCallback<ExtractionOrderPage> mMockStringNetworkCallback;
     private HttpUrl mMockUrl;
@@ -407,6 +413,190 @@ public class TariffApiImplTest {
     }
 
     @Test
+    public void getOrderState_shouldBeAGetRequest()
+            throws InterruptedException, TimeoutException {
+
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
+
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("GET", request.getMethod());
+    }
+
+    @Test
+    public void getOrderState_shouldContainAuthorizationHeader()
+            throws InterruptedException, TimeoutException {
+
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
+
+        RecordedRequest request = mServer.takeRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        assertFalse(authorizationHeader.isEmpty());
+    }
+
+    @Test
+    public void getOrderState_shouldContainTheBearerTokenAsAuthorization()
+            throws InterruptedException {
+
+        final TariffApiImpl tariffApi = createTariffApi();
+        final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
+        when(mMockAccessToken.getToken()).thenReturn(bearerToken);
+
+        tariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
+
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
+    }
+
+    @Test
+    public void getOrderState_wasNotSuccessfulShouldCallOnError()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        mServer.enqueue(new MockResponse().setResponseCode(500));
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void getOrderState_wasSuccessfulShouldCallOnSuccess()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionOrderState(new ArrayList<String>(), null, null));
+        mServer.enqueue(mJSONMockResponse);
+
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        mWaiter.assertNotNull(extractionOrderState);
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
+    @Test
+    public void getOrderState_wasSuccessfulShouldContainAPagesLink()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        final String pagesLink = "http://pages_link";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionOrderState(new ArrayList<String>(), null, pagesLink));
+        mServer.enqueue(mJSONMockResponse);
+
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        mWaiter.assertEquals(pagesLink, extractionOrderState.getOrder().getPages());
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
+    @Test
+    public void getOrderState_wasSuccessfulShouldContainASelfLink()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        final String selfLink = "http://self_link";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionOrderState(new ArrayList<String>(), selfLink, null));
+        mServer.enqueue(mJSONMockResponse);
+
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        mWaiter.assertEquals(selfLink, extractionOrderState.getOrder().getSelf());
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
+    @Test
+    public void getOrderState_wasSuccessfulShouldContainPages()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        ArrayList<String> pages = new ArrayList<>();
+        final String page1 = createMockCreatePagesResponse("Page1",
+                ExtractionOrderPage.Status.processing);
+        final String page2 = createMockCreatePagesResponse("Page2",
+                ExtractionOrderPage.Status.processing);
+        pages.add(page1);
+        pages.add(page2);
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionOrderState(pages, null, null));
+        mServer.enqueue(mJSONMockResponse);
+
+        final TariffApiImpl tariffApi = createTariffApi();
+
+        tariffApi.getOrderState(mMockUrl.toString(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        mWaiter.assertEquals(2, extractionOrderState.getOrderPages().size());
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
+    @Test
     public void requestConfiguration_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
 
@@ -570,6 +760,24 @@ public class TariffApiImplTest {
                 + "    },\n"
                 + "    \"pages\" : {\n"
                 + "      \"href\" : \"" + pages + "\"\n"
+                + "    }\n"
+                + "  }\n"
+                + "}";
+    }
+
+    private String createMockExtractionOrderState(final List<String> pages, final String self,
+            final String pagesLink) {
+        return "{\n"
+                + "  \"_embedded\" : {\n"
+                + "    \"pages\" : "
+                + Arrays.toString(pages.toArray())
+                + "  },\n"
+                + "  \"_links\" : {\n"
+                + "    \"self\" : {\n"
+                + "      \"href\" : \"" + self + "\"\n"
+                + "    },\n"
+                + "    \"pages\" : {\n"
+                + "      \"href\" : \"" + pagesLink + "\"\n"
                 + "    }\n"
                 + "  }\n"
                 + "}";
