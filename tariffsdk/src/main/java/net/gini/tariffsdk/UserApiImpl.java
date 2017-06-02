@@ -1,14 +1,16 @@
-package net.gini.tariffsdk.network;
+package net.gini.tariffsdk;
 
 
 import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
 
-import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
+import net.gini.tariffsdk.network.NetworkCallback;
+import net.gini.tariffsdk.network.UserApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +50,7 @@ public class UserApiImpl implements UserApi {
         mBaseUrl = url;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createUser(@NonNull final UserCredentials userCredentials,
             @NonNull final AccessToken accessToken, @NonNull final NetworkCallback<Void> callback) {
@@ -81,6 +84,7 @@ public class UserApiImpl implements UserApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void requestClientToken(@NonNull final NetworkCallback<AccessToken> callback) {
         final HttpUrl url = createTokenUrl("client_credentials");
@@ -93,7 +97,8 @@ public class UserApiImpl implements UserApi {
             }
 
             @Override
-            public void onResponse(final Call call, final Response response) throws IOException {
+            public void onResponse(final Call call, final Response response)
+                    throws IOException {
                 if (response.isSuccessful()) {
                     try {
                         final JSONObject obj = new JSONObject(response.body().string());
@@ -109,6 +114,32 @@ public class UserApiImpl implements UserApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
+    public AccessToken requestNewUserTokenSync(@NonNull final UserCredentials userCredentials)
+            throws IOException {
+
+        final RequestBody requestBody = new FormBody.Builder()
+                .add("username", userCredentials.getEmail())
+                .add("password", userCredentials.getPassword())
+                .build();
+
+        final HttpUrl url = createTokenUrl("password");
+        final Request request = createPostRequest(requestBody, url);
+
+        final Response response = mHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            final JSONObject obj;
+            try {
+                obj = new JSONObject(response.body().string());
+                return getAccessToken(obj);
+            } catch (JSONException ignored) {
+            }
+        }
+        throw new IOException();
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void requestUserToken(@NonNull final UserCredentials userCredentials,
             @NonNull final NetworkCallback<AccessToken> callback) {
@@ -142,15 +173,6 @@ public class UserApiImpl implements UserApi {
                 }
             }
         });
-    }
-
-    @NonNull
-    private HttpUrl createTokenUrl(final String value) {
-        return mBaseUrl.newBuilder()
-                .addPathSegment("oauth")
-                .addPathSegment("token")
-                .addQueryParameter("grant_type", value)
-                .build();
     }
 
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {
@@ -191,6 +213,15 @@ public class UserApiImpl implements UserApi {
                 .url(url)
                 .addHeader("Accept", "application/json")
                 .post(body)
+                .build();
+    }
+
+    @NonNull
+    private HttpUrl createTokenUrl(final String value) {
+        return mBaseUrl.newBuilder()
+                .addPathSegment("oauth")
+                .addPathSegment("token")
+                .addQueryParameter("grant_type", value)
                 .build();
     }
 

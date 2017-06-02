@@ -2,12 +2,15 @@ package net.gini.tariffsdk.authentication;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
 import net.gini.tariffsdk.authentication.user.UserManager;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.UserApi;
+
+import java.io.IOException;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -22,7 +25,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         mUserManager = userManager;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
+    public AccessToken getUserToken() {
+        return mAccessToken;
+    }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void init(@NonNull final NetworkCallback<Void> callback) {
 
@@ -60,12 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-
-    @Override
-    public AccessToken getUserToken() {
-        return mAccessToken;
-    }
-
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void requestNewUserToken(@NonNull final NetworkCallback<AccessToken> callback) {
         mUserApi.requestUserToken(mUserManager.getOrCreateUserCredentials(),
@@ -81,6 +85,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         callback.onSuccess(accessToken);
                     }
                 });
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
+    public AccessToken requestNewUserToken() throws IOException {
+
+        return mUserApi.requestNewUserTokenSync(mUserManager.getOrCreateUserCredentials());
     }
 
 

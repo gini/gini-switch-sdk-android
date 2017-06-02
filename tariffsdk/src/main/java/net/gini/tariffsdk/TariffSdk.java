@@ -11,6 +11,12 @@ import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.annotation.VisibleForTesting;
 
+import net.gini.tariffsdk.authentication.AuthenticationService;
+import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
+import net.gini.tariffsdk.authentication.models.ClientCredentials;
+import net.gini.tariffsdk.authentication.user.UserManager;
+import net.gini.tariffsdk.network.TariffApi;
+
 import java.util.Set;
 
 import okhttp3.OkHttpClient;
@@ -31,6 +37,7 @@ public class TariffSdk {
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
+    private final RemoteConfigManager mRemoteConfigManager;
     private int mAnalyzedImage;
     private int mAnalyzedText;
     private int mAnalyzedTextColor;
@@ -54,13 +61,15 @@ public class TariffSdk {
     private int mReviewTitleText;
     private int mTheme;
 
-    private TariffSdk(final Context context, final String clientId, final String clientPw,
-            final DocumentService authenticationService,
-            final ExtractionService extractionService) {
+    private TariffSdk(final Context context,
+            final DocumentService documentService,
+            final ExtractionService extractionService,
+            final RemoteConfigManager remoteConfigManager) {
 
         mContext = context.getApplicationContext();
-        mDocumentService = authenticationService;
+        mDocumentService = documentService;
         mExtractionService = extractionService;
+        mRemoteConfigManager = remoteConfigManager;
         mPositiveColor = R.color.positiveColor;
         mNegativeColor = R.color.negativeColor;
         mTheme = R.style.GiniTheme;
@@ -80,7 +89,11 @@ public class TariffSdk {
         mReviewKeepText = R.string.review_keep_button;
         mPreviewSuccessText = R.string.preview_analyze_success;
         mPreviewFailedText = R.string.preview_analyze_failed;
+
+        mRemoteConfigManager.requestRemoteConfig();
+
     }
+
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
             @NonNull final String clientPw, @NonNull final String domain) {
@@ -88,16 +101,11 @@ public class TariffSdk {
         assertNotNull(clientId);
         assertNotNull(clientPw);
         assertNotNull(domain);
-        if (mSingleton == null) {
-            synchronized (TariffSdk.class) {
-                if (mSingleton == null) {
-                    mSingleton = new TariffSdk(context, clientId, clientPw,
-                            new DocumentServiceImpl(context),
-                            new ExtractionServiceImpl());
-                }
-            }
-        }
-        return mSingleton;
+        TariffApi tariffApi = createTariffApi(context, clientId, clientPw, domain);
+        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
+
+        return create(context, new DocumentServiceImpl(context), new ExtractionServiceImpl(),
+                remoteConfigManager);
     }
 
     /**
@@ -160,6 +168,20 @@ public class TariffSdk {
 
     void cleanUp() {
         mDocumentService.cleanup();
+    }
+
+    @VisibleForTesting
+    static TariffSdk create(final Context context, DocumentService documentService,
+            ExtractionService extractionService, RemoteConfigManager remoteConfigManager) {
+        if (mSingleton == null) {
+            synchronized (TariffSdk.class) {
+                if (mSingleton == null) {
+                    mSingleton = new TariffSdk(context, documentService, extractionService,
+                            remoteConfigManager);
+                }
+            }
+        }
+        return mSingleton;
     }
 
     int getAnalyzedImage() {
@@ -494,5 +516,18 @@ public class TariffSdk {
             throw new IllegalArgumentException("Parameter cannot be null");
         }
         return parameter;
+    }
+
+    @NonNull
+    private static TariffApi createTariffApi(final @NonNull Context context,
+            final @NonNull String clientId, final @NonNull String clientPw,
+            final @NonNull String domain) {
+        ClientCredentials clientCredentials = new ClientCredentials(clientId, clientPw);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        UserApiImpl userApi = new UserApiImpl(clientCredentials, okHttpClient);
+        AuthenticationService authenticationService = new AuthenticationServiceImpl(
+                userApi, new UserManager(context, domain));
+
+        return new TariffApiImpl(okHttpClient, authenticationService);
     }
 }

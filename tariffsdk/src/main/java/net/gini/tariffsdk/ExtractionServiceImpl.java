@@ -1,6 +1,8 @@
 package net.gini.tariffsdk;
 
 
+import android.support.annotation.RestrictTo;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,6 +18,7 @@ class ExtractionServiceImpl implements ExtractionService {
         mExtractions.put("Wholesale Supplier", "Stadtwerke München");
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public Set<Extraction> getExtractions() {
         Set<Extraction> extractions = new HashSet<>();
@@ -26,11 +29,13 @@ class ExtractionServiceImpl implements ExtractionService {
         return extractions;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public int getResultCodeForActivity() {
         return TariffSdk.EXTRACTIONS_AVAILABLE;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void setExtraction(final Extraction extraction) {
         mExtractions.put(extraction.getName(), extraction.getValue());
