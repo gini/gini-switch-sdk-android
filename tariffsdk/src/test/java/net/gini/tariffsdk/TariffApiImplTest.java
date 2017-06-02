@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import android.accounts.NetworkErrorException;
-import android.support.annotation.NonNull;
 
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.models.AccessToken;
@@ -61,16 +60,13 @@ public class TariffApiImplTest {
     private HttpUrl mMockUrl;
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
+    private TariffApiImpl mTariffApi;
     private Waiter mWaiter;
 
     @Test
     public void addPage_shouldBeAPostRequest()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
-
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("POST", request.getMethod());
     }
@@ -78,11 +74,7 @@ public class TariffApiImplTest {
     @Test
     public void addPage_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
-
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -91,12 +83,9 @@ public class TariffApiImplTest {
     @Test
     public void addPage_shouldContainImageAsBody()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
         final byte[] page = new byte[Short.MAX_VALUE];
         new Random().nextBytes(page);
-        tariffApi.addPage(mMockUrl.toString(), page, mMockStringNetworkCallback);
+        mTariffApi.addPage(mMockUrl.toString(), page, mMockStringNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         final byte[] body = request.getBody().readByteArray();
@@ -106,13 +95,9 @@ public class TariffApiImplTest {
     @Test
     public void addPage_shouldContainTheBearerTokenAsAuthorization()
             throws InterruptedException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
-
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -122,9 +107,7 @@ public class TariffApiImplTest {
             throws InterruptedException, JSONException, TimeoutException {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -149,10 +132,7 @@ public class TariffApiImplTest {
                 createMockCreatePagesResponse("",
                         ExtractionOrderPage.Status.processing));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -178,10 +158,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse(pagesLink, ExtractionOrderPage.Status.processing));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -195,7 +172,6 @@ public class TariffApiImplTest {
                         mWaiter.resume();
                     }
                 });
-
         mWaiter.await();
     }
 
@@ -207,10 +183,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("", status));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -224,7 +197,6 @@ public class TariffApiImplTest {
                         mWaiter.resume();
                     }
                 });
-
         mWaiter.await();
     }
 
@@ -234,10 +206,7 @@ public class TariffApiImplTest {
 
         MockResponse mJSONMockResponse = new MockResponse().setBody("");
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.assertTrue(e instanceof JSONException);
@@ -250,18 +219,13 @@ public class TariffApiImplTest {
                 mWaiter.resume();
             }
         });
-
         mWaiter.await();
     }
 
     @Test
     public void createExtractionOrder_shouldBeAPostRequest()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
-
+        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("POST", request.getMethod());
     }
@@ -269,11 +233,7 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
-
+        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -282,11 +242,7 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_shouldContainEmptyJson()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
-
+        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String body = request.getBody().readUtf8();
         assertEquals("{ }", body);
@@ -295,12 +251,9 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_shouldContainTheBearerTokenAsAuthorization()
             throws InterruptedException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-
-        tariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
+        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
@@ -309,11 +262,8 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
-
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.assertTrue(e instanceof NetworkErrorException);
@@ -332,14 +282,10 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_wasSuccessfulShouldCallOnSuccess()
             throws InterruptedException, JSONException, TimeoutException {
-
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse("", ""));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
@@ -359,15 +305,11 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_wasSuccessfulShouldContainAPagesLink()
             throws InterruptedException, JSONException, TimeoutException {
-
         final String pagesLink = "http://self_link";
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse("", pagesLink));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
@@ -392,10 +334,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse(selfLink, ""));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
@@ -408,18 +347,13 @@ public class TariffApiImplTest {
                 mWaiter.resume();
             }
         });
-
         mWaiter.await();
     }
 
     @Test
     public void getOrderState_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
-
+        mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
     }
@@ -427,11 +361,7 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
-
+        mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -440,13 +370,9 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_shouldContainTheBearerTokenAsAuthorization()
             throws InterruptedException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-
-        tariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
-
+        mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -456,9 +382,7 @@ public class TariffApiImplTest {
             throws InterruptedException, JSONException, TimeoutException {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(),
+        mTariffApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -482,10 +406,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, null));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(),
+        mTariffApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -499,7 +420,6 @@ public class TariffApiImplTest {
                         mWaiter.resume();
                     }
                 });
-
         mWaiter.await();
     }
 
@@ -511,10 +431,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, pagesLink));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(),
+        mTariffApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -528,7 +445,6 @@ public class TariffApiImplTest {
                         mWaiter.resume();
                     }
                 });
-
         mWaiter.await();
     }
 
@@ -540,10 +456,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), selfLink, null));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(),
+        mTariffApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -575,10 +488,7 @@ public class TariffApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(pages, null, null));
         mServer.enqueue(mJSONMockResponse);
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.getOrderState(mMockUrl.toString(),
+        mTariffApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -592,18 +502,13 @@ public class TariffApiImplTest {
                         mWaiter.resume();
                     }
                 });
-
         mWaiter.await();
     }
 
     @Test
     public void requestConfiguration_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
-
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
-
+        mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
     }
@@ -611,10 +516,7 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_shouldContainAnAuthorizationHeader()
             throws InterruptedException {
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
-
+        mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -625,11 +527,9 @@ public class TariffApiImplTest {
     public void requestConfiguration_shouldContainClientDeviceModel()
             throws InterruptedException, TimeoutException {
 
-        final TariffApiImpl tariffApi = createTariffApi();
-
         final String deviceModel = "Pixel";
         final ClientInformation clientInformation = new ClientInformation(0, null, deviceModel);
-        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -640,11 +540,9 @@ public class TariffApiImplTest {
     public void requestConfiguration_shouldContainClientOsVersion()
             throws InterruptedException, TimeoutException {
 
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        int osVersion = 19;
+        final int osVersion = 19;
         final ClientInformation clientInformation = new ClientInformation(osVersion, null, null);
-        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -655,10 +553,8 @@ public class TariffApiImplTest {
     public void requestConfiguration_shouldContainClientPlatform()
             throws InterruptedException, TimeoutException {
 
-        final TariffApiImpl tariffApi = createTariffApi();
-
         final ClientInformation clientInformation = new ClientInformation(0, null, null);
-        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -669,11 +565,9 @@ public class TariffApiImplTest {
     public void requestConfiguration_shouldContainClientSdkVersion()
             throws InterruptedException, TimeoutException {
 
-        final TariffApiImpl tariffApi = createTariffApi();
-
         final String sdkVersion = "1.0.1";
         final ClientInformation clientInformation = new ClientInformation(0, sdkVersion, null);
-        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -684,12 +578,9 @@ public class TariffApiImplTest {
     public void requestConfiguration_shouldContainTheBearerTokenAsAuthorization()
             throws InterruptedException {
 
-        final TariffApiImpl tariffApi = createTariffApi();
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-
-        tariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
-
+        mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -697,24 +588,21 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
-
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        final TariffApiImpl tariffApi = createTariffApi();
-
-        tariffApi.requestConfiguration(mMockClientInformation,
+        mTariffApi.requestConfiguration(mMockClientInformation,
                 new NetworkCallback<Configuration>() {
-            @Override
-            public void onError(final Exception e) {
-                mWaiter.assertTrue(e instanceof NetworkErrorException);
-                mWaiter.resume();
-            }
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.resume();
+                    }
 
-            @Override
-            public void onSuccess(final Configuration configuration) {
-                mWaiter.fail();
-                mWaiter.resume();
-            }
-        });
+                    @Override
+                    public void onSuccess(final Configuration configuration) {
+                        mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
         mWaiter.await();
     }
 
@@ -735,6 +623,8 @@ public class TariffApiImplTest {
         when(mMockClientInformation.getOsVersion()).thenReturn("25");
 
         when(mMockFile.getName()).thenReturn("file");
+
+        mTariffApi = new TariffApiImpl(mOkHttpClient, mMockAuthenticationService, mMockUrl);
     }
 
     @After
@@ -784,11 +674,4 @@ public class TariffApiImplTest {
                 + "  }\n"
                 + "}";
     }
-
-    @NonNull
-    private TariffApiImpl createTariffApi() {
-        return new TariffApiImpl(mOkHttpClient,
-                mMockAuthenticationService, mMockUrl);
-    }
-
 }

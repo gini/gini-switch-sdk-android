@@ -140,12 +140,10 @@ class DocumentServiceImpl implements DocumentService {
         byte[] data;
         RandomAccessFile f = new RandomAccessFile(imageFile, "r");
         try {
-            // Get and check length
             long longLength = f.length();
             int length = (int) longLength;
             data = new byte[length];
             f.readFully(data);
-            f.close();
         } finally {
             f.close();
         }
