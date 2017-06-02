@@ -1,7 +1,7 @@
 package net.gini.tariffsdk.configuration.models;
 
 
-public class ClientParameter {
+public class ClientInformation {
 
     public static final String DEVICE_NAME = "device";
     public static final String OSVERSION_NAME = "osVersion";
@@ -12,7 +12,8 @@ public class ClientParameter {
     private final String mPlatformName;
     private final String mSdkVersion;
 
-    public ClientParameter(final int osVersion, final String sdkVersion, final String deviceModel) {
+    public ClientInformation(final int osVersion, final String sdkVersion,
+            final String deviceModel) {
         mPlatformName = "android";
         mOsVersion = Integer.toString(osVersion);
         mSdkVersion = sdkVersion;

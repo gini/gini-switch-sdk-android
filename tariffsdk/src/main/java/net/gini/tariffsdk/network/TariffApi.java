@@ -3,7 +3,7 @@ package net.gini.tariffsdk.network;
 
 import android.support.annotation.NonNull;
 
-import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
 
 public interface TariffApi {
@@ -16,7 +16,7 @@ public interface TariffApi {
     void getOrderState(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<ExtractionOrderState> callback);
 
-    void requestConfiguration(@NonNull final ClientParameter clientParameter,
+    void requestConfiguration(@NonNull final ClientInformation clientInformation,
             @NonNull final NetworkCallback<Configuration> callback);
 
 }

@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.models.AccessToken;
-import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
@@ -49,7 +49,7 @@ public class TariffApiImplTest {
     @Mock
     private AuthenticationService mMockAuthenticationService;
     @Mock
-    private ClientParameter mMockClientParameter;
+    private ClientInformation mMockClientInformation;
     @Mock
     private NetworkCallback<ExtractionOrder> mMockExtractionOrderNetworkCallback;
     @Mock
@@ -602,7 +602,7 @@ public class TariffApiImplTest {
 
         final TariffApiImpl tariffApi = createTariffApi();
 
-        tariffApi.requestConfiguration(mMockClientParameter, mMockConfigurationNetworkCallback);
+        tariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
@@ -613,7 +613,7 @@ public class TariffApiImplTest {
             throws InterruptedException {
         final TariffApiImpl tariffApi = createTariffApi();
 
-        tariffApi.requestConfiguration(mMockClientParameter, mMockConfigurationNetworkCallback);
+        tariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
@@ -628,11 +628,11 @@ public class TariffApiImplTest {
         final TariffApiImpl tariffApi = createTariffApi();
 
         final String deviceModel = "Pixel";
-        final ClientParameter clientParameter = new ClientParameter(0, null, deviceModel);
-        tariffApi.requestConfiguration(clientParameter, mMockConfigurationNetworkCallback);
+        final ClientInformation clientInformation = new ClientInformation(0, null, deviceModel);
+        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
-        assertTrue(request.getPath().contains(ClientParameter.PLATFORM_NAME));
+        assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
         assertTrue(request.getPath().contains(deviceModel));
     }
 
@@ -642,12 +642,13 @@ public class TariffApiImplTest {
 
         final TariffApiImpl tariffApi = createTariffApi();
 
-        final ClientParameter clientParameter = new ClientParameter(19, null, null);
-        tariffApi.requestConfiguration(clientParameter, mMockConfigurationNetworkCallback);
+        int osVersion = 19;
+        final ClientInformation clientInformation = new ClientInformation(osVersion, null, null);
+        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
-        assertTrue(request.getPath().contains(ClientParameter.PLATFORM_NAME));
-        assertTrue(request.getPath().contains("19"));
+        assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
+        assertTrue(request.getPath().contains(Integer.toString(osVersion)));
     }
 
     @Test
@@ -656,11 +657,11 @@ public class TariffApiImplTest {
 
         final TariffApiImpl tariffApi = createTariffApi();
 
-        final ClientParameter clientParameter = new ClientParameter(0, null, null);
-        tariffApi.requestConfiguration(clientParameter, mMockConfigurationNetworkCallback);
+        final ClientInformation clientInformation = new ClientInformation(0, null, null);
+        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
-        assertTrue(request.getPath().contains(ClientParameter.PLATFORM_NAME));
+        assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
         assertTrue(request.getPath().contains("android"));
     }
 
@@ -671,11 +672,11 @@ public class TariffApiImplTest {
         final TariffApiImpl tariffApi = createTariffApi();
 
         final String sdkVersion = "1.0.1";
-        final ClientParameter clientParameter = new ClientParameter(0, sdkVersion, null);
-        tariffApi.requestConfiguration(clientParameter, mMockConfigurationNetworkCallback);
+        final ClientInformation clientInformation = new ClientInformation(0, sdkVersion, null);
+        tariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
-        assertTrue(request.getPath().contains(ClientParameter.PLATFORM_NAME));
+        assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
         assertTrue(request.getPath().contains(sdkVersion));
     }
 
@@ -687,7 +688,7 @@ public class TariffApiImplTest {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
 
-        tariffApi.requestConfiguration(mMockClientParameter, mMockConfigurationNetworkCallback);
+        tariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
@@ -700,7 +701,8 @@ public class TariffApiImplTest {
         mServer.enqueue(new MockResponse().setResponseCode(500));
         final TariffApiImpl tariffApi = createTariffApi();
 
-        tariffApi.requestConfiguration(mMockClientParameter, new NetworkCallback<Configuration>() {
+        tariffApi.requestConfiguration(mMockClientInformation,
+                new NetworkCallback<Configuration>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.assertTrue(e instanceof NetworkErrorException);
@@ -728,9 +730,9 @@ public class TariffApiImplTest {
         when(mMockAccessToken.getToken()).thenReturn("");
         when(mMockAuthenticationService.getUserToken()).thenReturn(mMockAccessToken);
 
-        when(mMockClientParameter.getSdkVersion()).thenReturn("1.2.3");
-        when(mMockClientParameter.getDeviceModel()).thenReturn("Nexus 5");
-        when(mMockClientParameter.getOsVersion()).thenReturn("25");
+        when(mMockClientInformation.getSdkVersion()).thenReturn("1.2.3");
+        when(mMockClientInformation.getDeviceModel()).thenReturn("Nexus 5");
+        when(mMockClientInformation.getOsVersion()).thenReturn("25");
 
         when(mMockFile.getName()).thenReturn("file");
     }

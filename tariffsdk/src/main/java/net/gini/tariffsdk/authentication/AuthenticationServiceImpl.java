@@ -91,7 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AccessToken requestNewUserToken() throws IOException {
 
-        return mUserApi.requestUserTokenSync(mUserManager.getOrCreateUserCredentials());
+        return mUserApi.requestNewUserTokenSync(mUserManager.getOrCreateUserCredentials());
     }
 
 
