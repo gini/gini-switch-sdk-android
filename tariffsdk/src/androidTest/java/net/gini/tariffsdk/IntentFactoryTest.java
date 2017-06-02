@@ -26,7 +26,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
@@ -304,7 +304,8 @@ public class IntentFactoryTest {
         mTariffSdk = TariffSdk.create(mContext, null, null, new RemoteConfigManager(
                 new TariffApi() {
                     @Override
-                    public void requestConfiguration(@NonNull final ClientParameter clientParameter,
+                    public void requestConfiguration(
+                            @NonNull final ClientInformation clientInformation,
                             @NonNull final NetworkCallback<Configuration> callback) {
 
                     }

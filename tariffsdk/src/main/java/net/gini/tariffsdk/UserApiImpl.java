@@ -116,6 +116,31 @@ public class UserApiImpl implements UserApi {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
+    public AccessToken requestNewUserTokenSync(@NonNull final UserCredentials userCredentials)
+            throws IOException {
+
+        final RequestBody requestBody = new FormBody.Builder()
+                .add("username", userCredentials.getEmail())
+                .add("password", userCredentials.getPassword())
+                .build();
+
+        final HttpUrl url = createTokenUrl("password");
+        final Request request = createPostRequest(requestBody, url);
+
+        final Response response = mHttpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            final JSONObject obj;
+            try {
+                obj = new JSONObject(response.body().string());
+                return getAccessToken(obj);
+            } catch (JSONException ignored) {
+            }
+        }
+        throw new IOException();
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
     public void requestUserToken(@NonNull final UserCredentials userCredentials,
             @NonNull final NetworkCallback<AccessToken> callback) {
         final RequestBody requestBody = new FormBody.Builder()
@@ -148,31 +173,6 @@ public class UserApiImpl implements UserApi {
                 }
             }
         });
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    @Override
-    public AccessToken requestUserTokenSync(@NonNull final UserCredentials userCredentials)
-            throws IOException {
-
-        final RequestBody requestBody = new FormBody.Builder()
-                .add("username", userCredentials.getEmail())
-                .add("password", userCredentials.getPassword())
-                .build();
-
-        final HttpUrl url = createTokenUrl("password");
-        final Request request = createPostRequest(requestBody, url);
-
-        final Response response = mHttpClient.newCall(request).execute();
-        if (response.isSuccessful()) {
-            final JSONObject obj;
-            try {
-                obj = new JSONObject(response.body().string());
-                return getAccessToken(obj);
-            } catch (JSONException ignored) {
-            }
-        }
-        throw new IOException();
     }
 
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {

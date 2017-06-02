@@ -1,7 +1,7 @@
 package net.gini.tariffsdk;
 
 
-import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.NetworkCallback;
@@ -9,13 +9,14 @@ import net.gini.tariffsdk.network.TariffApi;
 
 class RemoteConfigManager {
 
-    private final ClientParameter mClientParameter;
+    private final ClientInformation mClientInformation;
     private Configuration mConfiguration;
     private TariffApi mTariffApi;
 
     RemoteConfigManager(final TariffApi tariffApi) {
         mTariffApi = tariffApi;
-        mClientParameter = new ClientParameter(getOsVersion(), getSdkVersion(), getDeviceModel());
+        mClientInformation = new ClientInformation(getOsVersion(), getSdkVersion(),
+                getDeviceModel());
     }
 
     FlashMode getFlashMode() {
@@ -23,7 +24,7 @@ class RemoteConfigManager {
     }
 
     void requestRemoteConfig() {
-        mTariffApi.requestConfiguration(mClientParameter, new NetworkCallback<Configuration>() {
+        mTariffApi.requestConfiguration(mClientInformation, new NetworkCallback<Configuration>() {
             @Override
             public void onError(final Exception e) {
                 //TODO

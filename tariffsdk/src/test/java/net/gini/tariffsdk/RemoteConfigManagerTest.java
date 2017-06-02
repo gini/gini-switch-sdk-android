@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.NetworkCallback;
@@ -23,7 +23,7 @@ import org.mockito.MockitoAnnotations;
 public class RemoteConfigManagerTest {
 
     @Mock
-    ClientParameter mMockClientParameter;
+    ClientInformation mMockClientInformation;
     @Mock
     Configuration mMockConfiguration;
     @Mock
@@ -42,7 +42,7 @@ public class RemoteConfigManagerTest {
 
         remoteConfigManager.requestRemoteConfig();
 
-        verify(mMockTariffApi).requestConfiguration(any(ClientParameter.class),
+        verify(mMockTariffApi).requestConfiguration(any(ClientInformation.class),
                 mNetworkCallbackConfigurationCaptor.capture());
         mNetworkCallbackConfigurationCaptor.getValue().onError(mMockException);
 
@@ -61,7 +61,7 @@ public class RemoteConfigManagerTest {
 
         remoteConfigManager.requestRemoteConfig();
 
-        verify(mMockTariffApi).requestConfiguration(any(ClientParameter.class),
+        verify(mMockTariffApi).requestConfiguration(any(ClientInformation.class),
                 mNetworkCallbackConfigurationCaptor.capture());
         mNetworkCallbackConfigurationCaptor.getValue().onSuccess(mMockConfiguration);
 

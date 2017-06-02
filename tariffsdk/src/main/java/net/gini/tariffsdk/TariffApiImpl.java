@@ -9,7 +9,7 @@ import android.support.annotation.VisibleForTesting;
 import net.gini.tariffsdk.authentication.AuthenticationInterceptor;
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.BearerAuthenticator;
-import net.gini.tariffsdk.configuration.models.ClientParameter;
+import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.NetworkCallback;
@@ -49,14 +49,18 @@ class TariffApiImpl implements TariffApi {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
-    public void requestConfiguration(@NonNull final ClientParameter clientParameter,
+    public void requestConfiguration(@NonNull final ClientInformation clientInformation,
             @NonNull final NetworkCallback<Configuration> callback) {
         final HttpUrl url = mTariffApiUrl.newBuilder()
                 .addEncodedPathSegment("config")
-                .addQueryParameter(ClientParameter.PLATFORM_NAME, clientParameter.getPlatformName())
-                .addQueryParameter(ClientParameter.OSVERSION_NAME, clientParameter.getOsVersion())
-                .addQueryParameter(ClientParameter.DEVICE_NAME, clientParameter.getDeviceModel())
-                .addQueryParameter(ClientParameter.SDKVERSION_NAME, clientParameter.getSdkVersion())
+                .addQueryParameter(ClientInformation.PLATFORM_NAME,
+                        clientInformation.getPlatformName())
+                .addQueryParameter(ClientInformation.OSVERSION_NAME,
+                        clientInformation.getOsVersion())
+                .addQueryParameter(ClientInformation.DEVICE_NAME,
+                        clientInformation.getDeviceModel())
+                .addQueryParameter(ClientInformation.SDKVERSION_NAME,
+                        clientInformation.getSdkVersion())
                 .build();
         final Request request = createGetRequest(url);
         mOkHttpClient.newCall(request).enqueue(new Callback() {
