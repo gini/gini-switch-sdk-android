@@ -28,6 +28,9 @@ import android.support.test.runner.AndroidJUnit4;
 
 import net.gini.tariffsdk.configuration.models.ClientInformation;
 import net.gini.tariffsdk.configuration.models.Configuration;
+import net.gini.tariffsdk.network.ExtractionOrder;
+import net.gini.tariffsdk.network.ExtractionOrderPage;
+import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
@@ -303,6 +306,25 @@ public class IntentFactoryTest {
         mContext = InstrumentationRegistry.getTargetContext();
         mTariffSdk = TariffSdk.create(mContext, null, null, new RemoteConfigManager(
                 new TariffApi() {
+
+                    @Override
+                    public void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
+                            @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
+
+                    }
+
+                    @Override
+                    public void createExtractionOrder(
+                            @NonNull final NetworkCallback<ExtractionOrder> callback) {
+
+                    }
+
+                    @Override
+                    public void getOrderState(@NonNull final String orderUrl,
+                            @NonNull final NetworkCallback<ExtractionOrderState> callback) {
+
+                    }
+
                     @Override
                     public void requestConfiguration(
                             @NonNull final ClientInformation clientInformation,
