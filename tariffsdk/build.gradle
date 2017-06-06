@@ -19,8 +19,8 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "USER_API_URL", "\"clientapi.gini.net\""
-        buildConfigField "String", "TARIFF_API_URL", "\"tariffapi.gini.net\""
+        buildConfigField "String", "USER_API_URL", "\"https://clientapi.gini.net\""
+        buildConfigField "String", "TARIFF_API_URL", "\"https://tariffapi.gini.net\""
 
     }
     buildTypes {
