@@ -15,6 +15,7 @@ import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.user.UserManager;
+import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
 import java.util.Set;
@@ -528,6 +529,17 @@ public class TariffSdk {
         UserApiImpl userApi = new UserApiImpl(clientCredentials, okHttpClient);
         AuthenticationService authenticationService = new AuthenticationServiceImpl(
                 userApi, new UserManager(context, domain));
+        authenticationService.init(new NetworkCallback<Void>() {
+            @Override
+            public void onError(final Exception e) {
+                //TODO error what are we going to do here?
+            }
+
+            @Override
+            public void onSuccess(final Void aVoid) {
+                //everything is fine
+            }
+        });
 
         return new TariffApiImpl(okHttpClient, authenticationService);
     }
