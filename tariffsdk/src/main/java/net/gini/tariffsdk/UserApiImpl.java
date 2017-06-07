@@ -125,7 +125,7 @@ public class UserApiImpl implements UserApi {
                 .build();
 
         final HttpUrl url = createTokenUrl("password");
-        final Request request = createPostRequestWithAuth(requestBody, url);
+        final Request request = createAuthenticatedPostRequest(requestBody, url);
 
         final Response response = mHttpClient.newCall(request).execute();
         if (response.isSuccessful()) {
@@ -151,7 +151,7 @@ public class UserApiImpl implements UserApi {
 
         final HttpUrl url = createTokenUrl("password");
 
-        final Request request = createPostRequestWithAuth(requestBody, url);
+        final Request request = createAuthenticatedPostRequest(requestBody, url);
 
         mHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -174,6 +174,17 @@ public class UserApiImpl implements UserApi {
                 }
             }
         });
+    }
+
+    private Request createAuthenticatedPostRequest(final RequestBody body, final HttpUrl url) {
+        final String credential = Credentials.basic(mClientCredentials.getClientId(),
+                mClientCredentials.getClientSecret());
+        return new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .header("Authorization", credential)
+                .post(body)
+                .build();
     }
 
     private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {
@@ -205,17 +216,6 @@ public class UserApiImpl implements UserApi {
                 .url(url)
                 .addHeader("Authorization", "BEARER " + accessToken.getToken())
                 .addHeader("Accept", "application/json")
-                .post(body)
-                .build();
-    }
-
-    private Request createPostRequestWithAuth(final RequestBody body, final HttpUrl url) {
-        final String credential = Credentials.basic(mClientCredentials.getClientId(),
-                mClientCredentials.getClientSecret());
-        return new Request.Builder()
-                .url(url)
-                .addHeader("Accept", "application/json")
-                .header("Authorization", credential)
                 .post(body)
                 .build();
     }
