@@ -351,6 +351,23 @@ public class TariffApiImplTest {
     }
 
     @Test
+    public void deletePage_shouldBeADeleteRequest()
+            throws InterruptedException, TimeoutException {
+        mTariffApi.deletePage(mMockUrl.toString());
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("DELETE", request.getMethod());
+    }
+
+    @Test
+    public void deletePage_shouldContainAuthorizationHeader()
+            throws InterruptedException, TimeoutException {
+        mTariffApi.deletePage(mMockUrl.toString());
+        RecordedRequest request = mServer.takeRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        assertFalse(authorizationHeader.isEmpty());
+    }
+
+    @Test
     public void getOrderState_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
         mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);

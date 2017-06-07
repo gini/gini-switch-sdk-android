@@ -133,6 +133,27 @@ class TariffApiImpl implements TariffApi {
     }
 
     @Override
+    public void deletePage(@NonNull final String pagesUrl) {
+        final HttpUrl url = HttpUrl.parse(pagesUrl);
+        final Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                //TODO. retry mechanism maybe
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                //since fire and forget nothing to do here
+            }
+        });
+
+    }
+
+    @Override
     public void getOrderState(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<ExtractionOrderState> callback) {
         Request request = createGetRequest(HttpUrl.parse(orderUrl));
