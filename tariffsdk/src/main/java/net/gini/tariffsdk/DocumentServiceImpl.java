@@ -95,9 +95,14 @@ class DocumentServiceImpl implements DocumentService {
         mImageList.add(image);
 
         if (rotationCount > 0) {
-            //rotate image
+            try {
+                //if we rotate 4 times with 90 degrees we are at the start
+                writeNewRotationIntoExif(uri, (rotationCount % 4) * 90);
 
-            //reupload image if uploaded
+                uploadImage(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -150,6 +155,20 @@ class DocumentServiceImpl implements DocumentService {
             f.close();
         }
         return data;
+    }
+
+    private int getDegreesFromExif(final int exif) {
+        switch (exif) {
+            case 1:
+                return 0;
+            case 3:
+                return 180;
+            case 6:
+                return 90;
+            case 8:
+                return 270;
+        }
+        return 0;
     }
 
     @NonNull
@@ -244,5 +263,19 @@ class DocumentServiceImpl implements DocumentService {
                         }
                     });
         }
+    }
+
+    private void writeNewRotationIntoExif(final Uri uri, final int rotation) throws IOException {
+        final File file = getFileFromUri(uri);
+        final ExifInterface exif = new ExifInterface(file.getAbsolutePath());
+        final int oldOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+        final int oldDegrees = getDegreesFromExif(oldOrientation);
+        //no need to rotate 360 degrees
+        final int degreesToRotate = (oldDegrees + rotation) % 360;
+        final String newRotation = getNewRotation(degreesToRotate);
+
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
+        exif.saveAttributes();
+
     }
 }
