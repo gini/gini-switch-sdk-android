@@ -55,8 +55,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
-    public void onPictureTaken(@NonNull final byte[] data) {
-        final Image image = mDocumentService.saveImage(data);
+    public void onPictureTaken(@NonNull final byte[] data, final int orientation) {
+        final Image image = mDocumentService.saveImage(data, orientation);
         mView.openImageReview(image);
     }
 

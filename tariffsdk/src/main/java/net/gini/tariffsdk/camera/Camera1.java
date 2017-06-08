@@ -155,7 +155,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
                 @Override
                 public void onPictureTaken(final byte[] bytes, final Camera camera) {
                     if (bytes != null) {
-                        jpegCallback.onPictureTaken(bytes);
+                        jpegCallback.onPictureTaken(bytes, getCameraInfo().orientation);
                     } else {
                         throw new GiniCameraException("Picture byte array was null");
                     }
