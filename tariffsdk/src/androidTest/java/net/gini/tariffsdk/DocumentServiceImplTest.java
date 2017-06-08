@@ -20,8 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,9 +30,7 @@ public class DocumentServiceImplTest {
 
     private Context mContext;
     private DocumentServiceImpl mDocumentService;
-    @Mock
     private TariffApi mMockTariffApi;
-    @Mock
     private Uri mMockUri;
 
     @Test
@@ -63,7 +60,8 @@ public class DocumentServiceImplTest {
     @Before
     public void setUp() throws Exception {
         mContext = InstrumentationRegistry.getTargetContext();
-        MockitoAnnotations.initMocks(this);
+        mMockTariffApi = Mockito.mock(TariffApi.class);
+        mMockUri = Mockito.mock(Uri.class);
         when(mMockUri.getPath()).thenReturn("/");
         mDocumentService = new DocumentServiceImpl(mContext, mMockTariffApi);
     }
