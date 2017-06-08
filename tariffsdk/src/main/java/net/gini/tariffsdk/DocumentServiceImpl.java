@@ -1,10 +1,6 @@
 package net.gini.tariffsdk;
 
 
-import static android.support.media.ExifInterface.ORIENTATION_ROTATE_180;
-import static android.support.media.ExifInterface.ORIENTATION_ROTATE_270;
-import static android.support.media.ExifInterface.ORIENTATION_ROTATE_90;
-
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -106,7 +102,7 @@ class DocumentServiceImpl implements DocumentService {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
-    public Image saveImage(@NonNull final byte[] data) {
+    public Image saveImage(@NonNull final byte[] data, final int cameraOrientation) {
         final File directory = mContext.getDir("tariffsdk", Context.MODE_PRIVATE);
         final String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(
                 new Date());
@@ -118,8 +114,7 @@ class DocumentServiceImpl implements DocumentService {
             outputStream.close();
 
             final ExifInterface exif = new ExifInterface(file.getAbsolutePath());
-            final String orientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            final String newRotation = getNewRotation(orientation);
+            final String newRotation = getNewRotation(cameraOrientation);
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
             exif.saveAttributes();
             uri = Uri.fromFile(file);
@@ -155,17 +150,26 @@ class DocumentServiceImpl implements DocumentService {
         return new File(uri.getPath());
     }
 
-    private String getNewRotation(String orientation) {
-        switch (orientation) {
-            case "3":
-                return Integer.toString(ORIENTATION_ROTATE_180);
-            case "0":
-            case "6":
-                return Integer.toString(ORIENTATION_ROTATE_90);
-            case "8":
-                return Integer.toString(ORIENTATION_ROTATE_270);
+    private String getNewRotation(int degrees) {
+        int exifOrientation;
+        switch (degrees) {
+            case 0:
+                exifOrientation = 1; // 0CW
+                break;
+            case 90:
+                exifOrientation = 6; // 270CW
+                break;
+            case 180:
+                exifOrientation = 3; // 180CW
+                break;
+            case 270:
+                exifOrientation = 8; // 90CW
+                break;
+            default:
+                exifOrientation = 1; // 0CW
+                break;
         }
-        return orientation;
+        return Integer.toString(exifOrientation);
     }
 
     private void imageProcessed(final Image image) {

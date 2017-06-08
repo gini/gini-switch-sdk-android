@@ -6,29 +6,10 @@ import android.support.annotation.NonNull;
 public interface GiniCamera {
 
     /**
-     * Callback interface for taking a jpeg picture.
-     */
-    interface JpegCallback {
-
-        /**
-         * On success with the data as byte array
-         *
-         * @throws GiniCameraException if the data is null in some weird circumstances
-         */
-        void onPictureTaken(@NonNull final byte[] data) throws GiniCameraException;
-
-    }
-
-    enum Orientation {
-        DEFAULT, LANDSCAPE, PORTRAIT
-    }
-
-    /**
      * Activates the flash, returns true if successful, false not. Also false when no flash is
      * available
      */
     boolean activateFlash();
-
 
     /**
      * Deactivates the flash,  if flash is not supported nothing gets deactivated.
@@ -51,4 +32,23 @@ public interface GiniCamera {
      * @param jpegCallback callback that gets called when the picture has been taken
      */
     void takePicture(@NonNull final JpegCallback jpegCallback);
+
+    enum Orientation {
+        DEFAULT, LANDSCAPE, PORTRAIT
+    }
+
+    /**
+     * Callback interface for taking a jpeg picture.
+     */
+    interface JpegCallback {
+
+        /**
+         * On success with the data as byte array
+         *
+         * @throws GiniCameraException if the data is null in some weird circumstances
+         */
+        void onPictureTaken(@NonNull final byte[] data, final int orientation)
+                throws GiniCameraException;
+
+    }
 }

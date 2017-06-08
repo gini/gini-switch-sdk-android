@@ -20,7 +20,7 @@ interface DocumentService {
 
     void removeDocumentListener(@NonNull DocumentListener listener);
 
-    Image saveImage(@NonNull final byte[] data);
+    Image saveImage(@NonNull final byte[] data, final int cameraOrientation);
 
     interface DocumentListener {
         void onImageStatChanged(@NonNull final Image image);

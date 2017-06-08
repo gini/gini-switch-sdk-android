@@ -170,9 +170,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 mTakePictureButton.setEnabled(false);
                 mCamera.takePicture(new GiniCamera.JpegCallback() {
                     @Override
-                    public void onPictureTaken(@NonNull final byte[] data)
+                    public void onPictureTaken(@NonNull final byte[] data, final int orientation)
                             throws GiniCameraException {
-                        mPresenter.onPictureTaken(data);
+                        mPresenter.onPictureTaken(data, orientation);
                     }
                 });
             }

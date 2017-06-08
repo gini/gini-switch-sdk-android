@@ -15,7 +15,7 @@ interface TakePictureContract {
 
         void onImageSelected(final Image image);
 
-        void onPictureTaken(@NonNull final byte[] data);
+        void onPictureTaken(@NonNull final byte[] data, final int orientation);
 
         void onTakePictureSelected();
 
