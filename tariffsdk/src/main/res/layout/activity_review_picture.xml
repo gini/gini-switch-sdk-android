@@ -29,12 +29,21 @@
         android:src="@drawable/ic_rotate"
         app:backgroundTint="@color/secondaryColor" />
 
-    <net.gini.tariffsdk.utils.AutoRotateImageView
-        android:id="@+id/image_preview"
+    <FrameLayout
+        android:id="@+id/image_preview_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/toolbar"
+        android:clipChildren="false">
+
+        <ImageView
+            android:id="@+id/image_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/footer"

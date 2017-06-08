@@ -89,9 +89,15 @@ class DocumentServiceImpl implements DocumentService {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
-    public void keepImage(@NonNull final Uri uri) {
+    public void keepImage(@NonNull final Uri uri, final int rotationCount) {
         final Image image = new Image(uri, ImageState.PROCESSING);
         mImageList.add(image);
+
+        if (rotationCount > 0) {
+            //rotate image
+
+            //reupload image if uploaded
+        }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)

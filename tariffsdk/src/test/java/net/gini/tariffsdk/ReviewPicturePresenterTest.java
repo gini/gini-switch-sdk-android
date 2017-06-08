@@ -48,7 +48,7 @@ public class ReviewPicturePresenterTest {
                 mMockDocumentService, mMockUri);
         presenter.keepImage();
 
-        verify(mMockDocumentService).keepImage(mMockUri);
+        verify(mMockDocumentService).keepImage(mMockUri, mRotationCount);
     }
 
     @Test

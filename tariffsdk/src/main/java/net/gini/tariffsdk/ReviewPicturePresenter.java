@@ -8,6 +8,7 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
     private final DocumentService mDocumentService;
     private final Uri mUri;
     private final ReviewPictureContract.View mView;
+    private int mRotationCount = 0;
 
     ReviewPicturePresenter(final ReviewPictureContract.View view, DocumentService documentService,
             Uri uri) {
@@ -26,13 +27,13 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
 
     @Override
     public void keepImage() {
-        mDocumentService.keepImage(mUri);
+        mDocumentService.keepImage(mUri, mRotationCount);
         mView.finishReview();
     }
 
     @Override
     public void rotateImage() {
-        //TODO
+        mRotationCount++;
         mView.rotateView();
     }
 
