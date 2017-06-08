@@ -246,7 +246,10 @@ class DocumentServiceImpl implements DocumentService {
                 e.printStackTrace();
             }
 
-            mTariffApi.addPage(mExtractionOrder.getPages(), data,
+            //replace in case it's already there
+            final String url = mImageUrls.containsKey(image) ? mImageUrls.get(image)
+                    : mExtractionOrder.getPages();
+            mTariffApi.addPage(url, data,
                     new NetworkCallback<ExtractionOrderPage>() {
                         @Override
                         public void onError(final Exception e) {
