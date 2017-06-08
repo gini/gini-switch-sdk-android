@@ -355,7 +355,7 @@ public class TariffApiImplTest {
             throws InterruptedException, TimeoutException {
         mTariffApi.deletePage(mMockUrl.toString());
         RecordedRequest request = mServer.takeRequest();
-        assertEquals("DELETE", request.getMethod());
+        assertEquals("Delete Page should be a DELETE request!", "DELETE", request.getMethod());
     }
 
     @Test
@@ -364,7 +364,19 @@ public class TariffApiImplTest {
         mTariffApi.deletePage(mMockUrl.toString());
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
-        assertFalse(authorizationHeader.isEmpty());
+        assertFalse("Delete Page should contain an Authorization Header!",
+                authorizationHeader.isEmpty());
+    }
+
+    @Test
+    public void deletePage_shouldContainTheBearerTokenAsAuthorization()
+            throws InterruptedException {
+        final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
+        when(mMockAccessToken.getToken()).thenReturn(bearerToken);
+        mTariffApi.deletePage(mMockUrl.toString());
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("Delete Page should contain a Bearer token as Authorization Header!",
+                "BEARER " + bearerToken, request.getHeader("Authorization"));
     }
 
     @Test
