@@ -1,5 +1,6 @@
 package net.gini.tariffsdk;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 import android.net.Uri;
@@ -48,7 +49,7 @@ public class ReviewPicturePresenterTest {
                 mMockDocumentService, mMockUri);
         presenter.keepImage();
 
-        verify(mMockDocumentService).keepImage(mMockUri, mRotationCount);
+        verify(mMockDocumentService).keepImage(mMockUri, anyInt());
     }
 
     @Test

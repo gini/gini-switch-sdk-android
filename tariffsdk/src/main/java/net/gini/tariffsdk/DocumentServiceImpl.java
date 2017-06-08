@@ -99,10 +99,10 @@ class DocumentServiceImpl implements DocumentService {
                 //if we rotate 4 times with 90 degrees we are at the start
                 writeNewRotationIntoExif(uri, (rotationCount % 4) * 90);
 
-                uploadImage(image);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            uploadImage(image);
         }
     }
 

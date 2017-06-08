@@ -21,23 +21,17 @@ import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCES
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import net.gini.tariffsdk.configuration.models.ClientInformation;
-import net.gini.tariffsdk.configuration.models.Configuration;
-import net.gini.tariffsdk.network.ExtractionOrder;
-import net.gini.tariffsdk.network.ExtractionOrderPage;
-import net.gini.tariffsdk.network.ExtractionOrderState;
-import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class IntentFactoryTest {
@@ -304,40 +298,8 @@ public class IntentFactoryTest {
     @Before
     public void setUp() throws Exception {
         mContext = InstrumentationRegistry.getTargetContext();
-        mTariffSdk = TariffSdk.create(mContext, null, null, new RemoteConfigManager(
-                new TariffApi() {
-
-                    @Override
-                    public void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
-                            @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
-
-                    }
-
-                    @Override
-                    public void createExtractionOrder(
-                            @NonNull final NetworkCallback<ExtractionOrder> callback) {
-
-                    }
-
-                    @Override
-                    public void deletePage(@NonNull final String pagesUrl) {
-
-                    }
-
-                    @Override
-                    public void getOrderState(@NonNull final String orderUrl,
-                            @NonNull final NetworkCallback<ExtractionOrderState> callback) {
-
-                    }
-
-                    @Override
-                    public void requestConfiguration(
-                            @NonNull final ClientInformation clientInformation,
-                            @NonNull final NetworkCallback<Configuration> callback) {
-
-                    }
-                })
-        );
+        final TariffApi mockApi = Mockito.mock(TariffApi.class);
+        mTariffSdk = TariffSdk.create(mContext, null, null, new RemoteConfigManager(mockApi));
     }
 
     @After
