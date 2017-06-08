@@ -19,9 +19,10 @@ import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -30,8 +31,8 @@ class DocumentServiceImpl implements DocumentService {
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
+    private final Map<Image, String> mImageUrls;
     private final TariffApi mTariffApi;
-    private final HashSet<Image> mUploadedImages;
     private ExtractionOrder mExtractionOrder;
 
     DocumentServiceImpl(final Context context, final TariffApi tariffApi) {
@@ -39,7 +40,7 @@ class DocumentServiceImpl implements DocumentService {
         mTariffApi = tariffApi;
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
-        mUploadedImages = new HashSet<>();
+        mImageUrls = new HashMap<>();
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -75,9 +76,9 @@ class DocumentServiceImpl implements DocumentService {
         mImageList.remove(image);
 
         notifyListeners(image);
-        if (mUploadedImages.contains(image)) {
-            //TODO when specified by the backend
-//            mTariffApi.deletePage(image);
+        final String url = mImageUrls.get(image);
+        if (url != null) {
+            mTariffApi.deletePage(url);
         }
     }
 
@@ -230,7 +231,7 @@ class DocumentServiceImpl implements DocumentService {
                         @Override
                         public void onSuccess(final ExtractionOrderPage page) {
                             if (page.getStatus() != ExtractionOrderPage.Status.failed) {
-                                mUploadedImages.add(image);
+                                mImageUrls.put(image, page.getSelf());
                             } else {
 
                             }

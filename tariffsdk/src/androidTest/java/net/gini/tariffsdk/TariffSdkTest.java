@@ -156,6 +156,11 @@ public class TariffSdkTest {
                     }
 
                     @Override
+                    public void deletePage(@NonNull final String pagesUrl) {
+
+                    }
+
+                    @Override
                     public void getOrderState(@NonNull final String orderUrl,
                             @NonNull final NetworkCallback<ExtractionOrderState> callback) {
 

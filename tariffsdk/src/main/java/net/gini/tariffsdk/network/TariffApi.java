@@ -13,6 +13,8 @@ public interface TariffApi {
 
     void createExtractionOrder(@NonNull final NetworkCallback<ExtractionOrder> callback);
 
+    void deletePage(@NonNull final String pagesUrl);//no callback since fire and forget for now
+
     void getOrderState(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<ExtractionOrderState> callback);
 
