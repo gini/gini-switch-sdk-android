@@ -41,6 +41,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
+    public void onBoardingFinished() {
+        mView.hideOnboarding();
+        startCameraProcess();
+    }
+
+    @Override
     public void onImageSelected(final Image image) {
         mSelectedImage = image;
         mView.showImagePreview(image);
@@ -80,12 +86,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (hasToCheckForPermissions() && !mView.hasCameraPermissions()) {
-            mView.requestPermissions();
+        if (shouldShowOnboarding()) {
+            mView.showOnboarding();
         } else {
-            mView.initCamera();
-            setImagesInList();
-            mDocumentService.addDocumentListener(this);
+            startCameraProcess();
         }
     }
 
@@ -101,5 +105,19 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private void setImagesInList() {
         final List<Image> images = mDocumentService.getImageList();
         mView.setImages(images);
+    }
+
+    private boolean shouldShowOnboarding() {
+        return true;
+    }
+
+    private void startCameraProcess() {
+        if (hasToCheckForPermissions() && !mView.hasCameraPermissions()) {
+            mView.requestPermissions();
+        } else {
+            mView.initCamera();
+            setImagesInList();
+            mDocumentService.addDocumentListener(this);
+        }
     }
 }

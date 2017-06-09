@@ -11,9 +11,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
+import net.gini.tariffsdk.onboarding.OnboardingAdapter;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 import java.util.List;
@@ -46,6 +49,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
+    private TabLayout mOnboardingTabLayout;
+    private ViewPager mOnboardingViewPager;
     private TakePictureContract.Presenter mPresenter;
     private View mPreviewButtonsContainer;
     private TextView mPreviewTitle;
@@ -90,6 +95,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void hideOnboarding() {
+        mOnboardingViewPager.setVisibility(View.GONE);
+        mOnboardingTabLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -229,6 +240,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         styleButtons(finishButton, deleteImageButton, retakeImageButton);
 
+        setUpOnboarding();
     }
 
     @Override
@@ -327,6 +339,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void showOnboarding() {
+        mOnboardingViewPager.setVisibility(View.VISIBLE);
+        mOnboardingTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showPreviewButtons() {
         mPreviewButtonsContainer.setVisibility(View.VISIBLE);
     }
@@ -349,6 +367,31 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private void hideCameraPreview() {
         mCameraPreview.setVisibility(View.GONE);
         mCameraFrame.setVisibility(View.GONE);
+    }
+
+    private void setUpOnboarding() {
+        mOnboardingViewPager = (ViewPager) findViewById(R.id.onBoardingContainer);
+        final OnboardingAdapter adapter = new OnboardingAdapter(this);
+        mOnboardingViewPager.setAdapter(adapter);
+        mOnboardingTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mOnboardingTabLayout.setupWithViewPager(mOnboardingViewPager, true);
+        mOnboardingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+            }
+
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset,
+                    final int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                if (adapter.isLastItem(position)) {
+                    mPresenter.onBoardingFinished();
+                }
+            }
+        });
     }
 
     private void showCameraPreview() {

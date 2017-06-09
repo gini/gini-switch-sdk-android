@@ -13,6 +13,8 @@ interface TakePictureContract {
 
         void onAllPicturesTaken();
 
+        void onBoardingFinished();
+
         void onImageSelected(final Image image);
 
         void onPictureTaken(@NonNull final byte[] data, final int orientation);
@@ -37,6 +39,8 @@ interface TakePictureContract {
 
         boolean hasCameraPermissions();
 
+        void hideOnboarding();
+
         void hidePreviewButtons();
 
         void hideTakePictureButtons();
@@ -58,6 +62,8 @@ interface TakePictureContract {
         void showFoundExtractions();
 
         void showImagePreview(final Image image);
+
+        void showOnboarding();
 
         void showPreviewButtons();
 

@@ -15,4 +15,7 @@
     <string name="take_picture_finish">Fertig</string>
     <string name="preview_analyze_success">Sehr gut, wir konnten alle Daten aus diesem Foto erfolgreich analysieren.</string>
     <string name="preview_analyze_failed">Leider ist die Qualität dieser Seite nicht ausreichend. Bitte foto grafiere diese Seite nochmal neu.</string>
+    <string name="onboarding_flat">Dokument flach fotografieren</string>
+    <string name="onboarding_parallel">Handy parallel zum Dokument halten</string>
+    <string name="onboarding_align">Dokument vollständig in Rahmen einpassen</string>
 </resources>
