@@ -5,12 +5,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import android.support.annotation.VisibleForTesting;
 import android.support.media.ExifInterface;
 
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
+import net.gini.tariffsdk.utils.ExifUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +35,9 @@ class DocumentServiceImpl implements DocumentService {
     private final List<Image> mImageList;
     private final Map<Image, String> mImageUrls;
     private final TariffApi mTariffApi;
-    private ExtractionOrder mExtractionOrder;
+
+    @VisibleForTesting
+    ExtractionOrder mExtractionOrder;
 
     DocumentServiceImpl(final Context context, final TariffApi tariffApi) {
         mContext = context.getApplicationContext();
@@ -41,6 +45,18 @@ class DocumentServiceImpl implements DocumentService {
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
         mImageUrls = new HashMap<>();
+
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+            @Override
+            public void onError(final Exception e) {
+                //TODO
+            }
+
+            @Override
+            public void onSuccess(final ExtractionOrder extractionOrder) {
+                mExtractionOrder = extractionOrder;
+            }
+        });
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -90,9 +106,19 @@ class DocumentServiceImpl implements DocumentService {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
-    public void keepImage(@NonNull final Uri uri) {
+    public void keepImage(@NonNull final Uri uri, final int rotationCount) {
         final Image image = new Image(uri, ImageState.PROCESSING);
         mImageList.add(image);
+
+        if (rotationCount > 0) {
+            try {
+                //if we rotate 4 times with 90 degrees we are at the start
+                writeNewRotationIntoExif(uri, (rotationCount % 4) * 90);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            uploadImage(image);
+        }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -115,7 +141,8 @@ class DocumentServiceImpl implements DocumentService {
             outputStream.close();
 
             final ExifInterface exif = new ExifInterface(file.getAbsolutePath());
-            final String newRotation = getNewRotation(cameraOrientation);
+            final String newRotation = Integer.toString(
+                    ExifUtils.getExifFromDegrees(cameraOrientation));
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
             exif.saveAttributes();
             uri = Uri.fromFile(file);
@@ -146,31 +173,11 @@ class DocumentServiceImpl implements DocumentService {
         return data;
     }
 
+
+
     @NonNull
     private File getFileFromUri(final @NonNull Uri uri) {
         return new File(uri.getPath());
-    }
-
-    private String getNewRotation(int degrees) {
-        int exifOrientation;
-        switch (degrees) {
-            case 0:
-                exifOrientation = 1; // 0CW
-                break;
-            case 90:
-                exifOrientation = 6; // 270CW
-                break;
-            case 180:
-                exifOrientation = 3; // 180CW
-                break;
-            case 270:
-                exifOrientation = 8; // 90CW
-                break;
-            default:
-                exifOrientation = 1; // 0CW
-                break;
-        }
-        return Integer.toString(exifOrientation);
     }
 
     private void imageProcessed(final Image image) {
@@ -195,22 +202,6 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void uploadImage(final Image image) {
-        if (mExtractionOrder == null) {
-            mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
-                @Override
-                public void onError(final Exception e) {
-                    //TODO
-                }
-
-                @Override
-                public void onSuccess(final ExtractionOrder extractionOrder) {
-                    mExtractionOrder = extractionOrder;
-
-                    uploadImage(image);
-
-                }
-            });
-        } else {
             File imageFile = getFileFromUri(image.getUri());
 
             byte[] data = new byte[0];
@@ -221,7 +212,10 @@ class DocumentServiceImpl implements DocumentService {
                 e.printStackTrace();
             }
 
-            mTariffApi.addPage(mExtractionOrder.getPages(), data,
+            //replace in case it's already there
+            final String url = mImageUrls.containsKey(image) ? mImageUrls.get(image)
+                    : mExtractionOrder.getPages();
+            mTariffApi.addPage(url, data,
                     new NetworkCallback<ExtractionOrderPage>() {
                         @Override
                         public void onError(final Exception e) {
@@ -237,6 +231,19 @@ class DocumentServiceImpl implements DocumentService {
                             }
                         }
                     });
-        }
+    }
+
+    private void writeNewRotationIntoExif(final Uri uri, final int rotation) throws IOException {
+        final File file = getFileFromUri(uri);
+        final ExifInterface exif = new ExifInterface(file.getAbsolutePath());
+        final int oldOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+        final int oldDegrees = ExifUtils.getDegreesFromExif(oldOrientation);
+        //no need to rotate 360 degrees
+        final int degreesToRotate = (oldDegrees + rotation) % 360;
+        final String newRotation = Integer.toString(ExifUtils.getExifFromDegrees(degreesToRotate));
+
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
+        exif.saveAttributes();
+
     }
 }

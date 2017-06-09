@@ -3,15 +3,14 @@ package net.gini.tariffsdk.camera;
 
 import static android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE;
 
-import static net.gini.tariffsdk.camera.GiniCameraUtil.getRotationValueForLandscape;
-import static net.gini.tariffsdk.camera.GiniCameraUtil.getRotationValueForPortrait;
-
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import net.gini.tariffsdk.utils.ExifUtils;
 
 import java.util.List;
 
@@ -29,8 +28,6 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
     @NonNull
     private Camera.CameraInfo mCameraInfo = new Camera.CameraInfo();
     private int mCurrentOrientation;
-    @NonNull
-    private Orientation mOrientation = Orientation.DEFAULT;
 
     public Camera1(@NonNull final SurfaceView cameraPreview) {
 
@@ -66,9 +63,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
     }
 
     @Override
-    public void setPreviewOrientation(final Orientation orientation,
-            final int currentOrientation) {
-        mOrientation = orientation;
+    public void setPreviewOrientation(final int currentOrientation) {
         mCurrentOrientation = currentOrientation;
     }
 
@@ -124,10 +119,8 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
                 mCamera.setParameters(parameters);
 
-                if (mOrientation != Orientation.DEFAULT) {
-                    mCamera.setDisplayOrientation(
-                            getOrientation(mOrientation, mCurrentOrientation));
-                }
+                mCamera.setDisplayOrientation(
+                        getOrientation(Orientation.PORTRAIT, mCurrentOrientation));
 
                 mCamera.startPreview();
             }
@@ -184,8 +177,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
     }
 
     private int getOrientation(final Orientation orientation, final int deviceOrientation) {
-        final int rotation = orientation == Orientation.PORTRAIT ? getRotationValueForPortrait(
-                deviceOrientation) : getRotationValueForLandscape(deviceOrientation);
+        final int rotation = ExifUtils.getDegreesFromExif(deviceOrientation);
         if (mCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             return (360 - (mCameraInfo.orientation + rotation) % 360) % 360;
         } else {  // back-facing

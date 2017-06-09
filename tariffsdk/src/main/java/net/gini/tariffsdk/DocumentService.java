@@ -16,7 +16,7 @@ interface DocumentService {
 
     List<Image> getImageList();
 
-    void keepImage(@NonNull final Uri uri);
+    void keepImage(@NonNull final Uri uri, final int rotationCount);
 
     void removeDocumentListener(@NonNull DocumentListener listener);
 
