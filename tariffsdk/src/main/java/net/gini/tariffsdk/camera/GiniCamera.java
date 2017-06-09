@@ -20,7 +20,7 @@ public interface GiniCamera {
      * Sets the orientation of the preview screen, use Activity.getWindowManager().getDefaultDisplay().getRotation()
      * to get the current orientation
      */
-    void setPreviewOrientation(final Orientation orientation, final int currentOrientation);
+    void setPreviewOrientation(final int currentOrientation);
 
     void start();
 

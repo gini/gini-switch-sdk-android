@@ -11,6 +11,7 @@ import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
+import net.gini.tariffsdk.utils.ExifUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -125,7 +126,8 @@ class DocumentServiceImpl implements DocumentService {
             outputStream.close();
 
             final ExifInterface exif = new ExifInterface(file.getAbsolutePath());
-            final String newRotation = getNewRotation(cameraOrientation);
+            final String newRotation = Integer.toString(
+                    ExifUtils.getExifFromDegrees(cameraOrientation));
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
             exif.saveAttributes();
             uri = Uri.fromFile(file);
@@ -156,45 +158,11 @@ class DocumentServiceImpl implements DocumentService {
         return data;
     }
 
-    private int getDegreesFromExif(final int exif) {
-        switch (exif) {
-            case 1:
-                return 0;
-            case 3:
-                return 180;
-            case 6:
-                return 90;
-            case 8:
-                return 270;
-        }
-        return 0;
-    }
+
 
     @NonNull
     private File getFileFromUri(final @NonNull Uri uri) {
         return new File(uri.getPath());
-    }
-
-    private String getNewRotation(int degrees) {
-        int exifOrientation;
-        switch (degrees) {
-            case 0:
-                exifOrientation = 1; // 0CW
-                break;
-            case 90:
-                exifOrientation = 6; // 270CW
-                break;
-            case 180:
-                exifOrientation = 3; // 180CW
-                break;
-            case 270:
-                exifOrientation = 8; // 90CW
-                break;
-            default:
-                exifOrientation = 1; // 0CW
-                break;
-        }
-        return Integer.toString(exifOrientation);
     }
 
     private void imageProcessed(final Image image) {
@@ -271,10 +239,10 @@ class DocumentServiceImpl implements DocumentService {
         final File file = getFileFromUri(uri);
         final ExifInterface exif = new ExifInterface(file.getAbsolutePath());
         final int oldOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-        final int oldDegrees = getDegreesFromExif(oldOrientation);
+        final int oldDegrees = ExifUtils.getDegreesFromExif(oldOrientation);
         //no need to rotate 360 degrees
         final int degreesToRotate = (oldDegrees + rotation) % 360;
-        final String newRotation = getNewRotation(degreesToRotate);
+        final String newRotation = Integer.toString(ExifUtils.getExifFromDegrees(degreesToRotate));
 
         exif.setAttribute(ExifInterface.TAG_ORIENTATION, newRotation);
         exif.saveAttributes();

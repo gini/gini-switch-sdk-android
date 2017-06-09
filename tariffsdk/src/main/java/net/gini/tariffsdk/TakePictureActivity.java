@@ -120,8 +120,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         final WindowManager windowManager =
                 (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mCamera = new Camera1(mCameraPreview);
-        mCamera.setPreviewOrientation(GiniCamera.Orientation.PORTRAIT,
-                windowManager.getDefaultDisplay().getRotation());
+        mCamera.setPreviewOrientation(windowManager.getDefaultDisplay().getRotation());
     }
 
     @Override
