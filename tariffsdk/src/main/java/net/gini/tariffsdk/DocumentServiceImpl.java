@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import android.support.annotation.VisibleForTesting;
 import android.support.media.ExifInterface;
 
 import net.gini.tariffsdk.network.ExtractionOrder;
@@ -34,7 +35,9 @@ class DocumentServiceImpl implements DocumentService {
     private final List<Image> mImageList;
     private final Map<Image, String> mImageUrls;
     private final TariffApi mTariffApi;
-    private ExtractionOrder mExtractionOrder;
+
+    @VisibleForTesting
+    ExtractionOrder mExtractionOrder;
 
     DocumentServiceImpl(final Context context, final TariffApi tariffApi) {
         mContext = context.getApplicationContext();
@@ -42,6 +45,18 @@ class DocumentServiceImpl implements DocumentService {
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
         mImageUrls = new HashMap<>();
+
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+            @Override
+            public void onError(final Exception e) {
+                //TODO
+            }
+
+            @Override
+            public void onSuccess(final ExtractionOrder extractionOrder) {
+                mExtractionOrder = extractionOrder;
+            }
+        });
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -187,22 +202,6 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void uploadImage(final Image image) {
-        if (mExtractionOrder == null) {
-            mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
-                @Override
-                public void onError(final Exception e) {
-                    //TODO
-                }
-
-                @Override
-                public void onSuccess(final ExtractionOrder extractionOrder) {
-                    mExtractionOrder = extractionOrder;
-
-                    uploadImage(image);
-
-                }
-            });
-        } else {
             File imageFile = getFileFromUri(image.getUri());
 
             byte[] data = new byte[0];
@@ -232,7 +231,6 @@ class DocumentServiceImpl implements DocumentService {
                             }
                         }
                     });
-        }
     }
 
     private void writeNewRotationIntoExif(final Uri uri, final int rotation) throws IOException {

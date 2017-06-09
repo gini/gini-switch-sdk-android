@@ -2,6 +2,8 @@ package net.gini.tariffsdk;
 
 import static junit.framework.Assert.assertEquals;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,6 +15,7 @@ import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import net.gini.tariffsdk.network.ExtractionOrder;
+import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
@@ -45,16 +48,16 @@ public class DocumentServiceImplTest {
     @SmallTest
     public void keepImage_shouldNotUploadAgainWhenNoRotation() throws IOException {
         mDocumentService.keepImage(mMockUri, 0);
-        verify(mMockTariffApi, never()).createExtractionOrder(
-                Matchers.<NetworkCallback<ExtractionOrder>>any());
+        verify(mMockTariffApi, never()).addPage(anyString(), any(byte[].class),
+                Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }
 
     @Test
     @SmallTest
     public void keepImage_shouldUploadAgainWhenThereIsRotation() throws IOException {
         mDocumentService.keepImage(mMockUri, 1);
-        verify(mMockTariffApi).createExtractionOrder(
-                Matchers.<NetworkCallback<ExtractionOrder>>any());
+        verify(mMockTariffApi).addPage(anyString(), any(byte[].class),
+                Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }
 
     @Before
@@ -64,5 +67,6 @@ public class DocumentServiceImplTest {
         mMockUri = Mockito.mock(Uri.class);
         when(mMockUri.getPath()).thenReturn("/");
         mDocumentService = new DocumentServiceImpl(mContext, mMockTariffApi);
+        mDocumentService.mExtractionOrder = Mockito.mock(ExtractionOrder.class);
     }
 }
