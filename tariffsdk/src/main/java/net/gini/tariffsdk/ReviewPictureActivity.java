@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.gini.tariffsdk.utils.ExifUtils;
+
 import java.io.IOException;
 
 final public class ReviewPictureActivity extends TariffSdkBaseActivity implements
@@ -105,18 +107,17 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        rotateView(mViewRotationInDegrees);
+                        rotateView(mViewRotationInDegrees, 0);
                         mImagePreviewContainer.getViewTreeObserver().removeOnGlobalLayoutListener(
                                 this);
                     }
                 });
-
     }
 
     @Override
     public void rotateView() {
         mViewRotationInDegrees += 90;
-        rotateViewAnimated(mViewRotationInDegrees);
+        rotateView(mViewRotationInDegrees, 300);
     }
 
     @Override
@@ -179,24 +180,13 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
     }
 
     private float getRequiredRotationDegrees(final Uri imageUri) {
-
         final ExifInterface exif;
         try {
             exif = new ExifInterface(imageUri.getPath());
-            final String orientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            switch (orientation) {
-                case "3":
-                    return 180;
-                case "0":
-                case "6":
-                    return 90;
-                case "8":
-                    return 270;
-            }
-
+            final int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+            return ExifUtils.getDegreesFromExif(orientation);
         } catch (IOException ignored) {
         }
-
         return 0;
     }
 
@@ -204,7 +194,7 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
         return getIntent().getIntExtra(BUNDLE_EXTRA_TITLE, R.string.review_screen_title);
     }
 
-    private void rotateView(final float viewRotationInDegrees) {
+    private void rotateView(final float viewRotationInDegrees, final long duration) {
         final ValueAnimator widthAnimation = createWidthValueAnimator(viewRotationInDegrees);
         final ValueAnimator heightAnimation = createHeightValueAnimator(viewRotationInDegrees);
 
@@ -213,27 +203,12 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
 
         final ObjectAnimator rotateAnimation = ObjectAnimator.ofFloat(mImagePreview, "rotation",
                 viewRotationInDegrees);
-        rotateAnimation.setDuration(0);
-        heightAnimation.setDuration(0);
-        widthAnimation.setDuration(0);
+        rotateAnimation.setDuration(duration);
+        heightAnimation.setDuration(duration);
+        widthAnimation.setDuration(duration);
 
         widthAnimation.start();
         heightAnimation.start();
         rotateAnimation.start();
     }
-
-    private void rotateViewAnimated(final float degrees) {
-        final ValueAnimator widthAnimation = createWidthValueAnimator(degrees);
-        final ValueAnimator heightAnimation = createHeightValueAnimator(degrees);
-
-        addWidthUpdateListener(widthAnimation);
-        addHeightUpdateListener(heightAnimation);
-
-        final ObjectAnimator rotateAnimation = ObjectAnimator.ofFloat(mImagePreview, "rotation",
-                degrees);
-        widthAnimation.start();
-        heightAnimation.start();
-        rotateAnimation.start();
-    }
-
 }
