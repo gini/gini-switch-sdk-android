@@ -167,7 +167,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         colorToolbar(toolbar);
 
         final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
-        mPresenter = new TakePicturePresenter(this, documentService);
+        mPresenter = new TakePicturePresenter(this, documentService, new OnboardingManager(this));
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.GONE);

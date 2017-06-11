@@ -11,16 +11,18 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         DocumentService.DocumentListener {
 
     private final DocumentService mDocumentService;
+    private final OnboardingManager mOnboardringManager;
     private final TakePictureContract.View mView;
     @VisibleForTesting
     int mBuildVersion = android.os.Build.VERSION.SDK_INT;
     private Image mSelectedImage = null;
 
     TakePicturePresenter(final TakePictureContract.View view,
-            final DocumentService documentService) {
+            final DocumentService documentService, final OnboardingManager onboardringManager) {
 
         mView = view;
         mDocumentService = documentService;
+        mOnboardringManager = onboardringManager;
     }
 
     @Override
@@ -43,7 +45,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onBoardingFinished() {
         mView.hideOnboarding();
-        startCameraProcess();
+        mOnboardringManager.storeOnboardingShown();
     }
 
     @Override
@@ -86,11 +88,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (shouldShowOnboarding()) {
+        if (!mOnboardringManager.onBoardingShown()) {
             mView.showOnboarding();
-        } else {
-            startCameraProcess();
         }
+        startCameraProcess();
     }
 
     @Override
@@ -105,10 +106,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private void setImagesInList() {
         final List<Image> images = mDocumentService.getImageList();
         mView.setImages(images);
-    }
-
-    private boolean shouldShowOnboarding() {
-        return true;
     }
 
     private void startCameraProcess() {
