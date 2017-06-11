@@ -88,7 +88,9 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (!mOnboardringManager.onBoardingShown()) {
+        if (mOnboardringManager.onBoardingShown()) {
+            mView.hideOnboarding();
+        } else {
             mView.showOnboarding();
         }
         startCameraProcess();
