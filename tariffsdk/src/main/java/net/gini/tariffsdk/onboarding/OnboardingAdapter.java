@@ -32,7 +32,7 @@ public class OnboardingAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.container_onboarding, collection, false);
+        View view = inflater.inflate(R.layout.view_onboarding, collection, false);
         if (position < OnboardingPage.values().length) {
             OnboardingPage onboardingPage = OnboardingPage.values()[position];
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view);

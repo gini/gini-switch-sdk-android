@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +50,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
+    private View mOnboardingContainer;
+    private FloatingActionButton mOnboardingNextButton;
     private TabLayout mOnboardingTabLayout;
     private ViewPager mOnboardingViewPager;
     private TakePictureContract.Presenter mPresenter;
@@ -99,8 +102,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void hideOnboarding() {
-        mOnboardingViewPager.setVisibility(View.GONE);
-        mOnboardingTabLayout.setVisibility(View.GONE);
+        mOnboardingContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -166,6 +168,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         setSupportActionBar(toolbar);
         colorToolbar(toolbar);
 
+        setUpOnboarding();
+
         final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
         mPresenter = new TakePicturePresenter(this, documentService, new OnboardingManager(this));
 
@@ -222,6 +226,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
         mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
 
+
         ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
         deleteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +245,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         styleButtons(finishButton, deleteImageButton, retakeImageButton);
 
-        setUpOnboarding();
     }
 
     @Override
@@ -340,8 +344,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void showOnboarding() {
-        mOnboardingViewPager.setVisibility(View.VISIBLE);
-        mOnboardingTabLayout.setVisibility(View.VISIBLE);
+        mOnboardingContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -370,7 +373,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private void setUpOnboarding() {
-        mOnboardingViewPager = (ViewPager) findViewById(R.id.onBoardingContainer);
+        mOnboardingNextButton = (FloatingActionButton) findViewById(R.id.button_onboarding_next);
+        mOnboardingContainer = findViewById(R.id.onBoardingContainer);
+        mOnboardingViewPager = (ViewPager) findViewById(R.id.onBoardingViewPager);
         final OnboardingAdapter adapter = new OnboardingAdapter(this);
         mOnboardingViewPager.setAdapter(adapter);
         mOnboardingTabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -390,6 +395,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 if (adapter.isLastItem(position)) {
                     mPresenter.onBoardingFinished();
                 }
+            }
+        });
+        mOnboardingNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mOnboardingViewPager.setCurrentItem(mOnboardingViewPager.getCurrentItem() + 1,
+                        true);
             }
         });
     }
