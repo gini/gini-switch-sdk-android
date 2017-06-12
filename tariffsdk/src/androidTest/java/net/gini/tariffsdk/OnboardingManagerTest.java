@@ -21,19 +21,19 @@ public class OnboardingManagerTest {
 
     @Test
     @SmallTest
-    public void onBoarding_shouldReturnFalseWhenNotWritten() {
+    public void onBoarding_shouldReturnFalseWhenHaveNotBeenShown() {
         boolean onBoardingShown = mDefaultOnboardingManager.onBoardingShown();
-        assertFalse("Onboarding shown should be false.", onBoardingShown);
+        assertFalse("Onboarding shown should be false when it wasn't displayed.", onBoardingShown);
     }
 
     @Test
     @SmallTest
-    public void onBoarding_shouldReturnTrueWhenWritten() {
+    public void onBoarding_shouldReturnTrueWhenShown() {
         boolean onBoardingShown = mDefaultOnboardingManager.onBoardingShown();
-        assertFalse("Onboarding shown should be false.", onBoardingShown);
+        assertFalse("Onboarding shown should be false when it wasn't displayed.", onBoardingShown);
         mDefaultOnboardingManager.storeOnboardingShown();
         boolean onBoardingShown2 = mDefaultOnboardingManager.onBoardingShown();
-        assertTrue("Should return true when written.", onBoardingShown2);
+        assertTrue("Should return true when it has been shown.", onBoardingShown2);
     }
 
     @Before

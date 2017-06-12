@@ -51,9 +51,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
     private View mOnboardingContainer;
-    private FloatingActionButton mOnboardingNextButton;
-    private TabLayout mOnboardingTabLayout;
-    private ViewPager mOnboardingViewPager;
     private TakePictureContract.Presenter mPresenter;
     private View mPreviewButtonsContainer;
     private TextView mPreviewTitle;
@@ -373,14 +370,15 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private void setUpOnboarding() {
-        mOnboardingNextButton = (FloatingActionButton) findViewById(R.id.button_onboarding_next);
+        final FloatingActionButton onboardingNextButton = (FloatingActionButton) findViewById(
+                R.id.button_onboarding_next);
         mOnboardingContainer = findViewById(R.id.onBoardingContainer);
-        mOnboardingViewPager = (ViewPager) findViewById(R.id.onBoardingViewPager);
+        final ViewPager onboardingViewPager = (ViewPager) findViewById(R.id.onBoardingViewPager);
         final OnboardingAdapter adapter = new OnboardingAdapter(this);
-        mOnboardingViewPager.setAdapter(adapter);
-        mOnboardingTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mOnboardingTabLayout.setupWithViewPager(mOnboardingViewPager, true);
-        mOnboardingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        onboardingViewPager.setAdapter(adapter);
+        final TabLayout onboardingTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        onboardingTabLayout.setupWithViewPager(onboardingViewPager, true);
+        onboardingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(final int state) {
             }
@@ -397,11 +395,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 }
             }
         });
-        mOnboardingNextButton.setOnClickListener(new View.OnClickListener() {
+        onboardingNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                mOnboardingViewPager.setCurrentItem(mOnboardingViewPager.getCurrentItem() + 1,
-                        true);
+                int nextItem = onboardingViewPager.getCurrentItem() + 1;
+                onboardingViewPager.setCurrentItem(nextItem, true);
             }
         });
     }
