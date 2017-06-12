@@ -83,4 +83,7 @@
         android:padding="128dp"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/onBoardingContainer"
+        layout="@layout/container_onboarding" />
 </RelativeLayout>

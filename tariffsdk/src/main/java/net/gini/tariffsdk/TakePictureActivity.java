@@ -11,9 +11,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +32,7 @@ import android.widget.TextView;
 import net.gini.tariffsdk.camera.Camera1;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
+import net.gini.tariffsdk.onboarding.OnboardingAdapter;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
 import java.util.List;
@@ -46,6 +50,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
+    private View mOnboardingContainer;
     private TakePictureContract.Presenter mPresenter;
     private View mPreviewButtonsContainer;
     private TextView mPreviewTitle;
@@ -90,6 +95,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void hideOnboarding() {
+        mOnboardingContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -155,8 +165,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         setSupportActionBar(toolbar);
         colorToolbar(toolbar);
 
+        setUpOnboarding();
+
         final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
-        mPresenter = new TakePicturePresenter(this, documentService);
+        mPresenter = new TakePicturePresenter(this, documentService, new OnboardingManager(this));
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -210,6 +222,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
         mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
+
 
         ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
         deleteImageButton.setOnClickListener(new View.OnClickListener() {
@@ -327,6 +340,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void showOnboarding() {
+        mOnboardingContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showPreviewButtons() {
         mPreviewButtonsContainer.setVisibility(View.VISIBLE);
     }
@@ -349,6 +367,41 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private void hideCameraPreview() {
         mCameraPreview.setVisibility(View.GONE);
         mCameraFrame.setVisibility(View.GONE);
+    }
+
+    private void setUpOnboarding() {
+        final FloatingActionButton onboardingNextButton = (FloatingActionButton) findViewById(
+                R.id.button_onboarding_next);
+        mOnboardingContainer = findViewById(R.id.onBoardingContainer);
+        final ViewPager onboardingViewPager = (ViewPager) findViewById(R.id.onBoardingViewPager);
+        final OnboardingAdapter adapter = new OnboardingAdapter(this);
+        onboardingViewPager.setAdapter(adapter);
+        final TabLayout onboardingTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        onboardingTabLayout.setupWithViewPager(onboardingViewPager, true);
+        onboardingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+            }
+
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset,
+                    final int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                if (adapter.isLastItem(position)) {
+                    mPresenter.onBoardingFinished();
+                }
+            }
+        });
+        onboardingNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                int nextItem = onboardingViewPager.getCurrentItem() + 1;
+                onboardingViewPager.setCurrentItem(nextItem, true);
+            }
+        });
     }
 
     private void showCameraPreview() {

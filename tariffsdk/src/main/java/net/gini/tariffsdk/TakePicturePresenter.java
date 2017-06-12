@@ -11,16 +11,18 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         DocumentService.DocumentListener {
 
     private final DocumentService mDocumentService;
+    private final OnboardingManager mOnboardringManager;
     private final TakePictureContract.View mView;
     @VisibleForTesting
     int mBuildVersion = android.os.Build.VERSION.SDK_INT;
     private Image mSelectedImage = null;
 
     TakePicturePresenter(final TakePictureContract.View view,
-            final DocumentService documentService) {
+            final DocumentService documentService, final OnboardingManager onboardringManager) {
 
         mView = view;
         mDocumentService = documentService;
+        mOnboardringManager = onboardringManager;
     }
 
     @Override
@@ -38,6 +40,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onAllPicturesTaken() {
         mView.showFoundExtractions();
+    }
+
+    @Override
+    public void onBoardingFinished() {
+        mView.hideOnboarding();
+        mOnboardringManager.storeOnboardingShown();
     }
 
     @Override
@@ -80,13 +88,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (hasToCheckForPermissions() && !mView.hasCameraPermissions()) {
-            mView.requestPermissions();
+        if (mOnboardringManager.onBoardingShown()) {
+            mView.hideOnboarding();
         } else {
-            mView.initCamera();
-            setImagesInList();
-            mDocumentService.addDocumentListener(this);
+            mView.showOnboarding();
         }
+        startCameraProcess();
     }
 
     @Override
@@ -101,5 +108,15 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private void setImagesInList() {
         final List<Image> images = mDocumentService.getImageList();
         mView.setImages(images);
+    }
+
+    private void startCameraProcess() {
+        if (hasToCheckForPermissions() && !mView.hasCameraPermissions()) {
+            mView.requestPermissions();
+        } else {
+            mView.initCamera();
+            setImagesInList();
+            mDocumentService.addDocumentListener(this);
+        }
     }
 }

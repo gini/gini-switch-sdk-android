@@ -15,67 +15,64 @@ public class TakePicturePresenterTest {
 
     private static final int AndroidMarshmallow = 23;
     @Mock
-    DocumentService mMockDocumentService;
+    private DocumentService mMockDocumentService;
     @Mock
-    TakePictureContract.View mMockView;
+    private OnboardingManager mMockOnboardingManager;
+    @Mock
+    private TakePictureContract.View mMockView;
+    private TakePicturePresenter mPresenter;
 
     @Test
     public void permissionDenied_initCameraNotCalled() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.mBuildVersion = AndroidMarshmallow;
+        mPresenter.mBuildVersion = AndroidMarshmallow;
 
         when(mMockView.hasCameraPermissions()).thenReturn(false);
-        presenter.start();
+        mPresenter.start();
         verify(mMockView, never()).initCamera();
     }
 
     @Test
     public void permissionGranted_initCameraCalled() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.mBuildVersion = AndroidMarshmallow;
+        mPresenter.mBuildVersion = AndroidMarshmallow;
 
         when(mMockView.hasCameraPermissions()).thenReturn(true);
-        presenter.start();
+        mPresenter.start();
         verify(mMockView).initCamera();
     }
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        mPresenter = new TakePicturePresenter(mMockView, mMockDocumentService,
+                mMockOnboardingManager);
+
     }
 
     @Test
     public void startPresenter_shouldAddListener() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.start();
-
-        verify(mMockDocumentService).addDocumentListener(presenter);
+        mPresenter.start();
+        verify(mMockDocumentService).addDocumentListener(mPresenter);
     }
 
     @Test
     public void stopPresenter_shouldRemoveListener() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.stop();
-
-        verify(mMockDocumentService).removeDocumentListener(presenter);
+        mPresenter.stop();
+        verify(mMockDocumentService).removeDocumentListener(mPresenter);
     }
 
     @Test
     public void versionGreaterThan23_requestPermissions() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.mBuildVersion = AndroidMarshmallow;
+        mPresenter.mBuildVersion = AndroidMarshmallow;
 
         when(mMockView.hasCameraPermissions()).thenReturn(false);
-        presenter.start();
+        mPresenter.start();
         verify(mMockView).requestPermissions();
     }
 
     @Test
     public void versionSmallerThan23_doNotRequestPermissions() {
-        TakePicturePresenter presenter = new TakePicturePresenter(mMockView, mMockDocumentService);
-        presenter.mBuildVersion = AndroidLollipop;
-
-        presenter.start();
+        mPresenter.mBuildVersion = AndroidLollipop;
+        mPresenter.start();
         verify(mMockView, never()).requestPermissions();
     }
 
