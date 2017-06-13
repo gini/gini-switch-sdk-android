@@ -71,6 +71,7 @@ class DocumentServiceImpl implements DocumentService {
 
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createExtractionOrder() {
         mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
@@ -121,6 +122,7 @@ class DocumentServiceImpl implements DocumentService {
         mDocumentListeners.remove(listener);
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void replaceImage(@NonNull final Uri uri, final int rotationCount) {
         final Image image = new Image(uri, ImageState.PROCESSING);

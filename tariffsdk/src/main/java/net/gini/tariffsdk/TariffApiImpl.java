@@ -54,6 +54,7 @@ class TariffApiImpl implements TariffApi {
                 .build();
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
             @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
@@ -92,6 +93,7 @@ class TariffApiImpl implements TariffApi {
 
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createExtractionOrder(@NonNull final NetworkCallback<ExtractionOrder> callback) {
         final HttpUrl url = mTariffApiUrl.newBuilder()
@@ -132,6 +134,7 @@ class TariffApiImpl implements TariffApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void deletePage(@NonNull final String pagesUrl) {
         final HttpUrl url = HttpUrl.parse(pagesUrl);
@@ -153,6 +156,7 @@ class TariffApiImpl implements TariffApi {
 
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void getOrderState(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<ExtractionOrderState> callback) {
@@ -196,6 +200,7 @@ class TariffApiImpl implements TariffApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void replacePage(@NonNull final String pagesUrl, @NonNull final byte[] page,
             @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
