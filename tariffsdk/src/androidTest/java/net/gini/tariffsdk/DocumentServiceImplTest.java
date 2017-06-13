@@ -39,7 +39,7 @@ public class DocumentServiceImplTest {
     @Test
     @SmallTest
     public void keepImage_shouldAddImageToImageList() throws IOException {
-        mDocumentService.keepImage(mMockUri, 0);
+        mDocumentService.keepImage(mMockUri);
         List<Image> imageList = mDocumentService.getImageList();
         assertEquals("Keep image should add image to image list!", 1, imageList.size());
     }
@@ -47,15 +47,24 @@ public class DocumentServiceImplTest {
     @Test
     @SmallTest
     public void keepImage_shouldNotUploadAgainWhenNoRotation() throws IOException {
-        mDocumentService.keepImage(mMockUri, 0);
+        mDocumentService.keepImage(mMockUri);
         verify(mMockTariffApi, never()).addPage(anyString(), any(byte[].class),
                 Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }
 
     @Test
     @SmallTest
-    public void keepImage_shouldUploadAgainWhenThereIsRotation() throws IOException {
-        mDocumentService.keepImage(mMockUri, 1);
+    public void replaceImage_shouldReplacePageWhenThereIsRotation() throws IOException {
+        mDocumentService.mImageUrls.put(new Image(mMockUri, ImageState.PROCESSING), "");
+        mDocumentService.replaceImage(mMockUri, 1);
+        verify(mMockTariffApi).replacePage(anyString(), any(byte[].class),
+                Matchers.<NetworkCallback<ExtractionOrderPage>>any());
+    }
+
+    @Test
+    @SmallTest
+    public void replaceImage_shouldUploadWhenImageWasNotUploadedBefore() throws IOException {
+        mDocumentService.replaceImage(mMockUri, 1);
         verify(mMockTariffApi).addPage(anyString(), any(byte[].class),
                 Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }

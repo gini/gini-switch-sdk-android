@@ -23,6 +23,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mView = view;
         mDocumentService = documentService;
         mOnboardringManager = onboardringManager;
+        mDocumentService.createExtractionOrder();
     }
 
     @Override

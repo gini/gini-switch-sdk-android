@@ -49,8 +49,8 @@ class TariffApiImpl implements TariffApi {
             final AuthenticationService authenticationService, final HttpUrl url) {
         mTariffApiUrl = url;
         mOkHttpClient = okHttpClient.newBuilder()
-                .authenticator(new BearerAuthenticator(authenticationService))
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
+                .authenticator(new BearerAuthenticator(authenticationService))
                 .build();
     }
 
@@ -189,6 +189,43 @@ class TariffApiImpl implements TariffApi {
                     }
 
 
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void replacePage(@NonNull final String pagesUrl, @NonNull final byte[] page,
+            @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
+        final HttpUrl url = HttpUrl.parse(pagesUrl);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
+                page);
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/hal+json")
+                .put(requestBody)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject obj = new JSONObject(response.body().string());
+                        ExtractionOrderPage page = createExtractionOrderPageFromJson(obj);
+                        callback.onSuccess(page);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     callback.onError(new NetworkErrorException("TODO SOME ERROR"));
                 }
