@@ -209,7 +209,6 @@ class DocumentServiceImpl implements DocumentService {
             @Override
             public void onError(final Exception e) {
                 //TODO
-                throw new RuntimeException(e);
             }
 
             @Override
