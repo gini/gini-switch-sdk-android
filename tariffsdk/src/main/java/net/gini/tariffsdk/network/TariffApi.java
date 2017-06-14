@@ -24,4 +24,6 @@ public interface TariffApi {
     void requestConfiguration(@NonNull final ClientInformation clientInformation,
             @NonNull final NetworkCallback<Configuration> callback);
 
+    void retrieveExtractions(@NonNull final String orderUrl,
+            @NonNull final NetworkCallback<Extractions> callback);
 }

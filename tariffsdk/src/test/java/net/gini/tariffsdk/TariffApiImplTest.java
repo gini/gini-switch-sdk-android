@@ -16,6 +16,7 @@ import net.gini.tariffsdk.configuration.models.Configuration;
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.ExtractionOrderState;
+import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.jodah.concurrentunit.Waiter;
 
@@ -51,6 +52,8 @@ public class TariffApiImplTest {
     private ClientInformation mMockClientInformation;
     @Mock
     private NetworkCallback<ExtractionOrder> mMockExtractionOrderNetworkCallback;
+    @Mock
+    private NetworkCallback<Extractions> mMockExtractionsNetworkCallback;
     @Mock
     private File mMockFile;
     @Mock
@@ -127,7 +130,6 @@ public class TariffApiImplTest {
     @Test
     public void addPage_wasSuccessfulShouldCallOnSuccess()
             throws InterruptedException, JSONException, TimeoutException {
-
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("",
                         ExtractionOrderPage.Status.processing));
@@ -153,7 +155,6 @@ public class TariffApiImplTest {
     @Test
     public void addPage_wasSuccessfulShouldContainAPagesLink()
             throws InterruptedException, JSONException, TimeoutException {
-
         final String pagesLink = "http://self_link";
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse(pagesLink, ExtractionOrderPage.Status.processing));
@@ -178,7 +179,6 @@ public class TariffApiImplTest {
     @Test
     public void addPage_wasSuccessfulShouldContainAStatus()
             throws InterruptedException, JSONException, TimeoutException {
-
         final ExtractionOrderPage.Status status = ExtractionOrderPage.Status.processing;
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("", status));
@@ -203,7 +203,6 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_CouldNotParseJsonShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
-
         MockResponse mJSONMockResponse = new MockResponse().setBody("");
         mServer.enqueue(mJSONMockResponse);
         mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
@@ -329,7 +328,6 @@ public class TariffApiImplTest {
     @Test
     public void createExtractionOrder_wasSuccessfulShouldContainASelfLink()
             throws InterruptedException, JSONException, TimeoutException {
-
         final String selfLink = "http://self_link";
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse(selfLink, ""));
@@ -409,7 +407,6 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
-
         mServer.enqueue(new MockResponse().setResponseCode(500));
         mTariffApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
@@ -431,7 +428,6 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_wasSuccessfulShouldCallOnSuccess()
             throws InterruptedException, JSONException, TimeoutException {
-
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, null));
         mServer.enqueue(mJSONMockResponse);
@@ -455,7 +451,6 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_wasSuccessfulShouldContainAPagesLink()
             throws InterruptedException, JSONException, TimeoutException {
-
         final String pagesLink = "http://pages_link";
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, pagesLink));
@@ -480,7 +475,6 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_wasSuccessfulShouldContainASelfLink()
             throws InterruptedException, JSONException, TimeoutException {
-
         final String selfLink = "http://self_link";
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), selfLink, null));
@@ -506,7 +500,6 @@ public class TariffApiImplTest {
     @Test
     public void getOrderState_wasSuccessfulShouldContainPages()
             throws InterruptedException, JSONException, TimeoutException {
-
         ArrayList<String> pages = new ArrayList<>();
         final String page1 = createMockCreatePagesResponse("Page1",
                 ExtractionOrderPage.Status.processing);
@@ -576,7 +569,6 @@ public class TariffApiImplTest {
     @Test
     public void replacePage_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
-
         mServer.enqueue(new MockResponse().setResponseCode(500));
         mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
@@ -598,7 +590,6 @@ public class TariffApiImplTest {
     @Test
     public void replacePage_wasSuccessfulShouldCallOnSuccess()
             throws InterruptedException, JSONException, TimeoutException {
-
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("",
                         ExtractionOrderPage.Status.processing));
@@ -624,7 +615,6 @@ public class TariffApiImplTest {
     @Test
     public void replacePage_wasSuccessfulShouldContainAPagesLink()
             throws InterruptedException, JSONException, TimeoutException {
-
         final String pagesLink = "http://self_link";
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse(pagesLink, ExtractionOrderPage.Status.processing));
@@ -649,7 +639,6 @@ public class TariffApiImplTest {
     @Test
     public void replacePage_wasSuccessfulShouldContainAStatus()
             throws InterruptedException, JSONException, TimeoutException {
-
         final ExtractionOrderPage.Status status = ExtractionOrderPage.Status.processing;
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("", status));
@@ -692,7 +681,6 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_shouldContainClientDeviceModel()
             throws InterruptedException, TimeoutException {
-
         final String deviceModel = "Pixel";
         final ClientInformation clientInformation = new ClientInformation(0, null, deviceModel);
         mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
@@ -705,7 +693,6 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_shouldContainClientOsVersion()
             throws InterruptedException, TimeoutException {
-
         final int osVersion = 19;
         final ClientInformation clientInformation = new ClientInformation(osVersion, null, null);
         mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
@@ -718,7 +705,6 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_shouldContainClientPlatform()
             throws InterruptedException, TimeoutException {
-
         final ClientInformation clientInformation = new ClientInformation(0, null, null);
         mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
@@ -730,7 +716,6 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_shouldContainClientSdkVersion()
             throws InterruptedException, TimeoutException {
-
         final String sdkVersion = "1.0.1";
         final ClientInformation clientInformation = new ClientInformation(0, sdkVersion, null);
         mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
@@ -743,7 +728,6 @@ public class TariffApiImplTest {
     @Test
     public void requestConfiguration_shouldContainTheBearerTokenAsAuthorization()
             throws InterruptedException {
-
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
         mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
@@ -766,6 +750,176 @@ public class TariffApiImplTest {
                     @Override
                     public void onSuccess(final Configuration configuration) {
                         mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void retrieveExtractions_shouldBeAGetRequest()
+            throws InterruptedException, TimeoutException {
+        mTariffApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("GET", request.getMethod());
+    }
+
+    @Test
+    public void retrieveExtractions_shouldContainAuthorizationHeader()
+            throws InterruptedException, TimeoutException {
+        mTariffApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        assertFalse(authorizationHeader.isEmpty());
+    }
+
+    @Test
+    public void retrieveExtractions_shouldContainTheBearerTokenAsAuthorization()
+            throws InterruptedException {
+        final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
+        when(mMockAccessToken.getToken()).thenReturn(bearerToken);
+        mTariffApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
+    }
+
+    @Test
+    public void retrieveExtractions_wasNotSuccessfulShouldCallOnError()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        mServer.enqueue(new MockResponse().setResponseCode(500));
+        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+                new NetworkCallback<Extractions>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Extractions e) {
+                        mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void retrieveExtractions_wasSuccessfulShouldCallOnSuccess()
+            throws InterruptedException, JSONException, TimeoutException {
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionsResponse(""));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+                new NetworkCallback<Extractions>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Extractions e) {
+                        mWaiter.assertNotNull(e);
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void retrieveExtractions_wasSuccessfulShouldContainACompanyName()
+            throws InterruptedException, JSONException, TimeoutException {
+        final String companyName = "Stadtwerke München";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionsResponse(null, companyName));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+                new NetworkCallback<Extractions>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Extractions e) {
+                        mWaiter.assertEquals(companyName, e.getCompanyName());
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void retrieveExtractions_wasSuccessfulShouldContainAConsumption()
+            throws InterruptedException, JSONException, TimeoutException {
+        final double consumptionValue = 315.0;
+        final String consumptionUnit = "kWh";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionsResponse(null, null, null, consumptionValue, consumptionUnit));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+                new NetworkCallback<Extractions>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Extractions e) {
+                        mWaiter.assertEquals(consumptionValue, e.getConsumptionValue());
+                        mWaiter.assertEquals(consumptionUnit, e.getConsumptionUnit());
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void retrieveExtractions_wasSuccessfulShouldContainASelfLink()
+            throws InterruptedException, JSONException, TimeoutException {
+        final String selfLink = "http://self_link";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionsResponse(selfLink));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+                new NetworkCallback<Extractions>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Extractions e) {
+                        mWaiter.assertEquals(selfLink, e.getSelf());
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void retrieveExtractions_wasSuccessfulShouldContainAnEnergyMeterNumber()
+            throws InterruptedException, JSONException, TimeoutException {
+        final String energyMeterNumber = "L4547";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionsResponse(null, null, energyMeterNumber));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+                new NetworkCallback<Extractions>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Extractions e) {
+                        mWaiter.assertEquals(energyMeterNumber, e.getEnergyMeterNumber());
                         mWaiter.resume();
                     }
                 });
@@ -839,5 +993,54 @@ public class TariffApiImplTest {
                 + "    }\n"
                 + "  }\n"
                 + "}";
+    }
+
+    private String createMockExtractionsResponse(final String selfLink) {
+        return createMockExtractionsResponse(selfLink, "");
+    }
+
+    private String createMockExtractionsResponse(final String selfLink, final String companyName,
+            final String energyMeterNumber,
+            final double consumptionValue, final String consumptionUnit) {
+        return "{\n"
+                + "  \"companyName\" : {\n"
+                + "    \"value\" : \"" + companyName + "\",\n"
+                + "    \"alternatives\" : [ ]\n"
+                + "  },\n"
+                + "  \"energyMeterNumber\" : {\n"
+                + "    \"value\" : \"" + energyMeterNumber + "\",\n"
+                + "    \"alternatives\" : [ ]\n"
+                + "  },\n"
+                + "  \"consumption\" : {\n"
+                + "    \"value\" : {\n"
+                + "      \"value\" : " + consumptionValue + ",\n"
+                + "      \"unit\" : \"" + consumptionUnit + "\"\n"
+                + "    },\n"
+                + "    \"alternatives\" : [ {\n"
+                + "      \"value\" : 315.0,\n"
+                + "      \"unit\" : \"kWh\"\n"
+                + "    }, {\n"
+                + "      \"value\" : 315.0,\n"
+                + "      \"unit\" : \"kWh\"\n"
+                + "    }, {\n"
+                + "      \"value\" : 750.0,\n"
+                + "      \"unit\" : \"kWh\"\n"
+                + "    } ]\n"
+                + "  },\n"
+                + "  \"_links\" : {\n"
+                + "    \"self\" : {\n"
+                + "      \"href\" : \"" + selfLink + "\"\n"
+                + "    }\n"
+                + "  }\n"
+                + "}";
+    }
+
+    private String createMockExtractionsResponse(final String selfLink, final String companyName,
+            final String energyMeterNumber) {
+        return createMockExtractionsResponse(selfLink, companyName, energyMeterNumber, 0.0, "");
+    }
+
+    private String createMockExtractionsResponse(final String selfLink, final String companyName) {
+        return createMockExtractionsResponse(selfLink, companyName, "");
     }
 }
