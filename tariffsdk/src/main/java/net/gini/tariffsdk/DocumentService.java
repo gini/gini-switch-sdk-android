@@ -12,13 +12,17 @@ interface DocumentService {
 
     void cleanup();
 
+    void createExtractionOrder();
+
     void deleteImage(@NonNull final Uri uri);
 
     List<Image> getImageList();
 
-    void keepImage(@NonNull final Uri uri, final int rotationCount);
+    void keepImage(@NonNull final Uri uri);
 
     void removeDocumentListener(@NonNull DocumentListener listener);
+
+    void replaceImage(@NonNull final Uri uri, final int rotationCount);
 
     Image saveImage(@NonNull final byte[] data, final int cameraOrientation);
 

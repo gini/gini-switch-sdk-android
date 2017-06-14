@@ -535,6 +535,143 @@ public class TariffApiImplTest {
     }
 
     @Test
+    public void replacePage_shouldBeAPutRequest()
+            throws InterruptedException, TimeoutException {
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("PUT", request.getMethod());
+    }
+
+    @Test
+    public void replacePage_shouldContainAuthorizationHeader()
+            throws InterruptedException, TimeoutException {
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        assertFalse(authorizationHeader.isEmpty());
+    }
+
+    @Test
+    public void replacePage_shouldContainImageAsBody()
+            throws InterruptedException, TimeoutException {
+        final byte[] page = new byte[Short.MAX_VALUE];
+        new Random().nextBytes(page);
+        mTariffApi.replacePage(mMockUrl.toString(), page, mMockStringNetworkCallback);
+
+        RecordedRequest request = mServer.takeRequest();
+        final byte[] body = request.getBody().readByteArray();
+        assertArrayEquals(page, body);
+    }
+
+    @Test
+    public void replacePage_shouldContainTheBearerTokenAsAuthorization()
+            throws InterruptedException {
+        final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
+        when(mMockAccessToken.getToken()).thenReturn(bearerToken);
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
+    }
+
+    @Test
+    public void replacePage_wasNotSuccessfulShouldCallOnError()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        mServer.enqueue(new MockResponse().setResponseCode(500));
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+                new NetworkCallback<ExtractionOrderPage>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderPage p) {
+                        mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void replacePage_wasSuccessfulShouldCallOnSuccess()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockCreatePagesResponse("",
+                        ExtractionOrderPage.Status.processing));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+                new NetworkCallback<ExtractionOrderPage>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderPage p) {
+                        mWaiter.assertNotNull(p);
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
+    @Test
+    public void replacePage_wasSuccessfulShouldContainAPagesLink()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        final String pagesLink = "http://self_link";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockCreatePagesResponse(pagesLink, ExtractionOrderPage.Status.processing));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+                new NetworkCallback<ExtractionOrderPage>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderPage e) {
+                        mWaiter.assertEquals(pagesLink, e.getSelf());
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void replacePage_wasSuccessfulShouldContainAStatus()
+            throws InterruptedException, JSONException, TimeoutException {
+
+        final ExtractionOrderPage.Status status = ExtractionOrderPage.Status.processing;
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockCreatePagesResponse("", status));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+                new NetworkCallback<ExtractionOrderPage>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderPage e) {
+                        mWaiter.assertEquals(status, e.getStatus());
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
     public void requestConfiguration_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
         mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);

@@ -27,7 +27,11 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
 
     @Override
     public void keepImage() {
-        mDocumentService.keepImage(mUri, mRotationCount);
+        if (mRotationCount > 0) {
+            mDocumentService.replaceImage(mUri, mRotationCount);
+        } else {
+            mDocumentService.keepImage(mUri);
+        }
         mView.finishReview();
     }
 

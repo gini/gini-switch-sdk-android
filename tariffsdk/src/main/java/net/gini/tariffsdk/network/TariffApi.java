@@ -18,6 +18,9 @@ public interface TariffApi {
     void getOrderState(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<ExtractionOrderState> callback);
 
+    void replacePage(@NonNull final String pagesUrl, @NonNull final byte[] page,
+            @NonNull final NetworkCallback<ExtractionOrderPage> callback);
+
     void requestConfiguration(@NonNull final ClientInformation clientInformation,
             @NonNull final NetworkCallback<Configuration> callback);
 

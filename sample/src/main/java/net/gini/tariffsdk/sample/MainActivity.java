@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.Extraction;
 import net.gini.tariffsdk.TariffSdk;
 
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.textView);
 
-        mTariffSdk = TariffSdk.init(this, "clientId", "clientPw", "gini.net");
+        mTariffSdk = TariffSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
+                "gini.net");
 
         Button viewById = (Button) findViewById(R.id.button_start);
         viewById.setOnClickListener(new View.OnClickListener() {

@@ -49,16 +49,16 @@ class TariffApiImpl implements TariffApi {
             final AuthenticationService authenticationService, final HttpUrl url) {
         mTariffApiUrl = url;
         mOkHttpClient = okHttpClient.newBuilder()
-                .authenticator(new BearerAuthenticator(authenticationService))
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
+                .authenticator(new BearerAuthenticator(authenticationService))
                 .build();
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
             @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
         final HttpUrl url = HttpUrl.parse(pagesUrl);
-
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
                 page);
         final Request request = new Request.Builder()
@@ -67,31 +67,11 @@ class TariffApiImpl implements TariffApi {
                 .post(requestBody)
                 .build();
 
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
-            }
-
-            @Override
-            public void onResponse(final Call call, final Response response) throws IOException {
-
-                if (response.isSuccessful()) {
-                    try {
-                        final JSONObject obj = new JSONObject(response.body().string());
-                        ExtractionOrderPage page = createExtractionOrderPageFromJson(obj);
-                        callback.onSuccess(page);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
-                }
-            }
-        });
+        mOkHttpClient.newCall(request).enqueue(getPagesResponseCallback(callback));
 
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createExtractionOrder(@NonNull final NetworkCallback<ExtractionOrder> callback) {
         final HttpUrl url = mTariffApiUrl.newBuilder()
@@ -132,6 +112,7 @@ class TariffApiImpl implements TariffApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void deletePage(@NonNull final String pagesUrl) {
         final HttpUrl url = HttpUrl.parse(pagesUrl);
@@ -153,6 +134,7 @@ class TariffApiImpl implements TariffApi {
 
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void getOrderState(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<ExtractionOrderState> callback) {
@@ -194,6 +176,23 @@ class TariffApiImpl implements TariffApi {
                 }
             }
         });
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
+    public void replacePage(@NonNull final String pagesUrl, @NonNull final byte[] page,
+            @NonNull final NetworkCallback<ExtractionOrderPage> callback) {
+        final HttpUrl url = HttpUrl.parse(pagesUrl);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
+                page);
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/hal+json")
+                .put(requestBody)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(getPagesResponseCallback(callback));
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -266,5 +265,32 @@ class TariffApiImpl implements TariffApi {
         final FlashMode flashMode = FlashMode.valueOf(
                 object.optString(Configuration.FLASH_MODE, FlashMode.ON.name()));
         return new Configuration(flashMode);
+    }
+
+    @NonNull
+    private Callback getPagesResponseCallback(
+            final @NonNull NetworkCallback<ExtractionOrderPage> callback) {
+        return new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+
+                if (response.isSuccessful()) {
+                    try {
+                        final JSONObject obj = new JSONObject(response.body().string());
+                        ExtractionOrderPage page = createExtractionOrderPageFromJson(obj);
+                        callback.onSuccess(page);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        };
     }
 }

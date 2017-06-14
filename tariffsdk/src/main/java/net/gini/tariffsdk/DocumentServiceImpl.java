@@ -30,10 +30,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 class DocumentServiceImpl implements DocumentService {
 
+    @VisibleForTesting
+    final Map<Image, String> mImageUrls;
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
-    private final Map<Image, String> mImageUrls;
     private final TariffApi mTariffApi;
 
     @VisibleForTesting
@@ -45,18 +46,6 @@ class DocumentServiceImpl implements DocumentService {
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
         mImageUrls = new HashMap<>();
-
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
-            @Override
-            public void onError(final Exception e) {
-                //TODO
-            }
-
-            @Override
-            public void onSuccess(final ExtractionOrder extractionOrder) {
-                mExtractionOrder = extractionOrder;
-            }
-        });
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -84,6 +73,22 @@ class DocumentServiceImpl implements DocumentService {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
+    public void createExtractionOrder() {
+        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+            @Override
+            public void onError(final Exception e) {
+                //TODO
+            }
+
+            @Override
+            public void onSuccess(final ExtractionOrder extractionOrder) {
+                mExtractionOrder = extractionOrder;
+            }
+        });
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
     public void deleteImage(@NonNull final Uri uri) {
 
         deleteFileFromStorage(uri);
@@ -106,25 +111,32 @@ class DocumentServiceImpl implements DocumentService {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
-    public void keepImage(@NonNull final Uri uri, final int rotationCount) {
+    public void keepImage(@NonNull final Uri uri) {
         final Image image = new Image(uri, ImageState.PROCESSING);
         mImageList.add(image);
-
-        if (rotationCount > 0) {
-            try {
-                //if we rotate 4 times with 90 degrees we are at the start
-                writeNewRotationIntoExif(uri, (rotationCount % 4) * 90);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            uploadImage(image);
-        }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void removeDocumentListener(@NonNull final DocumentListener listener) {
         mDocumentListeners.remove(listener);
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
+    public void replaceImage(@NonNull final Uri uri, final int rotationCount) {
+        final Image image = new Image(uri, ImageState.PROCESSING);
+        try {
+            //if we rotate 4 times with 90 degrees we are at the start
+            writeNewRotationIntoExif(uri, (rotationCount % 4) * 90);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (mImageUrls.containsKey(image)) {
+            replaceImage(mImageUrls.get(image), image);
+        } else {
+            uploadImage(image);
+        }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -173,11 +185,41 @@ class DocumentServiceImpl implements DocumentService {
         return data;
     }
 
+    private byte[] getBytesFromImage(final Image image) {
+        File imageFile = getFileFromUri(image.getUri());
 
+        byte[] data = new byte[0];
+        try {
+            data = getBytesFromFile(imageFile);
+        } catch (IOException e) {
+            //TODO
+            e.printStackTrace();
+        }
+        return data;
+    }
 
     @NonNull
     private File getFileFromUri(final @NonNull Uri uri) {
         return new File(uri.getPath());
+    }
+
+    @NonNull
+    private NetworkCallback<ExtractionOrderPage> getImageUploadingCallback(final Image image) {
+        return new NetworkCallback<ExtractionOrderPage>() {
+            @Override
+            public void onError(final Exception e) {
+                //TODO
+            }
+
+            @Override
+            public void onSuccess(final ExtractionOrderPage page) {
+                if (page.getStatus() != ExtractionOrderPage.Status.failed) {
+                    mImageUrls.put(image, page.getSelf());
+                } else {
+
+                }
+            }
+        };
     }
 
     private void imageProcessed(final Image image) {
@@ -201,36 +243,15 @@ class DocumentServiceImpl implements DocumentService {
 
     }
 
+    private void replaceImage(@NonNull final String url, final Image image) {
+        byte[] data = getBytesFromImage(image);
+        mTariffApi.replacePage(url, data, getImageUploadingCallback(image));
+    }
+
     private void uploadImage(final Image image) {
-            File imageFile = getFileFromUri(image.getUri());
+        byte[] data = getBytesFromImage(image);
 
-            byte[] data = new byte[0];
-            try {
-                data = getBytesFromFile(imageFile);
-            } catch (IOException e) {
-                //TODO
-                e.printStackTrace();
-            }
-
-            //replace in case it's already there
-            final String url = mImageUrls.containsKey(image) ? mImageUrls.get(image)
-                    : mExtractionOrder.getPages();
-            mTariffApi.addPage(url, data,
-                    new NetworkCallback<ExtractionOrderPage>() {
-                        @Override
-                        public void onError(final Exception e) {
-                            //TODO
-                        }
-
-                        @Override
-                        public void onSuccess(final ExtractionOrderPage page) {
-                            if (page.getStatus() != ExtractionOrderPage.Status.failed) {
-                                mImageUrls.put(image, page.getSelf());
-                            } else {
-
-                            }
-                        }
-                    });
+        mTariffApi.addPage(mExtractionOrder.getPages(), data, getImageUploadingCallback(image));
     }
 
     private void writeNewRotationIntoExif(final Uri uri, final int rotation) throws IOException {
