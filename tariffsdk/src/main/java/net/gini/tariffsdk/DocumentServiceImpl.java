@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 class DocumentServiceImpl implements DocumentService {
 
-    private static final int POLLING_INTERVAL = 5000;
+    private static final int POLLING_INTERVAL_IN_MS = 1000;
     @VisibleForTesting
     final Map<Image, String> mImageUrls;
     private final Context mContext;
@@ -46,33 +46,11 @@ class DocumentServiceImpl implements DocumentService {
     private final Runnable mPollingRunnable = new Runnable() {
         @Override
         public void run() {
-            mTariffApi.getOrderState(mExtractionOrder.getSelf(),
-                    new NetworkCallback<ExtractionOrderState>() {
-                        @Override
-                        public void onError(final Exception e) {
-                            //TODO might be ignored since this call is repeated in an interval
-                        }
-
-                        @Override
-                        public void onSuccess(final ExtractionOrderState extractionOrderState) {
-                            for (final ExtractionOrderPage extractionOrderPage :
-                                    extractionOrderState.getOrderPages()) {
-                                final Image image = getImageFromUrl(extractionOrderPage.getSelf());
-                                if (image != null) {
-                                    ExtractionOrderPage.Status status =
-                                            extractionOrderPage.getStatus();
-                                    if (status == ExtractionOrderPage.Status.processed) {
-                                        image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
-                                    } else if (status == ExtractionOrderPage.Status.failed) {
-                                        image.setProcessingState(ImageState.FAILED);
-                                    }
-                                    updateImageState(image);
-                                }
-                            }
-                        }
-                    });
-
-            mPollingHandler.postDelayed(mPollingRunnable, POLLING_INTERVAL);
+            //only fetch the state when we have one image uploaded
+            if (mImageUrls.size() > 0) {
+                fetchOrderState();
+            }
+            mPollingHandler.postDelayed(mPollingRunnable, POLLING_INTERVAL_IN_MS);
         }
     };
 
@@ -208,6 +186,34 @@ class DocumentServiceImpl implements DocumentService {
     private void deleteFileFromStorage(final @NonNull Uri uri) {
         final File file = getFileFromUri(uri);
         file.delete();
+    }
+
+    private void fetchOrderState() {
+        mTariffApi.getOrderState(mExtractionOrder.getSelf(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        //TODO might be ignored since this call is repeated in an interval
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        for (final ExtractionOrderPage extractionOrderPage :
+                                extractionOrderState.getOrderPages()) {
+                            final Image image = getImageFromUrl(extractionOrderPage.getSelf());
+                            if (image != null) {
+                                ExtractionOrderPage.Status status =
+                                        extractionOrderPage.getStatus();
+                                if (status == ExtractionOrderPage.Status.processed) {
+                                    image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
+                                } else if (status == ExtractionOrderPage.Status.failed) {
+                                    image.setProcessingState(ImageState.FAILED);
+                                }
+                                updateImageState(image);
+                            }
+                        }
+                    }
+                });
     }
 
     private byte[] getBytesFromFile(final File imageFile) throws IOException {
