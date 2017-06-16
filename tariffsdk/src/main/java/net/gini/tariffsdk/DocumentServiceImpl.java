@@ -98,7 +98,7 @@ class DocumentServiceImpl implements DocumentService {
             @Override
             public void onSuccess(final ExtractionOrder extractionOrder) {
                 mExtractionOrder = extractionOrder;
-                //we have an order we start to poll it's state
+                //we have an order we start to poll its state
                 startStatePolling();
             }
         });
@@ -299,8 +299,7 @@ class DocumentServiceImpl implements DocumentService {
     private void updateImageState(final Image image) {
         final int position = mImageList.indexOf(image);
         if (position >= 0) {
-            mImageList.remove(position);
-            mImageList.add(position, image);
+            mImageList.set(position, image);
         } else {
             mImageList.add(image);
         }
