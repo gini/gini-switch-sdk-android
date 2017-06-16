@@ -3,6 +3,7 @@ package net.gini.tariffsdk;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
@@ -10,6 +11,7 @@ import android.support.media.ExifInterface;
 
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
+import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 import net.gini.tariffsdk.utils.ExifUtils;
@@ -30,6 +32,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 class DocumentServiceImpl implements DocumentService {
 
+    private static final int POLLING_INTERVAL = 5000;
     @VisibleForTesting
     final Map<Image, String> mImageUrls;
     private final Context mContext;
@@ -39,6 +42,39 @@ class DocumentServiceImpl implements DocumentService {
 
     @VisibleForTesting
     ExtractionOrder mExtractionOrder;
+    private Handler mPollingHandler;
+    private final Runnable mPollingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mTariffApi.getOrderState(mExtractionOrder.getSelf(),
+                    new NetworkCallback<ExtractionOrderState>() {
+                        @Override
+                        public void onError(final Exception e) {
+                            //TODO might be ignored since this call is repeated in an interval
+                        }
+
+                        @Override
+                        public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                            for (final ExtractionOrderPage extractionOrderPage :
+                                    extractionOrderState.getOrderPages()) {
+                                final Image image = getImageFromUrl(extractionOrderPage.getSelf());
+                                if (image != null) {
+                                    ExtractionOrderPage.Status status =
+                                            extractionOrderPage.getStatus();
+                                    if (status == ExtractionOrderPage.Status.processed) {
+                                        image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
+                                    } else if (status == ExtractionOrderPage.Status.failed) {
+                                        image.setProcessingState(ImageState.FAILED);
+                                    }
+                                    updateImageState(image);
+                                }
+                            }
+                        }
+                    });
+
+            mPollingHandler.postDelayed(mPollingRunnable, POLLING_INTERVAL);
+        }
+    };
 
     DocumentServiceImpl(final Context context, final TariffApi tariffApi) {
         mContext = context.getApplicationContext();
@@ -57,6 +93,7 @@ class DocumentServiceImpl implements DocumentService {
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void cleanup() {
+        stopStatePolling();
         mDocumentListeners.clear();
         final List<Image> imagesToDelete = new ArrayList<>(mImageList);
         mImageList.clear();
@@ -83,6 +120,8 @@ class DocumentServiceImpl implements DocumentService {
             @Override
             public void onSuccess(final ExtractionOrder extractionOrder) {
                 mExtractionOrder = extractionOrder;
+                //we have an order we start to poll it's state
+                startStatePolling();
             }
         });
     }
@@ -203,6 +242,15 @@ class DocumentServiceImpl implements DocumentService {
         return new File(uri.getPath());
     }
 
+    private Image getImageFromUrl(final String selfUrl) {
+        for (final Image image : mImageUrls.keySet()) {
+            if (mImageUrls.get(image).equals(selfUrl)) {
+                return image;
+            }
+        }
+        return null;
+    }
+
     @NonNull
     private NetworkCallback<ExtractionOrderPage> getImageUploadingCallback(final Image image) {
         return new NetworkCallback<ExtractionOrderPage>() {
@@ -222,7 +270,27 @@ class DocumentServiceImpl implements DocumentService {
         };
     }
 
-    private void imageProcessed(final Image image) {
+    private void notifyListeners(final Image image) {
+        for (DocumentListener documentListener : mDocumentListeners) {
+            documentListener.onImageStatChanged(image);
+        }
+    }
+
+    private void replaceImage(@NonNull final String url, final Image image) {
+        byte[] data = getBytesFromImage(image);
+        mTariffApi.replacePage(url, data, getImageUploadingCallback(image));
+    }
+
+    private void startStatePolling() {
+        mPollingHandler = new Handler();
+        mPollingRunnable.run();
+    }
+
+    private void stopStatePolling() {
+        mPollingHandler.removeCallbacks(mPollingRunnable);
+    }
+
+    private void updateImageState(final Image image) {
         final int position = mImageList.indexOf(image);
         if (position >= 0) {
             mImageList.remove(position);
@@ -231,21 +299,6 @@ class DocumentServiceImpl implements DocumentService {
             mImageList.add(image);
         }
         notifyListeners(image);
-    }
-
-    private void notifyListeners(final Image image) {
-        for (DocumentListener documentListener : mDocumentListeners) {
-            documentListener.onImageStatChanged(image);
-        }
-    }
-
-    private void pollStatePeriodically() {
-
-    }
-
-    private void replaceImage(@NonNull final String url, final Image image) {
-        byte[] data = getBytesFromImage(image);
-        mTariffApi.replacePage(url, data, getImageUploadingCallback(image));
     }
 
     private void uploadImage(final Image image) {
