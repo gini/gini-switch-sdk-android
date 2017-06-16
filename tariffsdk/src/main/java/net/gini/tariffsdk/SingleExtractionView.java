@@ -19,21 +19,23 @@ import android.widget.TextView;
 public class SingleExtractionView extends LinearLayout {
 
     private final View mBackground;
-    private final Extraction mExtraction;
     private final EditText mInput;
-    private final TextView mTitle;
+    private final String mTitle;
+    private final TextView mTitleTextView;
+    private final String mValue;
     private int mLineColor;
     private int mNegativeColor;
 
-    public SingleExtractionView(final Context context, final Extraction extraction) {
+    public SingleExtractionView(final Context context, final String title, final String value) {
         super(context);
-        mExtraction = extraction;
+        mTitle = title;
+        mValue = value;
         final View view = inflate(context, R.layout.view_extraction, this);
         setOrientation(VERTICAL);
 
         mInput = (EditText) view.findViewById(R.id.text_input);
-        mInput.setText(extraction.getValue());
-        mInput.setHint(extraction.getName());
+        mInput.setText(value);
+        mInput.setHint(title);
         mInput.setHintTextColor(ContextCompat.getColor(context, R.color.secondaryText));
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -58,8 +60,8 @@ public class SingleExtractionView extends LinearLayout {
             }
         });
 
-        mTitle = (TextView) view.findViewById(R.id.text_title);
-        mTitle.setText(extraction.getName());
+        mTitleTextView = (TextView) view.findViewById(R.id.text_title);
+        mTitleTextView.setText(title);
 
         mBackground = view.findViewById(R.id.background);
 
@@ -69,13 +71,13 @@ public class SingleExtractionView extends LinearLayout {
         mBackground.setBackgroundColor(ContextCompat.getColor(getContext(), color));
     }
 
-    public Extraction getExtraction() {
-        return new Extraction(mExtraction.getName(), mInput.getText().toString());
-    }
+//    public Extraction getExtraction() {
+//        return new Extraction(mExtraction.getName(), mInput.getText().toString());
+//    }
 
     public void setHintColor(@ColorRes final int color) {
         int colorHint = ContextCompat.getColor(getContext(), color);
-        mTitle.setTextColor(colorHint);
+        mTitleTextView.setTextColor(colorHint);
         mInput.setHintTextColor(colorHint);
     }
 

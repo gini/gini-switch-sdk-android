@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Set;
+import net.gini.tariffsdk.network.Extractions;
 
 final public class ExtractionsActivity extends TariffSdkBaseActivity {
 
@@ -53,14 +54,12 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         mExtractionViewContainer = (LinearLayout) findViewById(R.id.view_container);
         mExtractionService = TariffSdk.getSdk().getExtractionService();
 
-        //TODO make this generic so we can set the showing fields via remote config
         setExtractionsInView(mExtractionService.getExtractions());
 
         final Button confirmButton = (Button) findViewById(R.id.button_done);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                setExtractions();
                 setResult(mExtractionService.getResultCodeForActivity());
                 finish();
             }
@@ -116,18 +115,19 @@ final public class ExtractionsActivity extends TariffSdkBaseActivity {
         return getIntent().getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, R.string.extractions_title);
     }
 
-    private void setExtractions() {
-        for (int i = 0; i < mExtractionViewContainer.getChildCount(); i++) {
-            Extraction extraction = ((SingleExtractionView) mExtractionViewContainer.getChildAt(
-                    i)).getExtraction();
-            mExtractionService.setExtraction(extraction);
-        }
-    }
+//    private void setExtractions() {
+//        for (int i = 0; i < mExtractionViewContainer.getChildCount(); i++) {
+//            Extraction extraction = ((SingleExtractionView) mExtractionViewContainer.getChildAt(
+//                    i)).getExtraction();
+//            mExtractionService.changeExtractions(extraction);
+//        }
+//    }
 
-    private void setExtractionsInView(Set<Extraction> extractionSet) {
+    private void setExtractionsInView(Extractions extractions) {
         mExtractionViewContainer.removeAllViews();
-        for (Extraction extraction : extractionSet) {
-            SingleExtractionView view = new SingleExtractionView(this, extraction);
+        if (!TextUtils.isEmpty(extractions.getCompanyName())) {
+            SingleExtractionView view = new SingleExtractionView(this, "Vorversorger",
+                    extractions.getCompanyName());
             view.setTextColor(getEditTextColorFromBundle());
 
             view.setHintColor(getHintColorFromBundle());

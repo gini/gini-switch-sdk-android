@@ -18,6 +18,16 @@ public class Extractions {
         mConsumptionValue = consumptionValue;
     }
 
+    @Override
+    public String toString() {
+        return "Extractions{" +
+                "mCompanyName='" + mCompanyName + '\'' +
+                ", mConsumptionUnit='" + mConsumptionUnit + '\'' +
+                ", mConsumptionValue=" + mConsumptionValue +
+                ", mEnergyMeterNumber='" + mEnergyMeterNumber + '\'' +
+                '}';
+    }
+
     public String getCompanyName() {
         return mCompanyName;
     }

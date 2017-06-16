@@ -235,6 +235,7 @@ class TariffApiImpl implements TariffApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void retrieveExtractions(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<Extractions> callback) {

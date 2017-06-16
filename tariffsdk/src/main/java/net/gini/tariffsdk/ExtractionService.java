@@ -1,13 +1,17 @@
 package net.gini.tariffsdk;
 
 
-import java.util.Set;
+import android.support.annotation.NonNull;
+
+import net.gini.tariffsdk.network.Extractions;
 
 interface ExtractionService {
 
-    Set<Extraction> getExtractions();
+    void changeExtractions(final Extractions extraction);
+
+    Extractions getExtractions();
+
+    void getExtractions(@NonNull final String extractionsUrl);
 
     int getResultCodeForActivity();
-
-    void setExtraction(final Extraction extraction);
 }

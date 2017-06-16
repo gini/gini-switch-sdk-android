@@ -8,11 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.gini.tariffsdk.BuildConfig;
-import net.gini.tariffsdk.Extraction;
 import net.gini.tariffsdk.TariffSdk;
-
-import java.util.Arrays;
-import java.util.Set;
+import net.gini.tariffsdk.network.Extractions;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
             final Intent data) {
         if (requestCode == TariffSdk.REQUEST_CODE) {
             if (resultCode == TariffSdk.EXTRACTIONS_AVAILABLE) {
-                Set<Extraction> extractions = mTariffSdk.getExtractions();
-                mTextView.setText(Arrays.toString(extractions.toArray()));
+                Extractions extractions = mTariffSdk.getExtractions();
+                mTextView.setText(extractions.toString());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

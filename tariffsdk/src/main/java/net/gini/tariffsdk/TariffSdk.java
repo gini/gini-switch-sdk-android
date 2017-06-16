@@ -15,10 +15,9 @@ import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.user.UserManager;
+import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
-
-import java.util.Set;
 
 import okhttp3.OkHttpClient;
 
@@ -106,7 +105,7 @@ public class TariffSdk {
         RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
 
         return create(context, new DocumentServiceImpl(context, tariffApi),
-                new ExtractionServiceImpl(),
+                new ExtractionServiceImpl(tariffApi),
                 remoteConfigManager);
     }
 
@@ -117,7 +116,7 @@ public class TariffSdk {
      *
      * @return the found extractions inside a list
      */
-    public Set<Extraction> getExtractions() {
+    public Extractions getExtractions() {
         //TODO
         cleanUp();
         return mExtractionService.getExtractions();
