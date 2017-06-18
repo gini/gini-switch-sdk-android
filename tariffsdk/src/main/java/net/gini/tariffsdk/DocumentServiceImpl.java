@@ -4,6 +4,7 @@ package net.gini.tariffsdk;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
@@ -208,6 +209,8 @@ class DocumentServiceImpl implements DocumentService {
                                     image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
                                 } else if (status == ExtractionOrderPage.Status.failed) {
                                     image.setProcessingState(ImageState.FAILED);
+                                } else if (status == ExtractionOrderPage.Status.processing) {
+                                    image.setProcessingState(ImageState.PROCESSING);
                                 }
                                 updateImageState(image);
                             }
@@ -288,7 +291,7 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void startStatePolling() {
-        mPollingHandler = new Handler();
+        mPollingHandler = new Handler(Looper.getMainLooper());
         mPollingRunnable.run();
     }
 
@@ -299,11 +302,12 @@ class DocumentServiceImpl implements DocumentService {
     private void updateImageState(final Image image) {
         final int position = mImageList.indexOf(image);
         if (position >= 0) {
-            mImageList.set(position, image);
-        } else {
-            mImageList.add(image);
+            //only update if there is a change in the processing state
+            if (image.getProcessingState() != mImageList.get(position).getProcessingState()) {
+                mImageList.set(position, image);
+                notifyListeners(image);
+            }
         }
-        notifyListeners(image);
     }
 
     private void uploadImage(final Image image) {
