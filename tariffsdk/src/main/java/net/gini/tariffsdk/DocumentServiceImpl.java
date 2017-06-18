@@ -203,15 +203,8 @@ class DocumentServiceImpl implements DocumentService {
                                 extractionOrderState.getOrderPages()) {
                             final Image image = getImageFromUrl(extractionOrderPage.getSelf());
                             if (image != null) {
-                                ExtractionOrderPage.Status status =
-                                        extractionOrderPage.getStatus();
-                                if (status == ExtractionOrderPage.Status.processed) {
-                                    image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
-                                } else if (status == ExtractionOrderPage.Status.failed) {
-                                    image.setProcessingState(ImageState.FAILED);
-                                } else if (status == ExtractionOrderPage.Status.processing) {
-                                    image.setProcessingState(ImageState.PROCESSING);
-                                }
+                                final ImageState imageState = getImageState(extractionOrderPage);
+                                image.setProcessingState(imageState);
                                 updateImageState(image);
                             }
                         }
@@ -258,6 +251,17 @@ class DocumentServiceImpl implements DocumentService {
             }
         }
         return null;
+    }
+
+    private ImageState getImageState(final ExtractionOrderPage extractionOrderPage) {
+        ExtractionOrderPage.Status status =
+                extractionOrderPage.getStatus();
+        if (status == ExtractionOrderPage.Status.processed) {
+            return ImageState.SUCCESSFULLY_PROCESSED;
+        } else if (status == ExtractionOrderPage.Status.failed) {
+            return ImageState.FAILED;
+        }
+        return ImageState.PROCESSING;
     }
 
     @NonNull
