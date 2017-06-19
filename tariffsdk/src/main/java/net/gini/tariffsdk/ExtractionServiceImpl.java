@@ -12,25 +12,20 @@ class ExtractionServiceImpl implements ExtractionService {
 
     private final TariffApi mTariffApi;
     private Extractions mExtractionsFromApi;
-    private Extractions mUserExtractions;
+    private String mExtractionsUrl;
 
     ExtractionServiceImpl(TariffApi tariffApi) {
         mTariffApi = tariffApi;
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
-    @Override
-    public void changeExtractions(final Extractions extractions) {
-        mUserExtractions = extractions;
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
     public Extractions getExtractions() {
-        return userChangedExtractions() ? mUserExtractions : mExtractionsFromApi;
+        return mExtractionsFromApi;
     }
 
     @Override
     public void getExtractions(@NonNull final String extractionsUrl) {
+        mExtractionsUrl = extractionsUrl;
         mTariffApi.retrieveExtractions(extractionsUrl, new NetworkCallback<Extractions>() {
             @Override
             public void onError(final Exception e) {
@@ -48,10 +43,6 @@ class ExtractionServiceImpl implements ExtractionService {
     @Override
     public int getResultCodeForActivity() {
         return TariffSdk.EXTRACTIONS_AVAILABLE;
-    }
-
-    private boolean userChangedExtractions() {
-        return mUserExtractions != null;
     }
 
 }

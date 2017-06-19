@@ -37,6 +37,8 @@ interface TakePictureContract {
 
         void displayImageProcessingState(Image image);
 
+        void exitSdk(final int resultCode);
+
         boolean hasCameraPermissions();
 
         void hideOnboarding();
@@ -58,8 +60,6 @@ interface TakePictureContract {
         void requestPermissions();
 
         void setImages(@NonNull final List<Image> imageList);
-
-        void showFoundExtractions();
 
         void showImagePreview(final Image image);
 

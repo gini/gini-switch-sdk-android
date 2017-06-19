@@ -1,6 +1,8 @@
 package net.gini.tariffsdk;
 
 
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -92,6 +95,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void exitSdk(final int resultCode) {
+        setResult(resultCode);
+        finish();
+    }
+
+    @Override
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
@@ -134,17 +143,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode,
-            final Intent data) {
-        if (resultCode != RESULT_CANCELED && requestCode == REQUEST_CODE_EXTRACTIONS) {
-            setResult(resultCode);
-
-            finish();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onBackPressed() {
         showAbortDialog();
     }
@@ -167,8 +165,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         setUpOnboarding();
 
-        final DocumentService documentService = TariffSdk.getSdk().getDocumentService();
-        mPresenter = new TakePicturePresenter(this, documentService, new OnboardingManager(this));
+        final TariffSdk tariffSdk = TariffSdk.getSdk();
+        final DocumentService documentService = tariffSdk.getDocumentService();
+        final ExtractionService extractionService = tariffSdk.getExtractionService();
+        mPresenter = new TakePicturePresenter(this, documentService, extractionService,
+                new OnboardingManager(this));
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -325,13 +326,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void showFoundExtractions() {
-        IntentFactory intentFactory = new IntentFactory(TariffSdk.getSdk());
-        Intent intent = intentFactory.createExtractionsActivity();
-        startActivityForResult(intent, REQUEST_CODE_EXTRACTIONS);
-    }
-
-    @Override
     public void showImagePreview(final Image image) {
         mSelectedImage = image;
         mImagePreview.displayImage(image.getUri());
@@ -364,9 +358,61 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 R.string.preview_analyze_success);
     }
 
+    private int getAnalyzedImageFromBundle() {
+//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE,
+        return R.drawable.ic_check_circle;
+    }
+
+    private int getAnalyzedTextColorFromBundle() {
+//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
+        return R.color.primaryText;
+    }
+
+    private int getAnalyzedTextFromBundle() {
+//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT,
+        return R.string.analyzed_text;
+    }
+
+    private int getAnalyzedTextSizeFromBundle() {
+//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
+        return getResources().getInteger(R.integer.analyzed_text_size);
+    }
+
     private void hideCameraPreview() {
         mCameraPreview.setVisibility(View.GONE);
         mCameraFrame.setVisibility(View.GONE);
+    }
+
+    private void setUpAnalyzedCompletedScreen(final View containerSplash, final int height) {
+        final View containerExtractions = findViewById(R.id.container_extractions);
+        ViewCompat.animate(containerSplash)
+                .translationY(height)
+                .setDuration(250)
+                .setStartDelay(3000)
+                .setListener(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(final View view) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(final View view) {
+                        containerExtractions.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationStart(final View view) {
+                    }
+                })
+                .start();
+
+        ImageView analyzedImage = (ImageView) findViewById(R.id.analyzed_image);
+        analyzedImage.setImageDrawable(ContextCompat.getDrawable(this, getAnalyzedImageFromBundle
+                ()));
+
+        TextView analyzedText = (TextView) findViewById(R.id.analyzed_text);
+        analyzedText.setText(getAnalyzedTextFromBundle());
+        analyzedText.setTextColor(ContextCompat.getColor(this, getAnalyzedTextColorFromBundle()));
+        analyzedText.setTextSize(COMPLEX_UNIT_SP, getAnalyzedTextSizeFromBundle());
     }
 
     private void setUpOnboarding() {
