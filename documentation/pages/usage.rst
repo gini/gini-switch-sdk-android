@@ -25,11 +25,20 @@ Receiving Extractions
 =====================
 
 The found information inside a bill are called extractions, to receive those extractions the SDK offers a method to get them.
-The extractions are provided inside a set of ``Extraction`` classes and can be received when the result code of the previous started activity was ``TariffSdk.EXTRACTIONS_AVAILABLE``.
+The extractions are provided inside the class ``Extractions`` and they can be received when the result code of the previous started activity was ``TariffSdk.EXTRACTIONS_AVAILABLE``. Every extraction offers a corresponding getter, in the form of ``getExtractionName()``.
 
 .. code-block:: java
 
   if(resultCode == TariffSdk.EXTRACTIONS_AVAILABLE)
-    Set<Extraction> extractions = mTariffSdk.getExtractions();
+    Extractions extractions = mTariffSdk.getExtractions();
 
-The ``Extraction`` class includes the name of the extraction and its value. These are the extractions that have been found by the SDK. Inside the SDK the user checks the extractions for their correctness, therefore it is possible that the extractions have been altered by the user.
+Supported extractions are:
+
+======================      ======================   ============   ==============
+Extraction                  Getter                   Type           Default value
+======================      ======================   ============   ==============
+Wholesale supplier          getCompanyName           String         ""
+Consumption value           getConsumptionValue      double         Double.NaN
+Consumptions unit           getConsumptionUnit       String         ""
+Energy meter number         getEnergyMeterNumber     String         ""
+======================      ======================   ============   ==============

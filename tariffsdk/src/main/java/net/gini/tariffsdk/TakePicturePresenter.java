@@ -11,6 +11,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         DocumentService.DocumentListener {
 
     private final DocumentService mDocumentService;
+    private final ExtractionService mExtractionService;
     private final OnboardingManager mOnboardringManager;
     private final TakePictureContract.View mView;
     @VisibleForTesting
@@ -18,11 +19,14 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private Image mSelectedImage = null;
 
     TakePicturePresenter(final TakePictureContract.View view,
-            final DocumentService documentService, final OnboardingManager onboardringManager) {
+            final DocumentService documentService,
+            final ExtractionService extractionService,
+            final OnboardingManager onboardingManager) {
 
         mView = view;
         mDocumentService = documentService;
-        mOnboardringManager = onboardringManager;
+        mExtractionService = extractionService;
+        mOnboardringManager = onboardingManager;
         mDocumentService.createExtractionOrder();
     }
 
@@ -40,7 +44,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void onAllPicturesTaken() {
-        mView.showFoundExtractions();
+        final int resultCode = mExtractionService.getResultCodeForActivity();
+        mView.exitSdk(resultCode);
     }
 
     @Override

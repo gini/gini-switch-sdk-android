@@ -218,73 +218,6 @@ The size has to be in ``sp``.
 .. note:: See `official Android documentation <https://developer.android.com/guide/topics/resources/more-resources.html#Dimension>`_ about dimensions for more information.
 
 
-Title Text (Extractions Screen)
---------------------------------
-
-To set the title in the extractions screen use the ``setExtractionTitleText()`` method. This text is shown in the extractions screen as a title and should hint your user to validate the fields.
-The text should be a string resource.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionTitleText(R.string.your_title_text);
-
-
-Button Text (Extractions Screen)
---------------------------------
-
-To set the text of the button in the extractions screen use the ``setExtractionButtonText()`` method. This text is shown on the button in the extractions screen.
-The text should be a string resource.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionButtonText(R.string.your_button_text);
-
-
-
-Edit Text Color (Extractions Screen)
---------------------------------
-
-To set the text color of the input field in the extraction screen use the ``setExtractionEditTextColor()`` method.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionEditTextColor(R.color.your_input_text_color);
-
-
-Edit Text Line Color (Extractions Screen)
---------------------------------
-
-To set the color of the line of the input field in the extraction screen use the ``setExtractionLineColor()`` method.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionLineColor(R.color.your_input_text_line_color);
-
-
-Edit Text Background Color (Extractions Screen)
---------------------------------
-
-To set the background color of the line of the input field in the extraction screen use the ``setExtractionEditTextBackgroundColor()`` method.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionEditTextBackgroundColor(R.color.your_input_text_background_color);
-
-
-Edit Text Background Color (Extractions Screen)
---------------------------------
-
-To set the text color of the hint of the input field in the extraction screen use the ``setExtractionHintColor()`` method. This color is applied to the input text field seen in the extraction screen.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionHintColor(R.color.your_input_text_hint_color);
-
-
 
 Overview Of Configurations
 ==========================
@@ -308,9 +241,4 @@ Text (ACS)                           int            Yes
 Text Color (ACS)                     int            Yes
 Text Size (ACS)                      int            Yes
 Image (ACS)                          int            Yes
-Title Text (ES)                      int            Yes
-Edit Text Color (ES)                 int            Yes
-Edit Text Line Color (ES)            int            Yes
-Edit Text Hint Color (ES)            int            Yes
-Edit Text Background Color (ES)      int            Yes
 ==================================   ============   ============
