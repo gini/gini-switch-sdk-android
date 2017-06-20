@@ -1,20 +1,14 @@
 package net.gini.tariffsdk;
 
 
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_TEXT;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_HINT_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_LINE_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_TITLE_TEXT;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_DISCARD;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_KEEP;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_TITLE;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
 import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_FAILED_TEXT;
 import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT;
 import static net.gini.tariffsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
@@ -79,23 +73,6 @@ final class IntentFactory {
         mPreviewFailedText = tariffSdk.getPreviewFailedText();
     }
 
-    Intent createExtractionsActivity() {
-        final Intent intent = new Intent(mContext, ExtractionsActivity.class);
-        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, mAnalyzedText);
-        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, mAnalyzedImage);
-        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, mAnalyzedTextColor);
-        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, mAnalyzedTextSize);
-        intent.putExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, mExtractionEditTextColor);
-        intent.putExtra(BUNDLE_EXTRA_HINT_COLOR, mExtractionHintColor);
-        intent.putExtra(BUNDLE_EXTRA_LINE_COLOR, mExtractionLineColor);
-        intent.putExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR,
-                mExtractionEditTextBackgroundColor);
-        intent.putExtra(BUNDLE_EXTRA_BUTTON_TEXT, mExtractionButtonText);
-        intent.putExtra(BUNDLE_EXTRA_TITLE_TEXT, mExtractionTitleText);
-        addDefaultExtras(intent);
-        return intent;
-    }
-
     Intent createReviewActivity(final Uri uri) {
         final Intent intent = new Intent(mContext, ReviewPictureActivity.class);
         addDefaultExtras(intent);
@@ -111,6 +88,12 @@ final class IntentFactory {
         addDefaultExtras(intent);
         intent.putExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, mPreviewSuccessText);
         intent.putExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, mPreviewFailedText);
+
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, mAnalyzedText);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, mAnalyzedImage);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, mAnalyzedTextColor);
+        intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, mAnalyzedTextSize);
+
         return intent;
     }
 

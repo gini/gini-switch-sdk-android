@@ -86,4 +86,8 @@
     <include
         android:id="@+id/onBoardingContainer"
         layout="@layout/container_onboarding" />
+
+    <include
+        layout="@layout/container_analyzed_screen"
+        android:visibility="gone" />
 </RelativeLayout>

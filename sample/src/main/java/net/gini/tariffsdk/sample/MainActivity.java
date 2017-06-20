@@ -24,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == TariffSdk.REQUEST_CODE) {
             if (resultCode == TariffSdk.EXTRACTIONS_AVAILABLE) {
                 Extractions extractions = mTariffSdk.getExtractions();
-                mTextView.setText(extractions.toString());
+                if (extractions != null) {
+                    mTextView.setText(extractions.toString());
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -7,6 +7,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -23,6 +24,7 @@ import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -43,10 +45,17 @@ import java.util.List;
 final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
 
+    public static final int ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS = 250;
+    public static final int ANALYSE_COMPLETE_SHOW_DURATION_IN_MS = 3000;
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE = "BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE";
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT = "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT";
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR =
+            "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR";
+    static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE =
+            "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
     static final String BUNDLE_EXTRA_PREVIEW_FAILED_TEXT = "BUNDLE_EXTRA_PREVIEW_FAILED_TEXT";
     static final String BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT = "BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT";
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
-    private static final int REQUEST_CODE_EXTRACTIONS = 123;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private View mCameraFrame;
@@ -59,8 +68,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private TextView mPreviewTitle;
     private ProgressBar mProgressBar;
     private Image mSelectedImage;
+    private View mSplashContainer;
     private ImageButton mTakePictureButton;
     private View mTakePictureButtonsContainer;
+    private Toolbar mToolbar;
 
     @Override
     public void cameraPermissionsDenied() {
@@ -97,7 +108,26 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void exitSdk(final int resultCode) {
         setResult(resultCode);
-        finish();
+
+        showAnalyzedCompletedScreen(new ViewPropertyAnimatorListener() {
+            @Override
+            public void onAnimationCancel(final View view) {
+            }
+
+            @Override
+            public void onAnimationEnd(final View view) {
+                finish();
+            }
+
+            @Override
+            public void onAnimationStart(final View view) {
+                mTakePictureButtonsContainer.setVisibility(View.GONE);
+                mCameraPreview.setVisibility(View.GONE);
+                mCameraFrame.setVisibility(View.GONE);
+                mToolbar.setVisibility(View.GONE);
+
+            }
+        });
     }
 
     @Override
@@ -159,9 +189,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         setContentView(R.layout.activity_take_picture);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        colorToolbar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        colorToolbar(mToolbar);
 
         setUpOnboarding();
 
@@ -204,7 +234,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreviewState = (ImageView) findViewById(R.id.image_state);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
-        final RecyclerView imageRecyclerView = (RecyclerView) toolbar.getChildAt(0);
+        final RecyclerView imageRecyclerView = (RecyclerView) mToolbar.getChildAt(0);
         imageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
@@ -220,6 +250,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         }, getPositiveColor(), getNegativeColor());
 
         imageRecyclerView.setAdapter(mAdapter);
+
+        mSplashContainer = findViewById(R.id.container_splash);
+        setUpAnalyzedCompletedScreen();
 
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
         mPreviewButtonsContainer = findViewById(R.id.container_preview_buttons);
@@ -359,23 +392,22 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private int getAnalyzedImageFromBundle() {
-//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE,
-        return R.drawable.ic_check_circle;
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE,
+                R.drawable.ic_check_circle);
     }
 
     private int getAnalyzedTextColorFromBundle() {
-//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
-        return R.color.primaryText;
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR,
+                R.color.primaryText);
     }
 
     private int getAnalyzedTextFromBundle() {
-//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT,
-        return R.string.analyzed_text;
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, R.string.analyzed_text);
     }
 
     private int getAnalyzedTextSizeFromBundle() {
-//        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
-        return getResources().getInteger(R.integer.analyzed_text_size);
+        return getIntent().getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE,
+                getResources().getInteger(R.integer.analyzed_text_size));
     }
 
     private void hideCameraPreview() {
@@ -383,28 +415,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mCameraFrame.setVisibility(View.GONE);
     }
 
-    private void setUpAnalyzedCompletedScreen(final View containerSplash, final int height) {
-        final View containerExtractions = findViewById(R.id.container_extractions);
-        ViewCompat.animate(containerSplash)
-                .translationY(height)
-                .setDuration(250)
-                .setStartDelay(3000)
-                .setListener(new ViewPropertyAnimatorListener() {
-                    @Override
-                    public void onAnimationCancel(final View view) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(final View view) {
-                        containerExtractions.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationStart(final View view) {
-                    }
-                })
-                .start();
-
+    private void setUpAnalyzedCompletedScreen() {
         ImageView analyzedImage = (ImageView) findViewById(R.id.analyzed_image);
         analyzedImage.setImageDrawable(ContextCompat.getDrawable(this, getAnalyzedImageFromBundle
                 ()));
@@ -448,6 +459,39 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 onboardingViewPager.setCurrentItem(nextItem, true);
             }
         });
+    }
+
+    private void showAnalyzedCompletedScreen(final ViewPropertyAnimatorListener animatorListener) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int height = size.y;
+        mSplashContainer.setVisibility(View.VISIBLE);
+        mSplashContainer.setTranslationY(height);
+        ViewCompat.animate(mSplashContainer)
+                .translationY(0)
+                .setDuration(ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS)
+                .setListener(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(final View view) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(final View view) {
+                        ViewCompat.animate(view)
+                                .translationY(height)
+                                .setDuration(ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS)
+                                .setStartDelay(ANALYSE_COMPLETE_SHOW_DURATION_IN_MS)
+                                .setListener(animatorListener)
+                                .start();
+                    }
+
+                    @Override
+                    public void onAnimationStart(final View view) {
+                    }
+                })
+                .start();
+
     }
 
     private void showCameraPreview() {

@@ -2,19 +2,13 @@ package net.gini.tariffsdk;
 
 import static junit.framework.Assert.assertEquals;
 
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_BUTTON_TEXT;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_EDIT_TEXT_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_HINT_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_LINE_COLOR;
-import static net.gini.tariffsdk.ExtractionsActivity.BUNDLE_EXTRA_TITLE_TEXT;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_DISCARD;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_KEEP;
 import static net.gini.tariffsdk.ReviewPictureActivity.BUNDLE_EXTRA_TITLE;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
+import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
 import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_FAILED_TEXT;
 import static net.gini.tariffsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT;
 
@@ -41,182 +35,20 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
-    public void custom_shouldHaveCustomTextColor() {
-        mTariffSdk.setAnalyzedTextColor(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
-        assertEquals(12345, color);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomButtonText() {
-        mTariffSdk.setExtractionButtonText(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int buttonText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
-        assertEquals(12345, buttonText);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomEditTextBackgroundColor() {
-        mTariffSdk.setExtractionEditTextBackgroundColor(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomEditTextColor() {
-        mTariffSdk.setExtractionEditTextColor(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomHintTextColor() {
-        mTariffSdk.setExtractionHintColor(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_HINT_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomImage() {
-        mTariffSdk.setAnalyzedImage(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(12345, image);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomLineColor() {
-        mTariffSdk.setExtractionLineColor(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_LINE_COLOR, 0);
-        assertEquals(12345, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomText() {
-        mTariffSdk.setAnalyzedText(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
-        assertEquals(12345, analyzedText);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomTextSize() {
-        mTariffSdk.setAnalyzedTextSize(16);
-        Intent extractionsActivity = getExtractionIntent();
-        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
-        assertEquals(16, textSize);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveCustomTitleText() {
-        mTariffSdk.setExtractionTitleText(12345);
-        Intent extractionsActivity = getExtractionIntent();
-        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, 0);
-        assertEquals(12345, titleText);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultButtonText() {
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT, 0);
-        assertEquals(R.string.button_extractions, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultEditTextBackgroundColor() {
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_BACKGROUND_COLOR, 0);
-        assertEquals(R.color.secondaryColor, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultEditTextColor() {
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_EDIT_TEXT_COLOR, 0);
-        assertEquals(R.color.primaryText, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultHintTextColor() {
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_HINT_COLOR, 0);
-        assertEquals(R.color.secondaryText, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultImage() {
-        Intent extractionsActivity = getExtractionIntent();
-        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(R.drawable.ic_check_circle, image);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultLineColor() {
-        Intent extractionsActivity = getExtractionIntent();
-        int textColor = extractionsActivity.getIntExtra(BUNDLE_EXTRA_LINE_COLOR, 0);
-        assertEquals(R.color.primaryText, textColor);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultText() {
-        Intent extractionsActivity = getExtractionIntent();
-        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
-        assertEquals(R.string.analyzed_text, analyzedText);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultTextColor() {
-        Intent extractionsActivity = getExtractionIntent();
-        int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
-        assertEquals(R.color.primaryText, color);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultTextSize() {
-        Intent extractionsActivity = getExtractionIntent();
-        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
-        int defaultSize = mContext.getResources().getInteger(R.integer.analyzed_text_size);
-        assertEquals(defaultSize, textSize);
-    }
-
-    @Test
-    @SmallTest
-    public void extractionsIntent_shouldHaveDefaultTitleText() {
-        Intent extractionsActivity = getExtractionIntent();
-        int titleText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE_TEXT, 0);
-        assertEquals(R.string.extractions_title, titleText);
-    }
-
-    @Test
-    @SmallTest
     public void previewIntent_shouldHaveCustomFailedText() {
         mTariffSdk.setPreviewFailedText(12345);
         Intent previewActivity = getPreviewIntent();
         int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, 0);
         assertEquals(12345, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveCustomImage() {
+        mTariffSdk.setAnalyzedImage(12345);
+        Intent extractionsActivity = getPreviewIntent();
+        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
+        assertEquals(12345, image);
     }
 
     @Test
@@ -230,6 +62,33 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
+    public void previewIntent_shouldHaveCustomText() {
+        mTariffSdk.setAnalyzedText(12345);
+        Intent extractionsActivity = getPreviewIntent();
+        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
+        assertEquals(12345, analyzedText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveCustomTextColor() {
+        mTariffSdk.setAnalyzedTextColor(12345);
+        Intent extractionsActivity = getPreviewIntent();
+        int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
+        assertEquals(12345, color);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveCustomTextSize() {
+        mTariffSdk.setAnalyzedTextSize(16);
+        Intent extractionsActivity = getPreviewIntent();
+        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
+        assertEquals(16, textSize);
+    }
+
+    @Test
+    @SmallTest
     public void previewIntent_shouldHaveDefaultFailedText() {
         Intent previewActivity = getPreviewIntent();
         int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, 0);
@@ -238,10 +97,43 @@ public class IntentFactoryTest {
 
     @Test
     @SmallTest
+    public void previewIntent_shouldHaveDefaultImage() {
+        Intent extractionsActivity = getPreviewIntent();
+        int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
+        assertEquals(R.drawable.ic_check_circle, image);
+    }
+
+    @Test
+    @SmallTest
     public void previewIntent_shouldHaveDefaultSuccessText() {
         Intent previewActivity = getPreviewIntent();
         int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, 0);
         assertEquals(R.string.preview_analyze_success, titleText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveDefaultText() {
+        Intent extractionsActivity = getPreviewIntent();
+        int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
+        assertEquals(R.string.analyzed_text, analyzedText);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveDefaultTextColor() {
+        Intent extractionsActivity = getPreviewIntent();
+        int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
+        assertEquals(R.color.primaryText, color);
+    }
+
+    @Test
+    @SmallTest
+    public void previewIntent_shouldHaveDefaultTextSize() {
+        Intent extractionsActivity = getPreviewIntent();
+        int textSize = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE, 0);
+        int defaultSize = mContext.getResources().getInteger(R.integer.analyzed_text_size);
+        assertEquals(defaultSize, textSize);
     }
 
     @Test
@@ -305,11 +197,6 @@ public class IntentFactoryTest {
     @After
     public void tearDown() {
         TariffSdk.mSingleton = null;
-    }
-
-    private Intent getExtractionIntent() {
-        final IntentFactory intentFactory = new IntentFactory(mTariffSdk);
-        return intentFactory.createExtractionsActivity();
     }
 
     private Intent getPreviewIntent() {
