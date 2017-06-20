@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.annotation.VisibleForTesting;
@@ -15,10 +16,9 @@ import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.AuthenticationServiceImpl;
 import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.user.UserManager;
+import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
-
-import java.util.Set;
 
 import okhttp3.OkHttpClient;
 
@@ -106,7 +106,7 @@ public class TariffSdk {
         RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
 
         return create(context, new DocumentServiceImpl(context, tariffApi),
-                new ExtractionServiceImpl(),
+                new ExtractionServiceImpl(tariffApi),
                 remoteConfigManager);
     }
 
@@ -115,9 +115,10 @@ public class TariffSdk {
      * Use this to receive the extractions init the SDK.
      * </p>
      *
-     * @return the found extractions inside a list
+     * @return the found extractions, or null
      */
-    public Set<Extraction> getExtractions() {
+    @Nullable
+    public Extractions getExtractions() {
         //TODO
         cleanUp();
         return mExtractionService.getExtractions();

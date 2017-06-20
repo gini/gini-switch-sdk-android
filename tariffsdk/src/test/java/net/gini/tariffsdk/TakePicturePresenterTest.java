@@ -17,6 +17,8 @@ public class TakePicturePresenterTest {
     @Mock
     private DocumentService mMockDocumentService;
     @Mock
+    private ExtractionService mMockExtractionService;
+    @Mock
     private OnboardingManager mMockOnboardingManager;
     @Mock
     private TakePictureContract.View mMockView;
@@ -44,6 +46,7 @@ public class TakePicturePresenterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mPresenter = new TakePicturePresenter(mMockView, mMockDocumentService,
+                mMockExtractionService,
                 mMockOnboardingManager);
 
     }

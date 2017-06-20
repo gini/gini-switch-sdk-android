@@ -15,6 +15,7 @@ import net.gini.tariffsdk.configuration.models.FlashMode;
 import net.gini.tariffsdk.network.ExtractionOrder;
 import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.ExtractionOrderState;
+import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 
@@ -234,6 +235,46 @@ class TariffApiImpl implements TariffApi {
         });
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    @Override
+    public void retrieveExtractions(@NonNull final String orderUrl,
+            @NonNull final NetworkCallback<Extractions> callback) {
+        Request request = createGetRequest(HttpUrl.parse(orderUrl));
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final JSONObject obj;
+                    try {
+                        obj = new JSONObject(response.body().string());
+                        final String selfUrl = getSelfLink(obj);
+                        final String companyName = obj.optJSONObject("companyName").optString(
+                                "value");
+                        final String energyMeterNumber = obj.optJSONObject(
+                                "energyMeterNumber").optString("value");
+                        JSONObject consumptionJsonObject = obj.optJSONObject(
+                                "consumption").optJSONObject(
+                                "value");
+                        final double consumptionValue = consumptionJsonObject.optDouble("value");
+                        final String consumptionUnit = consumptionJsonObject.optString("unit");
+                        callback.onSuccess(new Extractions(selfUrl, companyName, energyMeterNumber,
+                                consumptionValue,
+                                consumptionUnit));
+                    } catch (JSONException e) {
+                        callback.onError(e);
+                    }
+                } else {
+                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                }
+            }
+        });
+    }
+
     @NonNull
     private ExtractionOrder createExtractionOrderFromJson(final JSONObject obj)
             throws JSONException {
@@ -246,8 +287,7 @@ class TariffApiImpl implements TariffApi {
     @NonNull
     private ExtractionOrderPage createExtractionOrderPageFromJson(final JSONObject jsonPage)
             throws JSONException {
-        final String self = jsonPage.getJSONObject("_links").getJSONObject("self").getString
-                ("href");
+        final String self = getSelfLink(jsonPage);
         final ExtractionOrderPage.Status status =
                 ExtractionOrderPage.Status.valueOf(jsonPage.getString("status"
                         + ""));
@@ -292,5 +332,10 @@ class TariffApiImpl implements TariffApi {
                 }
             }
         };
+    }
+
+    private String getSelfLink(final JSONObject obj) throws JSONException {
+        final JSONObject links = obj.getJSONObject("_links");
+        return links.getJSONObject("self").getString("href");
     }
 }
