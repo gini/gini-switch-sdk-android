@@ -61,6 +61,7 @@ class DocumentServiceImpl implements DocumentService {
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
         mImageUrls = new HashMap<>();
+        mPollingHandler = new Handler(Looper.getMainLooper());
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -295,7 +296,6 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void startStatePolling() {
-        mPollingHandler = new Handler(Looper.getMainLooper());
         mPollingRunnable.run();
     }
 
