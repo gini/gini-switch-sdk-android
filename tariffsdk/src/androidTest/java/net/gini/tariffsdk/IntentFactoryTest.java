@@ -30,52 +30,53 @@ import org.mockito.Mockito;
 @RunWith(AndroidJUnit4.class)
 public class IntentFactoryTest {
 
+    private static final int DUMMY_RESOURCE_ID = 12345;
     private Context mContext;
     private TariffSdk mTariffSdk;
 
     @Test
     @SmallTest
     public void previewIntent_shouldHaveCustomFailedText() {
-        mTariffSdk.setPreviewFailedText(12345);
+        mTariffSdk.setPreviewFailedText(DUMMY_RESOURCE_ID);
         Intent previewActivity = getPreviewIntent();
         int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, 0);
-        assertEquals(12345, titleText);
+        assertEquals(DUMMY_RESOURCE_ID, titleText);
     }
 
     @Test
     @SmallTest
     public void previewIntent_shouldHaveCustomImage() {
-        mTariffSdk.setAnalyzedImage(12345);
+        mTariffSdk.setAnalyzedImage(DUMMY_RESOURCE_ID);
         Intent extractionsActivity = getPreviewIntent();
         int image = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, 0);
-        assertEquals(12345, image);
+        assertEquals(DUMMY_RESOURCE_ID, image);
     }
 
     @Test
     @SmallTest
     public void previewIntent_shouldHaveCustomSuccessText() {
-        mTariffSdk.setPreviewSuccessText(12345);
+        mTariffSdk.setPreviewSuccessText(DUMMY_RESOURCE_ID);
         Intent previewActivity = getPreviewIntent();
         int titleText = previewActivity.getIntExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, 0);
-        assertEquals(12345, titleText);
+        assertEquals(DUMMY_RESOURCE_ID, titleText);
     }
 
     @Test
     @SmallTest
     public void previewIntent_shouldHaveCustomText() {
-        mTariffSdk.setAnalyzedText(12345);
+        mTariffSdk.setAnalyzedText(DUMMY_RESOURCE_ID);
         Intent extractionsActivity = getPreviewIntent();
         int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, 0);
-        assertEquals(12345, analyzedText);
+        assertEquals(DUMMY_RESOURCE_ID, analyzedText);
     }
 
     @Test
     @SmallTest
     public void previewIntent_shouldHaveCustomTextColor() {
-        mTariffSdk.setAnalyzedTextColor(12345);
+        mTariffSdk.setAnalyzedTextColor(DUMMY_RESOURCE_ID);
         Intent extractionsActivity = getPreviewIntent();
         int color = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, 0);
-        assertEquals(12345, color);
+        assertEquals(DUMMY_RESOURCE_ID, color);
     }
 
     @Test
@@ -139,28 +140,28 @@ public class IntentFactoryTest {
     @Test
     @SmallTest
     public void reviewIntent_shouldHaveCustomDiscardText() {
-        mTariffSdk.setReviewDiscardText(12345);
+        mTariffSdk.setReviewDiscardText(DUMMY_RESOURCE_ID);
         Intent extractionsActivity = getReviewIntent();
         int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_DISCARD, 0);
-        assertEquals(12345, analyzedText);
+        assertEquals(DUMMY_RESOURCE_ID, analyzedText);
     }
 
     @Test
     @SmallTest
     public void reviewIntent_shouldHaveCustomKeepText() {
-        mTariffSdk.setReviewKeepText(12345);
+        mTariffSdk.setReviewKeepText(DUMMY_RESOURCE_ID);
         Intent extractionsActivity = getReviewIntent();
         int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_BUTTON_KEEP, 0);
-        assertEquals(12345, analyzedText);
+        assertEquals(DUMMY_RESOURCE_ID, analyzedText);
     }
 
     @Test
     @SmallTest
     public void reviewIntent_shouldHaveCustomTitleText() {
-        mTariffSdk.setReviewTitleText(12345);
+        mTariffSdk.setReviewTitleText(DUMMY_RESOURCE_ID);
         Intent extractionsActivity = getReviewIntent();
         int analyzedText = extractionsActivity.getIntExtra(BUNDLE_EXTRA_TITLE, 0);
-        assertEquals(12345, analyzedText);
+        assertEquals(DUMMY_RESOURCE_ID, analyzedText);
     }
 
     @Test
