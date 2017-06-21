@@ -61,6 +61,7 @@ class DocumentServiceImpl implements DocumentService {
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
         mImageUrls = new HashMap<>();
+        mPollingHandler = new Handler(Looper.getMainLooper());
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -155,6 +156,7 @@ class DocumentServiceImpl implements DocumentService {
         } else {
             uploadImage(image);
         }
+        mImageList.add(image);
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -285,17 +287,18 @@ class DocumentServiceImpl implements DocumentService {
 
     private void notifyListeners(final Image image) {
         for (DocumentListener documentListener : mDocumentListeners) {
-            documentListener.onImageStatChanged(image);
+            documentListener.onImageStateChanged(image);
         }
     }
 
     private void replaceImage(@NonNull final String url, final Image image) {
-        byte[] data = getBytesFromImage(image);
-        mTariffApi.replacePage(url, data, getImageUploadingCallback(image));
+        if (mExtractionOrder != null) {
+            byte[] data = getBytesFromImage(image);
+            mTariffApi.replacePage(url, data, getImageUploadingCallback(image));
+        }
     }
 
     private void startStatePolling() {
-        mPollingHandler = new Handler(Looper.getMainLooper());
         mPollingRunnable.run();
     }
 
@@ -315,9 +318,10 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void uploadImage(final Image image) {
-        byte[] data = getBytesFromImage(image);
-
-        mTariffApi.addPage(mExtractionOrder.getPages(), data, getImageUploadingCallback(image));
+        if (mExtractionOrder != null) {
+            byte[] data = getBytesFromImage(image);
+            mTariffApi.addPage(mExtractionOrder.getPages(), data, getImageUploadingCallback(image));
+        }
     }
 
     private void writeNewRotationIntoExif(final Uri uri, final int rotation) throws IOException {

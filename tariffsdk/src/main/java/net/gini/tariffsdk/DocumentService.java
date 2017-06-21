@@ -27,6 +27,6 @@ interface DocumentService {
     Image saveImage(@NonNull final byte[] data, final int cameraOrientation);
 
     interface DocumentListener {
-        void onImageStatChanged(@NonNull final Image image);
+        void onImageStateChanged(@NonNull final Image image);
     }
 }
