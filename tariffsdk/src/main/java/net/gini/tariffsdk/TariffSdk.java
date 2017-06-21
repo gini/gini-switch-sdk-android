@@ -53,7 +53,6 @@ public class TariffSdk {
     private int mExtractionLineColor;
     private int mExtractionTitleText;
     private int mNegativeColor;
-    private OkHttpClient mOkHttpClient;
     private int mPositiveColor;
     private int mPreviewFailedText;
     private int mPreviewSuccessText;
@@ -98,11 +97,20 @@ public class TariffSdk {
 
     public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
             @NonNull final String clientPw, @NonNull final String domain) {
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .build();
+        return init(context, clientId, clientPw, domain, okHttpClient);
+    }
+
+    public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
+            @NonNull final String clientPw, @NonNull final String domain,
+            @NonNull final OkHttpClient okHttpClient) {
         assertNotNull(context);
         assertNotNull(clientId);
         assertNotNull(clientPw);
         assertNotNull(domain);
-        TariffApi tariffApi = createTariffApi(context, clientId, clientPw, domain);
+        assertNotNull(okHttpClient);
+        TariffApi tariffApi = createTariffApi(context, clientId, clientPw, domain, okHttpClient);
         RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
 
         return create(context, new DocumentServiceImpl(context, tariffApi),
@@ -152,20 +160,6 @@ public class TariffSdk {
      */
     public TariffSdk setButtonStyleSelector(@DrawableRes final int selector) {
         mButtonSelector = selector;
-        return this;
-    }
-
-    /**
-     * <p>
-     * Use this if an OkHttpClient has been already created, since OkHttpClient should be a
-     * singleton.
-     * </p>
-     *
-     * @param okHttpClient the created okHttpClient
-     * @return the instance of the available SDK
-     */
-    public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient) {
-        mOkHttpClient = assertNotNull(okHttpClient);
         return this;
     }
 
@@ -524,12 +518,12 @@ public class TariffSdk {
     @NonNull
     private static TariffApi createTariffApi(final @NonNull Context context,
             final @NonNull String clientId, final @NonNull String clientPw,
-            final @NonNull String domain) {
+            final @NonNull String domain, final OkHttpClient okHttpClient) {
         ClientCredentials clientCredentials = new ClientCredentials(clientId, clientPw);
-        OkHttpClient okHttpClient = new OkHttpClient();
         UserApiImpl userApi = new UserApiImpl(clientCredentials, okHttpClient);
         AuthenticationService authenticationService = new AuthenticationServiceImpl(
                 userApi, new UserManager(context, domain));
+        final TariffApiImpl tariffApi = new TariffApiImpl(okHttpClient, authenticationService);
         authenticationService.init(new NetworkCallback<Void>() {
             @Override
             public void onError(final Exception e) {
@@ -542,6 +536,6 @@ public class TariffSdk {
             }
         });
 
-        return new TariffApiImpl(okHttpClient, authenticationService);
+        return tariffApi;
     }
 }

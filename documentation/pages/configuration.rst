@@ -32,11 +32,11 @@ OkHttpClient
 
 Since the SDK uses the library okHttp for its network operations an okHttp client has to be used.
 OkHttp clients are encouraged to be singletons due to caching, joining and canceling of calls.
-Therefore the SDK provides the possibility to add a okHttpClient which is being reused in the SDK:
+Therefore the SDK provides the possibility to add a okHttpClient which is being reused in the SDK via an overloaded init method:
 
 .. code-block:: java
 
-  public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient)
+  public TariffSdk init(…, OkHttpClient okhttpClient);
 
 Accent Color
 ------------
