@@ -36,7 +36,7 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
                 LayoutParams.MATCH_PARENT);
         paramsImageView.gravity = Gravity.CENTER;
         mImageView.setLayoutParams(paramsImageView);
-        mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         addView(mImageView);
         observeViewTree(this);
     }

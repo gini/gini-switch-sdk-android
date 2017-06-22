@@ -99,8 +99,8 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
                 mCamera.stopPreview();
                 final Camera.Parameters parameters = mCamera.getParameters();
 
-                final List<Camera.Size> supportedPreviewSizes = parameters
-                        .getSupportedPreviewSizes();
+                final List<Camera.Size> supportedPreviewSizes =
+                        parameters.getSupportedPreviewSizes();
                 if (supportedPreviewSizes != null) {
                     final Camera.Size optimalPreviewSize = GiniCameraUtil.getOptimalPreviewSize(
                             supportedPreviewSizes, width, height);
