@@ -37,7 +37,7 @@
         android:layout_below="@+id/toolbar"
         android:clipChildren="false">
 
-        <ImageView
+        <net.gini.tariffsdk.utils.ZoomImageView
             android:id="@+id/image_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
