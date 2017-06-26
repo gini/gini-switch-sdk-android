@@ -10,6 +10,10 @@ import android.widget.TextView;
 import net.gini.tariffsdk.BuildConfig;
 import net.gini.tariffsdk.TariffSdk;
 import net.gini.tariffsdk.network.Extractions;
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
+import okhttp3.OkHttpClient;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.textView);
 
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .build();
         mTariffSdk = TariffSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
-                "gini.net");
+                "gini.net", okHttpClient);
 
         Button viewById = (Button) findViewById(R.id.button_start);
         viewById.setOnClickListener(new View.OnClickListener() {
@@ -77,5 +83,36 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
             }
         });
+        checkForUpdates();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkForCrashes();
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
     }
 }
