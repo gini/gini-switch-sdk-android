@@ -237,26 +237,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreviewState = (ImageView) findViewById(R.id.image_state);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
-        mImageRecyclerView = (RecyclerView) mToolbar.getChildAt(0);
-        mImageRecyclerView.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mImageRecyclerView.addItemDecoration(new CenterDecorator());
-        CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
-        centerSnapHelper.attachToRecyclerView(mImageRecyclerView);
-
-        mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
-            @Override
-            public void onCameraClicked() {
-                mPresenter.onTakePictureSelected();
-            }
-
-            @Override
-            public void onImageClicked(final Image image) {
-                mPresenter.onImageSelected(image);
-            }
-        }, getPositiveColor(), getNegativeColor());
-
-        mImageRecyclerView.setAdapter(mAdapter);
+        setUpDocumentBar();
 
         mSplashContainer = findViewById(R.id.container_splash);
         setUpAnalyzedCompletedScreen();
@@ -432,6 +413,30 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         analyzedText.setText(getAnalyzedTextFromBundle());
         analyzedText.setTextColor(ContextCompat.getColor(this, getAnalyzedTextColorFromBundle()));
         analyzedText.setTextSize(COMPLEX_UNIT_SP, getAnalyzedTextSizeFromBundle());
+    }
+
+    private void setUpDocumentBar() {
+        mImageRecyclerView = (RecyclerView) mToolbar.findViewById(R.id.image_overview);
+        mImageRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
+        centerSnapHelper.attachToRecyclerView(mImageRecyclerView);
+
+        mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
+            @Override
+            public void onCameraClicked() {
+                mPresenter.onTakePictureSelected();
+            }
+
+            @Override
+            public void onImageClicked(final Image image) {
+                mPresenter.onImageSelected(image);
+            }
+        }, getPositiveColor(), getNegativeColor());
+
+        mImageRecyclerView.setAdapter(mAdapter);
+        mImageRecyclerView.addItemDecoration(new CenterDecorator());
+
     }
 
     private void setUpOnboarding() {

@@ -13,8 +13,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import net.gini.tariffsdk.utils.ExitDialogFragment;
 
@@ -41,19 +39,20 @@ class TariffSdkBaseActivity extends AppCompatActivity implements
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primaryColor));
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item = menu.add(R.string.menu_entry_cancel);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-                showAbortDialog();
-                return false;
-            }
-        });
-        return true;
-    }
+    //TODO think how to make this without using a menu
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuItem item = menu.add(R.string.menu_entry_cancel);
+//        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(final MenuItem item) {
+//                showAbortDialog();
+//                return false;
+//            }
+//        });
+//        return true;
+//    }
 
     @Override
     public void onNegative() {
