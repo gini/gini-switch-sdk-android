@@ -1,6 +1,7 @@
 package net.gini.tariffsdk;
 
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 import android.Manifest;
@@ -419,8 +420,23 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImageRecyclerView = (RecyclerView) mToolbar.findViewById(R.id.image_overview);
         mImageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
+        final CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
         centerSnapHelper.attachToRecyclerView(mImageRecyclerView);
+        mImageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
+                if (newState == SCROLL_STATE_IDLE) {
+                    final int position = centerSnapHelper.getCenteredPosition();
+                    if (position < mAdapter.getItemCount() - 1) {
+                        final Image item = mAdapter.getItem(position);
+                        mPresenter.onImageSelected(item);
+                    } else {
+                        mPresenter.onTakePictureSelected();
+                    }
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
 
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override

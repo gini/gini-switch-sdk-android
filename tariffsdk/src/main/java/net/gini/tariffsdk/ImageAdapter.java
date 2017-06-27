@@ -99,10 +99,14 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    public void deleteImage(final Image selectedImage) {
+    void deleteImage(final Image selectedImage) {
         final int position = mImageList.indexOf(selectedImage);
         mImageList.remove(position);
         notifyItemRemoved(position);
+    }
+
+    Image getItem(final int position) {
+        return mImageList.get(position);
     }
 
     void setImages(List<Image> images) {
