@@ -39,6 +39,8 @@ import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.onboarding.OnboardingAdapter;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
+import net.gini.tariffsdk.utils.CenterDecorator;
+import net.gini.tariffsdk.utils.CenterSnapHelper;
 
 import java.util.List;
 
@@ -62,6 +64,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private SurfaceView mCameraPreview;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
+    private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
     private TakePictureContract.Presenter mPresenter;
     private View mPreviewButtonsContainer;
@@ -234,9 +237,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreviewState = (ImageView) findViewById(R.id.image_state);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
-        final RecyclerView imageRecyclerView = (RecyclerView) mToolbar.getChildAt(0);
-        imageRecyclerView.setLayoutManager(
+        mImageRecyclerView = (RecyclerView) mToolbar.getChildAt(0);
+        mImageRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mImageRecyclerView.addItemDecoration(new CenterDecorator());
+        CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
+        centerSnapHelper.attachToRecyclerView(mImageRecyclerView);
+
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
             public void onCameraClicked() {
@@ -249,7 +256,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         }, getPositiveColor(), getNegativeColor());
 
-        imageRecyclerView.setAdapter(mAdapter);
+        mImageRecyclerView.setAdapter(mAdapter);
 
         mSplashContainer = findViewById(R.id.container_splash);
         setUpAnalyzedCompletedScreen();
@@ -356,6 +363,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void setImages(@NonNull final List<Image> imageList) {
         mAdapter.setImages(imageList);
+        mImageRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
     @Override

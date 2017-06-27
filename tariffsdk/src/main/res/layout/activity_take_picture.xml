@@ -21,6 +21,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
+        android:paddingEnd="-16dp"
+        android:paddingRight="-16dp"
         android:scrollbars="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:visibility="gone" />
