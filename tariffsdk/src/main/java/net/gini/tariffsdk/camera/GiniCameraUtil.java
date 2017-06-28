@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
@@ -13,6 +14,24 @@ class GiniCameraUtil {
     private static final double ASPECT_RATIO_TOLERANCE = 0.1;
 
     private GiniCameraUtil() {
+    }
+
+    @Nullable
+    static Camera.Size getLargestSize(@NonNull List<Camera.Size> sizes) {
+        Camera.Size largest = null;
+        for (Camera.Size size : sizes) {
+            if (largest == null || getArea(largest) < getArea(size)) {
+                largest = size;
+            }
+        }
+        return largest;
+    }
+
+    @Nullable
+    static Camera.Size getLargestSizeWithSimilarAspectRatio(
+            @NonNull final List<Camera.Size> sizes, @NonNull final Camera.Size referenceSize) {
+        List<Camera.Size> sameAspectSizes = getSameAspectRatioSizes(sizes, referenceSize);
+        return getLargestSize(sameAspectSizes);
     }
 
     @Nullable
@@ -43,5 +62,29 @@ class GiniCameraUtil {
             }
         }
         return optimalSize;
+    }
+
+    private static long getArea(final Camera.Size size) {
+        return size.width * size.height;
+    }
+
+    @NonNull
+    private static List<Camera.Size> getSameAspectRatioSizes(final @NonNull List<Camera.Size> sizes,
+            final @NonNull Camera.Size referenceSize) {
+        final float referenceAspectRatio =
+                (float) referenceSize.width / (float) referenceSize.height;
+        List<Camera.Size> sameAspectSizes = new ArrayList<>();
+        for (final Camera.Size size : sizes) {
+            final float aspectRatio = (float) size.width / (float) size.height;
+            if (isSimilarAspectRatio(aspectRatio, referenceAspectRatio)) {
+                sameAspectSizes.add(size);
+            }
+        }
+        return sameAspectSizes;
+    }
+
+    private static boolean isSimilarAspectRatio(final float aspectRatio,
+            final float referenceAspectRatio) {
+        return Math.abs(aspectRatio - referenceAspectRatio) < ASPECT_RATIO_TOLERANCE;
     }
 }
