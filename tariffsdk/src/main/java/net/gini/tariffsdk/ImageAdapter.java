@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 
@@ -27,6 +28,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Listener mListener;
     private final int mNegativeColor;
     private final int mPositiveColor;
+    private boolean mShowPlus;
 
     ImageAdapter(Context context, Listener listener, final int positiveColor,
             final int negativeColor) {
@@ -74,10 +76,12 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             viewHolder.mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    mListener.onImageClicked(image);
+                    mListener.onImageClicked(image, holder.getAdapterPosition());
                 }
             });
-        } else {
+        } else if (holder instanceof EmptyViewHolder) {
+            final EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
+            viewHolder.mText.setText(showPlusSymbol() ? "+" : null);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
@@ -103,16 +107,31 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final int position = mImageList.indexOf(selectedImage);
         mImageList.remove(position);
         notifyItemRemoved(position);
+        notifyItemChanged(getItemCount() - 1);
     }
 
     Image getItem(final int position) {
         return mImageList.get(position);
     }
 
+    int getLastPosition() {
+        return getItemCount() - 1;
+    }
+
+    void hidePlus() {
+        mShowPlus = false;
+        notifyItemChanged(getLastPosition());
+    }
+
     void setImages(List<Image> images) {
         mImageList.clear();
         mImageList.addAll(images);
         notifyDataSetChanged();
+    }
+
+    void showPlus() {
+        mShowPlus = true;
+        notifyItemChanged(getLastPosition());
     }
 
     void updateImageState(final Image image) {
@@ -143,10 +162,17 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 : ContextCompat.getColor(mContext, mNegativeColor);
     }
 
+    private boolean showPlusSymbol() {
+        return mImageList.size() > 0 && mShowPlus;
+    }
+
     private static class EmptyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView mText;
 
         EmptyViewHolder(final View itemView) {
             super(itemView);
+            mText = (TextView) itemView.findViewById(R.id.text_view);
         }
     }
 
@@ -170,6 +196,6 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     interface Listener {
         void onCameraClicked();
 
-        void onImageClicked(final Image image);
+        void onImageClicked(final Image image, final int position);
     }
 }

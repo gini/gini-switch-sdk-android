@@ -3,6 +3,7 @@ package net.gini.tariffsdk;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
+import static android.view.View.SCREEN_STATE_ON;
 
 import android.Manifest;
 import android.content.Context;
@@ -260,12 +261,14 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             public void onClick(final View v) {
                 //TODO implement retake logic
                 mPresenter.deleteSelectedImage();
+                mImageRecyclerView.scrollToPosition(mAdapter.getLastPosition());
             }
         });
 
         styleButtons(finishButton, deleteImageButton, retakeImageButton);
 
     }
+
 
     @Override
     protected void onPause() {
@@ -345,7 +348,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void setImages(@NonNull final List<Image> imageList) {
         mAdapter.setImages(imageList);
-        mImageRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        mImageRecyclerView.scrollToPosition(mAdapter.getLastPosition());
     }
 
     @Override
@@ -418,8 +421,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     private void setUpDocumentBar() {
         mImageRecyclerView = (RecyclerView) mToolbar.findViewById(R.id.image_overview);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL,
+                false);
         mImageRecyclerView.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                layoutManager);
         final CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
         centerSnapHelper.attachToRecyclerView(mImageRecyclerView);
         mImageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -427,12 +433,17 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
                 if (newState == SCROLL_STATE_IDLE) {
                     final int position = centerSnapHelper.getCenteredPosition();
-                    if (position < mAdapter.getItemCount() - 1) {
+                    if (position < mAdapter.getLastPosition()) {
                         final Image item = mAdapter.getItem(position);
                         mPresenter.onImageSelected(item);
+                        mAdapter.showPlus();
                     } else {
                         mPresenter.onTakePictureSelected();
+                        mAdapter.hidePlus();
                     }
+                }
+                if (newState == SCREEN_STATE_ON) {
+                    mAdapter.showPlus();
                 }
                 super.onScrollStateChanged(recyclerView, newState);
             }
@@ -442,12 +453,15 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             @Override
             public void onCameraClicked() {
                 mPresenter.onTakePictureSelected();
+                layoutManager.scrollToPosition(mAdapter.getLastPosition());
             }
 
             @Override
-            public void onImageClicked(final Image image) {
+            public void onImageClicked(final Image image, final int position) {
                 mPresenter.onImageSelected(image);
+                layoutManager.scrollToPosition(position);
             }
+
         }, getPositiveColor(), getNegativeColor());
 
         mImageRecyclerView.setAdapter(mAdapter);
