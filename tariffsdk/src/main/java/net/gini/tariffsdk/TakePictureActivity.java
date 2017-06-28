@@ -41,7 +41,7 @@ import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.onboarding.OnboardingAdapter;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
-import net.gini.tariffsdk.utils.CenterDecorator;
+import net.gini.tariffsdk.utils.CenterItemDecoration;
 import net.gini.tariffsdk.utils.CenterSnapHelper;
 
 import java.util.List;
@@ -359,7 +359,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void showImageNumberTitle(final int imageNumber) {
         //Hardcoded because I hope we will remove this
-        mImageNumberText.setText("Seite " + imageNumber);
+        mImageNumberText.setText("Foto " + imageNumber);
     }
 
     @Override
@@ -479,7 +479,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         }, getPositiveColor(), getNegativeColor());
 
         mImageRecyclerView.setAdapter(mAdapter);
-        mImageRecyclerView.addItemDecoration(new CenterDecorator());
+        mImageRecyclerView.addItemDecoration(new CenterItemDecoration());
 
     }
 

@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class CenterDecorator extends RecyclerView.ItemDecoration {
+public class CenterItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(final Rect outRect, final View view, final RecyclerView parent,

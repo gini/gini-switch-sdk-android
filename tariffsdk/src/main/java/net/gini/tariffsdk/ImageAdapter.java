@@ -81,7 +81,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         } else if (holder instanceof EmptyViewHolder) {
             final EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
-            viewHolder.mText.setText(showPlusSymbol() ? "+" : null);
+            viewHolder.mText.setText(shouldShowPlusSymbol() ? "+" : null);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
@@ -162,7 +162,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 : ContextCompat.getColor(mContext, mNegativeColor);
     }
 
-    private boolean showPlusSymbol() {
+    private boolean shouldShowPlusSymbol() {
         return mImageList.size() > 0 && mShowPlus;
     }
 
