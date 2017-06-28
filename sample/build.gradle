@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+def hockeyAppId = project.hasProperty('hockeyAppId') ? hockeyAppId.toString() : ""
+def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -8,8 +11,9 @@ android {
         applicationId "net.gini.tariffsdk.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode versionBuild
         versionName "1.0"
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "${hockeyAppId}"]
     }
 
     buildTypes {
@@ -24,5 +28,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
+    compile 'net.hockeyapp.android:HockeySDK:4.1.4'
     compile project(':tariffsdk')
 }
