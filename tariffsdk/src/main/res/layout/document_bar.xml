@@ -7,12 +7,18 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:background="@color/primaryColor"
+    android:clipChildren="false"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     tools:showIn="@layout/activity_take_picture">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="88dp">
+        android:layout_height="88dp"
+        android:layout_marginEnd="@dimen/negative_offset"
+        android:layout_marginLeft="@dimen/negative_offset"
+        android:layout_marginRight="@dimen/negative_offset"
+        android:layout_marginStart="@dimen/negative_offset"
+        android:clipChildren="false">
 
 
         <android.support.v7.widget.RecyclerView
@@ -22,6 +28,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
+            android:clipChildren="false"
             android:scrollbars="horizontal"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="gone" />
@@ -30,6 +37,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/negative_offset"
+            android:layout_marginStart="@dimen/negative_offset"
             android:layout_toLeftOf="@+id/window_view"
             android:layout_toStartOf="@+id/window_view"
             android:alpha="0.5"
@@ -41,15 +50,29 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
 
+        <TextView
+            android:id="@+id/image_number_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/window_view"
+            android:layout_alignLeft="@id/window_view"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@id/window_view"
+            android:layout_alignStart="@id/window_view"
+            android:gravity="center"
+            android:textColor="@color/primaryText"
+            tools:text="Seite 1" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/negative_offset"
+            android:layout_marginRight="@dimen/negative_offset"
             android:layout_toEndOf="@+id/window_view"
             android:layout_toRightOf="@+id/window_view"
             android:alpha="0.5"
             android:background="@android:color/black" />
 
     </RelativeLayout>
-
 
 </android.support.v7.widget.Toolbar>

@@ -64,6 +64,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private GiniCamera mCamera;
     private View mCameraFrame;
     private SurfaceView mCameraPreview;
+    private TextView mImageNumberText;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
     private RecyclerView mImageRecyclerView;
@@ -139,6 +140,11 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void hideImageNumberTitle() {
+        mImageNumberText.setText(null);
     }
 
     @Override
@@ -269,7 +275,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -352,6 +357,12 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
+    public void showImageNumberTitle(final int imageNumber) {
+        //Hardcoded because I hope we will remove this
+        mImageNumberText.setText("Seite " + imageNumber);
+    }
+
+    @Override
     public void showImagePreview(final Image image) {
         mSelectedImage = image;
         mImagePreview.displayImage(image.getUri());
@@ -420,7 +431,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private void setUpDocumentBar() {
+        mImageNumberText = (TextView) mToolbar.findViewById(R.id.image_number_text);
         mImageRecyclerView = (RecyclerView) mToolbar.findViewById(R.id.image_overview);
+
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL,
                 false);
@@ -435,7 +448,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                     final int position = centerSnapHelper.getCenteredPosition();
                     if (position < mAdapter.getLastPosition()) {
                         final Image item = mAdapter.getItem(position);
-                        mPresenter.onImageSelected(item);
+                        mPresenter.onImageSelected(item, position + 1);
                         mAdapter.showPlus();
                     } else {
                         mPresenter.onTakePictureSelected();
@@ -444,6 +457,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 }
                 if (newState == SCREEN_STATE_ON) {
                     mAdapter.showPlus();
+                    hideImageNumberTitle();
                 }
                 super.onScrollStateChanged(recyclerView, newState);
             }
@@ -458,7 +472,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
             @Override
             public void onImageClicked(final Image image, final int position) {
-                mPresenter.onImageSelected(image);
+                mPresenter.onImageSelected(image, position + 1);
                 layoutManager.scrollToPosition(position);
             }
 
