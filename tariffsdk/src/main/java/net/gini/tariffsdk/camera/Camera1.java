@@ -3,6 +3,9 @@ package net.gini.tariffsdk.camera;
 
 import static android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE;
 
+import static net.gini.tariffsdk.camera.GiniCameraUtil.getLargestSize;
+import static net.gini.tariffsdk.camera.GiniCameraUtil.getLargestSizeWithSimilarAspectRatio;
+
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -87,7 +90,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
             mCamera.release();
             mCamera = null;
         }
-            mHolder.removeCallback(this);
+        mHolder.removeCallback(this);
     }
 
     @Override
@@ -101,9 +104,14 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
                 final List<Camera.Size> supportedPreviewSizes =
                         parameters.getSupportedPreviewSizes();
-                if (supportedPreviewSizes != null) {
-                    final Camera.Size optimalPreviewSize = GiniCameraUtil.getOptimalPreviewSize(
-                            supportedPreviewSizes, width, height);
+
+                final List<Camera.Size> supportedPictureSizes =
+                        parameters.getSupportedPictureSizes();
+                if (supportedPreviewSizes != null && supportedPictureSizes != null) {
+                    Camera.Size largestSize = getLargestSize(supportedPictureSizes);
+                    final Camera.Size optimalPreviewSize = getLargestSizeWithSimilarAspectRatio(
+                            supportedPreviewSizes,
+                            largestSize != null ? largestSize : supportedPictureSizes.get(0));
 
                     if (parameters.getSupportedPreviewSizes().contains(optimalPreviewSize)) {
                         parameters.setPreviewSize(optimalPreviewSize.width,
@@ -129,6 +137,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
             Log.d(TAG, "Error setting camera preview: " + e.getLocalizedMessage());
         }
     }
+
 
     @Override
     public void surfaceCreated(final SurfaceHolder surfaceHolder) {
