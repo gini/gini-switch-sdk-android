@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.media.ExifInterface;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -61,6 +62,7 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
     public void setImageURI(@Nullable final Uri uri) {
         mDegrees = getRequiredRotationDegrees(uri);
         mUri = uri;
+        observeViewTree(this);
     }
 
     private float getRequiredRotationDegrees(final Uri imageUri) {
@@ -120,11 +122,21 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
 
     private void setImageBitmap() {
         if (mUri != null) {
-            BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, getHeight(), getWidth(),
-                    getContext(), this);
-
+            if (shouldUseThumbnail()) {
+                BitmapMemoryCache.getInstance().loadThumbnailAsync(mUri, getHeight(), getWidth(),
+                        getContext(), this);
+            } else {
+                BitmapMemoryCache.getInstance().loadBitmapAsync(mUri, getHeight(), getWidth(),
+                        getContext(), this);
+            }
         } else {
             bitmapLoaded(null);
         }
+    }
+
+    //if image height is smaller than 100 dp
+    private boolean shouldUseThumbnail() {
+        return getHeight() < TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
+                getContext().getResources().getDisplayMetrics());
     }
 }

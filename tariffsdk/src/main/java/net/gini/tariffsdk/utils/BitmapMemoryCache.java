@@ -4,6 +4,7 @@ package net.gini.tariffsdk.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -46,7 +47,20 @@ class BitmapMemoryCache {
         if (bitmap != null) {
             callback.bitmapLoaded(bitmap);
         } else {
-            BitmapWorkerTask task = new BitmapWorkerTask(callback, height, width, context);
+            BitmapWorkerTask task = new BitmapWorkerTask(callback, height, width, context, false);
+            task.execute(uri);
+        }
+    }
+
+    void loadThumbnailAsync(Uri uri, int height, int width, Context context,
+            BitmapListener callback) {
+
+        final Bitmap bitmap = getBitmapFromMemCache(uri);
+        if (bitmap != null) {
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, height, width);
+            callback.bitmapLoaded(thumbnail);
+        } else {
+            BitmapWorkerTask task = new BitmapWorkerTask(callback, height, width, context, true);
             task.execute(uri);
         }
     }
@@ -122,14 +136,16 @@ class BitmapMemoryCache {
         final int mWidth;
         private final WeakReference<Context> mContextReference;
         private final WeakReference<BitmapListener> mImageViewReference;
+        private final boolean mIsThumbnail;
 
         BitmapWorkerTask(final BitmapListener listener, final int height, final int width,
-                final Context context) {
+                final Context context, final boolean isThumbnail) {
 
             mHeight = height;
             mWidth = width;
             mImageViewReference = new WeakReference<>(listener);
             mContextReference = new WeakReference<>(context);
+            mIsThumbnail = isThumbnail;
         }
 
         @Override
@@ -142,7 +158,12 @@ class BitmapMemoryCache {
 
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
-            mImageViewReference.get().bitmapLoaded(bitmap);
+            if (mIsThumbnail) {
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, mHeight, mWidth);
+                mImageViewReference.get().bitmapLoaded(thumbnail);
+            } else {
+                mImageViewReference.get().bitmapLoaded(bitmap);
+            }
         }
     }
 
