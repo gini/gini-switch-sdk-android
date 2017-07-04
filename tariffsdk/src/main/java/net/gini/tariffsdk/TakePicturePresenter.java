@@ -12,7 +12,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
-    private final OnboardingManager mOnboardringManager;
+    private final OnboardingManager mOnboardingManager;
     private final TakePictureContract.View mView;
     @VisibleForTesting
     int mBuildVersion = android.os.Build.VERSION.SDK_INT;
@@ -26,7 +26,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mView = view;
         mDocumentService = documentService;
         mExtractionService = extractionService;
-        mOnboardringManager = onboardingManager;
+        mOnboardingManager = onboardingManager;
         mDocumentService.createExtractionOrder();
     }
 
@@ -51,7 +51,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onBoardingFinished() {
         mView.hideOnboarding();
-        mOnboardringManager.storeOnboardingShown();
+        mOnboardingManager.storeOnboardingShown();
     }
 
     @Override
@@ -67,6 +67,21 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onImageStateChanged(@NonNull final Image image) {
         mView.imageStateChanged(image);
+    }
+
+    @Override
+    public void onOrderCompleted(@NonNull final String extractionUrl) {
+        //get extractions
+        mExtractionService.fetchExtractions(extractionUrl,
+                new ExtractionService.ExtractionListener() {
+                    @Override
+                    public void onExtractionsReceived() {
+                        //Extractions ready
+                        //TODO check what user is doing and wait till she finishes the current
+                        // process
+                        mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+                    }
+                });
     }
 
     @Override
@@ -96,7 +111,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (mOnboardringManager.onBoardingShown()) {
+        if (mOnboardingManager.onBoardingShown()) {
             mView.hideOnboarding();
         } else {
             mView.showOnboarding();

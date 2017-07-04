@@ -154,6 +154,7 @@ class TariffApiImpl implements TariffApi {
                     try {
                         obj = new JSONObject(response.body().string());
                         ExtractionOrder extractionOrder = createExtractionOrderFromJson(obj);
+                        final boolean orderComplete = getOrderCompleteStateFromJson(obj);
 
                         ArrayList<ExtractionOrderPage> orderPages = new ArrayList<>();
                         JSONArray pagesJSONArray = obj.getJSONObject("_embedded").getJSONArray(
@@ -165,7 +166,8 @@ class TariffApiImpl implements TariffApi {
                         }
 
 
-                        callback.onSuccess(new ExtractionOrderState(orderPages, extractionOrder));
+                        callback.onSuccess(new ExtractionOrderState(orderPages, extractionOrder,
+                                orderComplete));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -305,6 +307,11 @@ class TariffApiImpl implements TariffApi {
         final FlashMode flashMode = FlashMode.valueOf(
                 object.optString(Configuration.FLASH_MODE, FlashMode.ON.name()));
         return new Configuration(flashMode);
+    }
+
+    private boolean getOrderCompleteStateFromJson(final JSONObject obj) {
+        //TODO implement when we have the state in the response
+        return false;
     }
 
     @NonNull
