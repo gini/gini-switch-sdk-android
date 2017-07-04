@@ -129,7 +129,7 @@ public class TariffSdk {
     public Extractions getExtractions() {
         //TODO
         cleanUp();
-        return mExtractionService.fetchExtractions();
+        return mExtractionService.getExtractions();
     }
 
     /**

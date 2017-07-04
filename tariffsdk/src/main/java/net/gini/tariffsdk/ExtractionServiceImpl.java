@@ -17,9 +17,9 @@ class ExtractionServiceImpl implements ExtractionService {
         mTariffApi = tariffApi;
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    public Extractions fetchExtractions() {
-        return mExtractionsFromApi;
+    @Override
+    public boolean extractionsAvailable() {
+        return mExtractionsFromApi != null;
     }
 
     @Override
@@ -37,6 +37,11 @@ class ExtractionServiceImpl implements ExtractionService {
                 listener.onExtractionsReceived();
             }
         });
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public Extractions getExtractions() {
+        return mExtractionsFromApi;
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)

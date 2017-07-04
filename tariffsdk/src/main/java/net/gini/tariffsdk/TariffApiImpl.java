@@ -166,8 +166,9 @@ class TariffApiImpl implements TariffApi {
                         }
 
 
+                        final String extractionUrl = getExtractionsUrlFromJson(obj);
                         callback.onSuccess(new ExtractionOrderState(orderPages, extractionOrder,
-                                orderComplete));
+                                orderComplete, extractionUrl));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -309,8 +310,20 @@ class TariffApiImpl implements TariffApi {
         return new Configuration(flashMode);
     }
 
+    private String getExtractionsUrlFromJson(final JSONObject obj) {
+        try {
+            return obj.getJSONObject("_links").getJSONObject("extractions").getString("href");
+        } catch (JSONException ignored) {
+        }
+        return null;
+    }
+
     private boolean getOrderCompleteStateFromJson(final JSONObject obj) {
-        //TODO implement when we have the state in the response
+        try {
+            //TODO make this right when it has been specified
+            return obj.getJSONObject("extractionStatus").getBoolean("complete");
+        } catch (JSONException ignored) {
+        }
         return false;
     }
 

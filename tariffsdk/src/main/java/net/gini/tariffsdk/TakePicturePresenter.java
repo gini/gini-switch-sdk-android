@@ -76,10 +76,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                 new ExtractionService.ExtractionListener() {
                     @Override
                     public void onExtractionsReceived() {
-                        //Extractions ready
-                        //TODO check what user is doing and wait till she finishes the current
-                        // process
-                        mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+                        //Check if the user is in the camera screen
+                        if (canExitSdk()) {
+                            mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+                        }
                     }
                 });
     }
@@ -97,6 +97,11 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mView.showTakePictureButtons();
         mView.hidePreviewButtons();
         mView.hideImageNumberTitle();
+        //if there are extractions available we finish the sdk
+        if (mExtractionService.extractionsAvailable()) {
+            //TODO maybe add delay here
+            mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+        }
     }
 
     @Override
@@ -122,6 +127,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void stop() {
         mDocumentService.removeDocumentListener(this);
+    }
+
+    private boolean canExitSdk() {
+        return mSelectedImage == null;
     }
 
     private boolean hasToCheckForPermissions() {

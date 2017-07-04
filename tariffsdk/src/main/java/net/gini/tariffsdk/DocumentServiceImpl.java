@@ -212,10 +212,12 @@ class DocumentServiceImpl implements DocumentService {
                         }
                         if (extractionOrderState.isOrderComplete()) {
                             //TODO extractionOrderState.getOrder().
-                            final String extractionUrl = "";
+                            final String extractionUrl = extractionOrderState.getExtractionUrl();
                             for (final DocumentListener documentListener : mDocumentListeners) {
                                 documentListener.onOrderCompleted(extractionUrl);
                             }
+                            //if the order is complete there is no need for polling anymore
+                            stopStatePolling();
                         }
                     }
                 });
