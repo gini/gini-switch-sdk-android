@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import net.gini.tariffsdk.utils.ExifUtils;
 
@@ -25,6 +24,8 @@ import java.util.List;
 public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
     private static final String TAG = Camera1.class.getSimpleName();
+    @NonNull
+    private final CameraSurfacePreview mCameraPreview;
     private final SurfaceHolder mHolder;
     @Nullable
     private Camera mCamera;
@@ -32,9 +33,10 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
     private Camera.CameraInfo mCameraInfo = new Camera.CameraInfo();
     private int mCurrentOrientation;
 
-    public Camera1(@NonNull final SurfaceView cameraPreview) {
+    public Camera1(@NonNull final CameraSurfacePreview cameraPreview) {
 
         mHolder = cameraPreview.getHolder();
+        mCameraPreview = cameraPreview;
     }
 
     @Override
@@ -116,6 +118,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
                     if (parameters.getSupportedPreviewSizes().contains(optimalPreviewSize)) {
                         parameters.setPreviewSize(optimalPreviewSize.width,
                                 optimalPreviewSize.height);
+                        mCameraPreview.setPreviewSize(optimalPreviewSize);
                     }
                 }
 
