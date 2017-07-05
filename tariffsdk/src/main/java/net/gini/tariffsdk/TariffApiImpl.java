@@ -320,8 +320,7 @@ class TariffApiImpl implements TariffApi {
 
     private boolean getOrderCompleteStateFromJson(final JSONObject obj) {
         try {
-            //TODO make this right when it has been specified
-            return obj.getJSONObject("extractionStatus").getBoolean("complete");
+            return obj.getBoolean("extractionsComplete");
         } catch (JSONException ignored) {
         }
         return false;

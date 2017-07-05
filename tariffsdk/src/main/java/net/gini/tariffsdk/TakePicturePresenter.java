@@ -71,7 +71,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void onOrderCompleted(@NonNull final String extractionUrl) {
-        //get extractions
         mExtractionService.fetchExtractions(extractionUrl,
                 new ExtractionService.ExtractionListener() {
                     @Override

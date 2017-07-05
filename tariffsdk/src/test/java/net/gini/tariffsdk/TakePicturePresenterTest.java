@@ -1,5 +1,7 @@
 package net.gini.tariffsdk;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,6 +54,14 @@ public class TakePicturePresenterTest {
     }
 
     @Test
+    public void shouldRetrieveExtractions_WhenTheyAreReady() {
+        final String orderUrl = "http://bl.ah";
+        mPresenter.onOrderCompleted(orderUrl);
+        verify(mMockExtractionService).fetchExtractions(anyString(),
+                any(ExtractionService.ExtractionListener.class));
+    }
+
+    @Test
     public void startPresenter_shouldAddListener() {
         mPresenter.start();
         verify(mMockDocumentService).addDocumentListener(mPresenter);
@@ -78,7 +88,6 @@ public class TakePicturePresenterTest {
         mPresenter.start();
         verify(mMockView, never()).requestPermissions();
     }
-
 
 
 }
