@@ -6,9 +6,9 @@ import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
-@SuppressWarnings("deprecation")
 public class CameraSurfacePreview extends SurfaceView {
 
+    @SuppressWarnings("deprecation") //since camera1 api is deprecated, but we support versions < 21
     private Camera.Size mPreviewSize;
     private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
 
@@ -73,6 +73,7 @@ public class CameraSurfacePreview extends SurfaceView {
         }
     }
 
+    @SuppressWarnings("deprecation")//since camera1 api is deprecated, but we support versions < 21
     public void setPreviewSize(Camera.Size previewSize) {
         this.mPreviewSize = previewSize;
         requestLayout();
@@ -84,6 +85,6 @@ public class CameraSurfacePreview extends SurfaceView {
     }
 
     public enum ScaleType {
-        CENTER_RESIZE, CENTER_INSIDE;
+        CENTER_RESIZE, CENTER_INSIDE
     }
 }
