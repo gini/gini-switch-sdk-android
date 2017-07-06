@@ -27,7 +27,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -38,6 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import net.gini.tariffsdk.camera.Camera1;
+import net.gini.tariffsdk.camera.CameraSurfacePreview;
 import net.gini.tariffsdk.camera.GiniCamera;
 import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.onboarding.OnboardingAdapter;
@@ -64,7 +64,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private View mCameraFrame;
-    private SurfaceView mCameraPreview;
+    private CameraSurfacePreview mCameraPreview;
     private TextView mImageNumberText;
     private AutoRotateImageView mImagePreview;
     private ImageView mImagePreviewState;
@@ -240,7 +240,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             }
         });
 
-        mCameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
+        mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
         mImagePreviewState = (ImageView) findViewById(R.id.image_state);

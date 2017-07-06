@@ -13,9 +13,9 @@
         android:layout_above="@+id/footer"
         android:layout_below="@+id/toolbar" />
 
-    <SurfaceView
+    <net.gini.tariffsdk.camera.CameraSurfacePreview
         android:id="@+id/camera_preview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/toolbar"
