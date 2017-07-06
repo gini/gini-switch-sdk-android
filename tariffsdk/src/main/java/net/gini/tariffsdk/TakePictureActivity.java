@@ -368,6 +368,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreview.displayImage(image.getUri());
         hideCameraPreview();
         mImagePreview.setVisibility(View.VISIBLE);
+        //TODO save this state and retrieve it
     }
 
     @Override
