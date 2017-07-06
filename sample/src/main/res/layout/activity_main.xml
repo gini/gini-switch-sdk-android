@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_start_theme"
         android:layout_centerInParent="true"
-        android:text="Start Gini Sdk" />
+        android:text="Start Gini Switch" />
 
     <Button
         android:id="@+id/button_start_theme"
@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Start Gini Sdk with other Theme" />
+        android:text="Start Gini Sdk with other Theme"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView"

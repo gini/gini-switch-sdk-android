@@ -14,12 +14,38 @@ android {
         versionCode versionBuild
         versionName "1.0"
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "${hockeyAppId}"]
+
+        buildConfigField "boolean", "PROACTIVE_ANALYSING", "true"
+        buildConfigField "int", "ITEM_TO_FAIL", "-1"
+        buildConfigField "int", "MIN_ITEMS_BEFORE_ANALYSE_COMPLETE", "3"
+
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        number1 {
+            applicationIdSuffix ".one"
+            versionNameSuffix "-one"
+            manifestPlaceholders = [appName: "Gini Switch 1"]
+        }
+        number2 {
+            applicationIdSuffix ".two"
+            versionNameSuffix "-two"
+            buildConfigField "int", "ITEM_TO_FAIL", "1"
+            manifestPlaceholders = [appName: "Gini Switch 2"]
+            buildConfigField "int", "MIN_ITEMS_BEFORE_ANALYSE_COMPLETE", "4"
+        }
+        number3 {
+            applicationIdSuffix ".three"
+            versionNameSuffix "-three"
+            buildConfigField "boolean", "PROACTIVE_ANALYSING", "false"
+            manifestPlaceholders = [appName: "Gini Switch 3"]
         }
     }
 }

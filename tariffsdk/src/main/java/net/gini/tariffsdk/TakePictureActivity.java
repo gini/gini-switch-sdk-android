@@ -114,27 +114,34 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void exitSdk(final int resultCode) {
-        setResult(resultCode);
+        runOnUiThread(new Runnable() {
+            public void run() {
+                setResult(resultCode);
+                showAnalyzedCompletedScreen(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(final View view) {
+                    }
 
-        showAnalyzedCompletedScreen(new ViewPropertyAnimatorListener() {
-            @Override
-            public void onAnimationCancel(final View view) {
-            }
+                    @Override
+                    public void onAnimationEnd(final View view) {
+                        Intent intent = new Intent(TakePictureActivity.this, FinishActivity.class);
+                        startActivityForResult(intent, 100);
+//                finish();
+                    }
 
-            @Override
-            public void onAnimationEnd(final View view) {
-                finish();
-            }
+                    @Override
+                    public void onAnimationStart(final View view) {
+                        mTakePictureButtonsContainer.setVisibility(View.GONE);
+                        mCameraPreview.setVisibility(View.GONE);
+                        mCameraFrame.setVisibility(View.GONE);
+                        mToolbar.setVisibility(View.GONE);
 
-            @Override
-            public void onAnimationStart(final View view) {
-                mTakePictureButtonsContainer.setVisibility(View.GONE);
-                mCameraPreview.setVisibility(View.GONE);
-                mCameraFrame.setVisibility(View.GONE);
-                mToolbar.setVisibility(View.GONE);
-
+                    }
+                });
             }
         });
+
+
     }
 
     @Override
@@ -182,6 +189,19 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mCamera = new Camera1(mCameraPreview);
         mCamera.setPreviewOrientation(windowManager.getDefaultDisplay().getRotation());
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode,
+            final Intent data) {
+        if (requestCode == 100) {
+            mPresenter.onBoardingFinished();
+            mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
+            mCameraPreview.setVisibility(View.VISIBLE);
+            mCameraFrame.setVisibility(View.VISIBLE);
+            mToolbar.setVisibility(View.VISIBLE);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -236,7 +256,27 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                mPresenter.onAllPicturesTaken();
+                showAnalyzedCompletedScreen(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(final View view) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(final View view) {
+                        Intent intent = new Intent(TakePictureActivity.this, FinishActivity.class);
+                        startActivityForResult(intent, 100);
+//                finish();
+                    }
+
+                    @Override
+                    public void onAnimationStart(final View view) {
+                        mTakePictureButtonsContainer.setVisibility(View.GONE);
+                        mCameraPreview.setVisibility(View.GONE);
+                        mCameraFrame.setVisibility(View.GONE);
+                        mToolbar.setVisibility(View.GONE);
+
+                    }
+                });
             }
         });
 

@@ -43,10 +43,18 @@ public class MainActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.textView);
 
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
                 .build();
         mTariffSdk = TariffSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
                 "gini.net", okHttpClient);
+
+
+        mTariffSdk.setUserTestingFlags(net.gini.tariffsdk.sample.BuildConfig.PROACTIVE_ANALYSING,
+                net.gini.tariffsdk.sample.BuildConfig.ITEM_TO_FAIL,
+                net.gini.tariffsdk.sample.BuildConfig.MIN_ITEMS_BEFORE_ANALYSE_COMPLETE);
 
         Button viewById = (Button) findViewById(R.id.button_start);
         viewById.setOnClickListener(new View.OnClickListener() {

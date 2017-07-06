@@ -210,12 +210,31 @@ class DocumentServiceImpl implements DocumentService {
                                 updateImageState(image);
                             }
                         }
-                        if (extractionOrderState.isOrderComplete()) {
+
+
+//                        if (extractionOrderState.isOrderComplete()) {
+//                            final String extractionUrl = extractionOrderState.getExtractionUrl();
+//                            for (final DocumentListener documentListener : mDocumentListeners) {
+//                                documentListener.onOrderCompleted(extractionUrl);
+//                            }
+//                            //if the order is complete there is no need for polling anymore
+//                            stopStatePolling();
+//                        }
+
+
+                        if (TariffSdk.getSdk().mProactiveAnalysing
+                                && mImageList.size() >= TariffSdk.getSdk().mMinImagesForSuccess) {
+
+                            for (Image image : mImageList) {
+                                image.setProcessingState(ImageState.SUCCESSFULLY_PROCESSED);
+                                updateImageState(image);
+                            }
+
                             final String extractionUrl = extractionOrderState.getExtractionUrl();
                             for (final DocumentListener documentListener : mDocumentListeners) {
-                                documentListener.onOrderCompleted(extractionUrl);
+                                documentListener.onOrderCompleted(
+                                        extractionUrl != null ? extractionUrl : "");
                             }
-                            //if the order is complete there is no need for polling anymore
                             stopStatePolling();
                         }
                     }
@@ -317,6 +336,11 @@ class DocumentServiceImpl implements DocumentService {
     private void updateImageState(final Image image) {
         final int position = mImageList.indexOf(image);
         if (position >= 0) {
+
+            if (position == TariffSdk.getSdk().mItemToFail) {
+                image.setProcessingState(ImageState.FAILED);
+            }
+
             //only update if there is a change in the processing state
             if (image.getProcessingState() != mImageList.get(position).getProcessingState()) {
                 mImageList.set(position, image);

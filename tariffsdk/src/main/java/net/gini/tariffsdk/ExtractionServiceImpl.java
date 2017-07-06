@@ -25,6 +25,8 @@ class ExtractionServiceImpl implements ExtractionService {
     @Override
     public void fetchExtractions(@NonNull final String extractionsUrl,
             @NonNull final ExtractionListener listener) {
+        mExtractionsFromApi = new Extractions("", "", "", 0, "");
+        listener.onExtractionsReceived();
         mTariffApi.retrieveExtractions(extractionsUrl, new NetworkCallback<Extractions>() {
             @Override
             public void onError(final Exception e) {

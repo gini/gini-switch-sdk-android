@@ -268,7 +268,7 @@ class TariffApiImpl implements TariffApi {
                         callback.onSuccess(new Extractions(selfUrl, companyName, energyMeterNumber,
                                 consumptionValue,
                                 consumptionUnit));
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         callback.onError(e);
                     }
                 } else {

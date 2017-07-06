@@ -16,7 +16,9 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     private final TakePictureContract.View mView;
     @VisibleForTesting
     int mBuildVersion = android.os.Build.VERSION.SDK_INT;
+    private boolean mDidExit = false;
     private Image mSelectedImage = null;
+    private boolean mShowOnboarding = true;
 
     TakePicturePresenter(final TakePictureContract.View view,
             final DocumentService documentService,
@@ -51,7 +53,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     @Override
     public void onBoardingFinished() {
         mView.hideOnboarding();
-        mOnboardingManager.storeOnboardingShown();
+        mShowOnboarding = false;
+//        mOnboardingManager.storeOnboardingShown();
     }
 
     @Override
@@ -77,7 +80,15 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                     public void onExtractionsReceived() {
                         //Check if the user is in the camera screen
                         if (canExitSdk()) {
-                            mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if (!mDidExit) {
+                                mDidExit = true;
+                                mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+                            }
                         }
                     }
                 });
@@ -115,10 +126,10 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void start() {
-        if (mOnboardingManager.onBoardingShown()) {
-            mView.hideOnboarding();
-        } else {
+        if (mShowOnboarding) {
             mView.showOnboarding();
+        } else {
+            mView.hideOnboarding();
         }
         startCameraProcess();
     }

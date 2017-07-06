@@ -39,6 +39,9 @@ public class TariffSdk {
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
     private final RemoteConfigManager mRemoteConfigManager;
+    int mItemToFail;
+    int mMinImagesForSuccess;
+    boolean mProactiveAnalysing;
     private int mAnalyzedImage;
     private int mAnalyzedText;
     private int mAnalyzedTextColor;
@@ -161,6 +164,14 @@ public class TariffSdk {
     public TariffSdk setButtonStyleSelector(@DrawableRes final int selector) {
         mButtonSelector = selector;
         return this;
+    }
+
+    public void setUserTestingFlags(final boolean proactiveAnalysing, final int itemToFail,
+            final int minImagesForSuccess) {
+
+        mProactiveAnalysing = proactiveAnalysing;
+        mItemToFail = itemToFail;
+        mMinImagesForSuccess = minImagesForSuccess;
     }
 
     void cleanUp() {

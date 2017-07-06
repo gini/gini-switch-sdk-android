@@ -20,6 +20,10 @@
             android:name=".ExtractionsActivity"
             android:taskAffinity="net.gini.tariffsdk"
             android:theme="@style/GiniTheme" />
+        <activity
+            android:name=".FinishActivity"
+            android:taskAffinity="net.gini.tariffsdk"
+            android:theme="@style/GiniTheme" />
     </application>
 
 </manifest>

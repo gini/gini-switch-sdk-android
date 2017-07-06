@@ -64,7 +64,8 @@ class TariffSdkBaseActivity extends AppCompatActivity implements
     public void onPositive() {
         //TODO track etc.
         TariffSdk.getSdk().cleanUp();
-        finishAffinity();
+        finish();
+//        finishAffinity();
     }
 
     protected void colorToolbar(final Toolbar toolbar) {
