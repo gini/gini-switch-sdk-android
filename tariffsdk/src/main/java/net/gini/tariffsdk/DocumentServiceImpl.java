@@ -210,6 +210,14 @@ class DocumentServiceImpl implements DocumentService {
                                 updateImageState(image);
                             }
                         }
+                        if (extractionOrderState.isOrderComplete()) {
+                            final String extractionUrl = extractionOrderState.getExtractionUrl();
+                            for (final DocumentListener documentListener : mDocumentListeners) {
+                                documentListener.onOrderCompleted(extractionUrl);
+                            }
+                            //if the order is complete there is no need for polling anymore
+                            stopStatePolling();
+                        }
                     }
                 });
     }

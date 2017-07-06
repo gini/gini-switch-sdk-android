@@ -154,6 +154,7 @@ class TariffApiImpl implements TariffApi {
                     try {
                         obj = new JSONObject(response.body().string());
                         ExtractionOrder extractionOrder = createExtractionOrderFromJson(obj);
+                        final boolean orderComplete = getOrderCompleteStateFromJson(obj);
 
                         ArrayList<ExtractionOrderPage> orderPages = new ArrayList<>();
                         JSONArray pagesJSONArray = obj.getJSONObject("_embedded").getJSONArray(
@@ -165,7 +166,9 @@ class TariffApiImpl implements TariffApi {
                         }
 
 
-                        callback.onSuccess(new ExtractionOrderState(orderPages, extractionOrder));
+                        final String extractionUrl = getExtractionsUrlFromJson(obj);
+                        callback.onSuccess(new ExtractionOrderState(orderPages, extractionOrder,
+                                orderComplete, extractionUrl));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -305,6 +308,22 @@ class TariffApiImpl implements TariffApi {
         final FlashMode flashMode = FlashMode.valueOf(
                 object.optString(Configuration.FLASH_MODE, FlashMode.ON.name()));
         return new Configuration(flashMode);
+    }
+
+    private String getExtractionsUrlFromJson(final JSONObject obj) {
+        try {
+            return obj.getJSONObject("_links").getJSONObject("extractions").getString("href");
+        } catch (JSONException ignored) {
+        }
+        return null;
+    }
+
+    private boolean getOrderCompleteStateFromJson(final JSONObject obj) {
+        try {
+            return obj.getBoolean("extractionsComplete");
+        } catch (JSONException ignored) {
+        }
+        return false;
     }
 
     @NonNull

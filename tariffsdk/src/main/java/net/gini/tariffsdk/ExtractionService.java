@@ -7,10 +7,17 @@ import net.gini.tariffsdk.network.Extractions;
 
 interface ExtractionService {
 
+    boolean extractionsAvailable();
+
+    void fetchExtractions(@NonNull final String extractionsUrl,
+            @NonNull final ExtractionListener listener);
+
     Extractions getExtractions();
 
-    void getExtractions(@NonNull final String extractionsUrl);
-
     int getResultCodeForActivity();
+
+    interface ExtractionListener {
+        void onExtractionsReceived();
+    }
 
 }
