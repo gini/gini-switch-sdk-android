@@ -28,5 +28,7 @@ interface DocumentService {
 
     interface DocumentListener {
         void onImageStateChanged(@NonNull final Image image);
+
+        void onOrderCompleted(@NonNull final String extractionUrl);
     }
 }

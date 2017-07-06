@@ -449,6 +449,30 @@ public class TariffApiImplTest {
     }
 
     @Test
+    public void getOrderState_wasSuccessfulShouldContainAExtractionsReadyBoolean()
+            throws InterruptedException, JSONException, TimeoutException {
+        final String pagesLink = "http://pages_link";
+        MockResponse mJSONMockResponse = new MockResponse().setBody(
+                createMockExtractionOrderState(new ArrayList<String>(), null, pagesLink, true));
+        mServer.enqueue(mJSONMockResponse);
+        mTariffApi.getOrderState(mMockUrl.toString(),
+                new NetworkCallback<ExtractionOrderState>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final ExtractionOrderState extractionOrderState) {
+                        mWaiter.assertTrue(extractionOrderState.isOrderComplete());
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
     public void getOrderState_wasSuccessfulShouldContainAPagesLink()
             throws InterruptedException, JSONException, TimeoutException {
         final String pagesLink = "http://pages_link";
@@ -979,7 +1003,13 @@ public class TariffApiImplTest {
 
     private String createMockExtractionOrderState(final List<String> pages, final String self,
             final String pagesLink) {
+        return createMockExtractionOrderState(pages, self, pagesLink, false);
+    }
+
+    private String createMockExtractionOrderState(final List<String> pages, final String self,
+            final String pagesLink, final boolean extractionsComplete) {
         return "{\n"
+                + "  \"extractionsComplete\" : " + extractionsComplete + ",\n"
                 + "  \"_embedded\" : {\n"
                 + "    \"pages\" : "
                 + Arrays.toString(pages.toArray())
