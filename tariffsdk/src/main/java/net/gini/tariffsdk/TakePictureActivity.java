@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -368,6 +369,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mImagePreview.displayImage(image.getUri());
         hideCameraPreview();
         mImagePreview.setVisibility(View.VISIBLE);
+        //TODO save this state and retrieve it
     }
 
     @Override
@@ -480,6 +482,14 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         mImageRecyclerView.setAdapter(mAdapter);
         mImageRecyclerView.addItemDecoration(new CenterItemDecoration());
+        mImageRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mImageRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        mImageRecyclerView.invalidateItemDecorations();
+                    }
+                });
 
     }
 
