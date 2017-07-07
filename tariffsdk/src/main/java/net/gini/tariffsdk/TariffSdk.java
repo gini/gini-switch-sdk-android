@@ -19,6 +19,7 @@ import net.gini.tariffsdk.authentication.user.UserManager;
 import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
+import net.gini.tariffsdk.utils.Logging;
 
 import okhttp3.OkHttpClient;
 
@@ -160,6 +161,31 @@ public class TariffSdk {
      */
     public TariffSdk setButtonStyleSelector(@DrawableRes final int selector) {
         mButtonSelector = selector;
+        return this;
+    }
+
+    /**
+     * Set the log level of the SDK. The levels are similar to the ones available for {@link
+     * android.util.Log}. You can choose between: ALL, VERBOSE, DEBUG, ERROR, WARN, INFO. {@link
+     * net.gini.tariffsdk.utils.Logging.LogLevel}
+     * Default is that all log levels are shown.
+     *
+     * @param logLevel the desired log level
+     */
+    public TariffSdk setLoggingLevel(final Logging.LogLevel logLevel) {
+        Logging.LOG_LEVEL = logLevel;
+        return this;
+    }
+
+    /**
+     * Use this method to turn on logging in the SDK. Logging is turned off by default and should
+     * not be turned on for production(or removed via Proguard)
+     *
+     * @param show true if logging should be shown, false if not
+     * @return the instance of the available SDK
+     */
+    public TariffSdk showLogging(final boolean show) {
+        Logging.SHOW_LOGS = show;
         return this;
     }
 

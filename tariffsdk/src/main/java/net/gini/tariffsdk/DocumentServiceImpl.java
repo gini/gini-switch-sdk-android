@@ -16,6 +16,7 @@ import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
 import net.gini.tariffsdk.utils.ExifUtils;
+import net.gini.tariffsdk.utils.Logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -95,6 +96,7 @@ class DocumentServiceImpl implements DocumentService {
             @Override
             public void onError(final Exception e) {
                 //TODO
+                Logging.e("Create Extraction Order failed.", e);
             }
 
             @Override
@@ -197,6 +199,7 @@ class DocumentServiceImpl implements DocumentService {
                     @Override
                     public void onError(final Exception e) {
                         //TODO might be ignored since this call is repeated in an interval
+                        Logging.e("Fetching Order State failed.", e);
                     }
 
                     @Override
@@ -280,6 +283,7 @@ class DocumentServiceImpl implements DocumentService {
             @Override
             public void onError(final Exception e) {
                 //TODO
+                Logging.e("Uploading image to API failed.", e);
             }
 
             @Override
@@ -307,10 +311,12 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void startStatePolling() {
+        Logging.v("Stated Polling started");
         mPollingRunnable.run();
     }
 
     private void stopStatePolling() {
+        Logging.v("Stated Polling stopped.");
         mPollingHandler.removeCallbacks(mPollingRunnable);
     }
 
