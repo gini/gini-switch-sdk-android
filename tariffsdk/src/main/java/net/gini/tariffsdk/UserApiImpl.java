@@ -178,7 +178,7 @@ class UserApiImpl implements UserApi {
                         final AccessToken accessToken = getAccessToken(obj);
                         callback.onSuccess(accessToken);
                     } catch (JSONException e) {
-                        callback.onError(e);
+                        callback.onError(new SwitchException(REQUEST_USER_TOKEN, e.getMessage()));
                     }
                 } else {
                     callback.onError(new SwitchException(REQUEST_USER_TOKEN));
