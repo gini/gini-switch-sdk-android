@@ -1,7 +1,12 @@
 package net.gini.tariffsdk;
 
 
-import android.accounts.NetworkErrorException;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.CREATE_EXTRACTION_ORDER;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.GET_ORDER_STATE;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.REQUEST_CONFIGURATION;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.RETRIEVE_EXTRACTIONS;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.UPLOAD_IMAGE;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
@@ -18,6 +23,7 @@ import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
+import net.gini.tariffsdk.utils.SwitchException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,8 +96,7 @@ class TariffApiImpl implements TariffApi {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                //TODO
-                callback.onError(e);
+                callback.onError(new SwitchException(CREATE_EXTRACTION_ORDER, e.getMessage()));
             }
 
             @Override
@@ -104,10 +109,11 @@ class TariffApiImpl implements TariffApi {
 
                         callback.onSuccess(extractionOrder);
                     } catch (JSONException e) {
-                        callback.onError(e);
+                        callback.onError(
+                                new SwitchException(CREATE_EXTRACTION_ORDER, e.getMessage()));
                     }
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(CREATE_EXTRACTION_ORDER));
                 }
             }
         });
@@ -143,7 +149,7 @@ class TariffApiImpl implements TariffApi {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(GET_ORDER_STATE, e.getMessage()));
             }
 
             @Override
@@ -171,12 +177,12 @@ class TariffApiImpl implements TariffApi {
                                 orderComplete, extractionUrl));
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        callback.onError(new SwitchException(GET_ORDER_STATE, e.getMessage()));
                     }
 
 
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(GET_ORDER_STATE));
                 }
             }
         });
@@ -218,7 +224,7 @@ class TariffApiImpl implements TariffApi {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(REQUEST_CONFIGURATION, e.getMessage()));
             }
 
             @Override
@@ -229,10 +235,11 @@ class TariffApiImpl implements TariffApi {
                         final Configuration configuration = getConfigurationFromJson(object);
                         callback.onSuccess(configuration);
                     } catch (JSONException e) {
-                        callback.onError(e);
+                        callback.onError(
+                                new SwitchException(REQUEST_CONFIGURATION, e.getMessage()));
                     }
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(REQUEST_CONFIGURATION));
                 }
             }
         });
@@ -246,7 +253,7 @@ class TariffApiImpl implements TariffApi {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(RETRIEVE_EXTRACTIONS, e.getMessage()));
             }
 
             @Override
@@ -269,10 +276,10 @@ class TariffApiImpl implements TariffApi {
                                 consumptionValue,
                                 consumptionUnit));
                     } catch (JSONException e) {
-                        callback.onError(e);
+                        callback.onError(new SwitchException(RETRIEVE_EXTRACTIONS, e.getMessage()));
                     }
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(RETRIEVE_EXTRACTIONS));
                 }
             }
         });
@@ -332,7 +339,7 @@ class TariffApiImpl implements TariffApi {
         return new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(UPLOAD_IMAGE, e.getMessage()));
             }
 
             @Override
@@ -344,10 +351,10 @@ class TariffApiImpl implements TariffApi {
                         ExtractionOrderPage page = createExtractionOrderPageFromJson(obj);
                         callback.onSuccess(page);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        callback.onError(new SwitchException(UPLOAD_IMAGE, e.getMessage()));
                     }
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(UPLOAD_IMAGE));
                 }
             }
         };
