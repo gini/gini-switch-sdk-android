@@ -165,7 +165,7 @@ public class TariffSdk {
     }
 
     /**
-     * Set the log level of the SDK. The levels are similar as the once available for {@link
+     * Set the log level of the SDK. The levels are similar to the ones available for {@link
      * android.util.Log}. You can choose between: ALL, VERBOSE, DEBUG, ERROR, WARN, INFO. {@link
      * net.gini.tariffsdk.utils.Logging.LogLevel}
      * Default is that all log levels are shown.
@@ -179,7 +179,7 @@ public class TariffSdk {
 
     /**
      * Use this method to turn on logging in the SDK. Logging is turned off by default and should
-     * not turned on for production(or removed via Proguard)
+     * not be turned on for production(or removed via Proguard)
      *
      * @param show true if logging should be shown, false if not
      * @return the instance of the available SDK

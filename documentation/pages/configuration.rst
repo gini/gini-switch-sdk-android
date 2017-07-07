@@ -42,7 +42,7 @@ Therefore the SDK provides the possibility to add a okHttpClient which is being 
 Enable Logging
 ------------
 
-You can enable logging inside the SDK to get some information what is going on there. The logging is disabled by default and should only turned on for testing and debugging purposes. With logging the usual Android Logcat output is meant and there are also the same log levels, which can also be defined. See ``Logging Level`` for more information about it.
+You can enable logging inside the SDK to get some information what is going on there. The logging is disabled by default and should only be turned on for testing and debugging purposes. The log output is printed into the usual Android Logcat output and there are also the same log levels, which can also be defined. See ``Logging Level`` for more information about it.
 
 .. code-block:: java
 
@@ -52,7 +52,7 @@ You can enable logging inside the SDK to get some information what is going on t
 Set Logging Level
 ------------
 
-You can define the level of what should be printed in the logs. They are similar to the once from the Android Log class. There are: VERBOSE, INFO, DEBUG, WARN and ERROR. By default all of them are shown.
+You can define the level of what should be printed in the logs. They are similar to the ones in the Android Log class. There are: VERBOSE, INFO, DEBUG, WARN and ERROR. By default all of them are shown.
 
 .. code-block:: java
 
