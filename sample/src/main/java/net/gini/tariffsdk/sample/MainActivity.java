@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mTariffSdk = TariffSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
                 "gini.net", okHttpClient);
+        mTariffSdk.showLogging(true);
 
         Button viewById = (Button) findViewById(R.id.button_start);
         viewById.setOnClickListener(new View.OnClickListener() {

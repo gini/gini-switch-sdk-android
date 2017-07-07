@@ -7,6 +7,7 @@ import android.support.annotation.RestrictTo;
 import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.TariffApi;
+import net.gini.tariffsdk.utils.Logging;
 
 class ExtractionServiceImpl implements ExtractionService {
 
@@ -29,6 +30,7 @@ class ExtractionServiceImpl implements ExtractionService {
             @Override
             public void onError(final Exception e) {
                 //TODO
+                Logging.e("Fetching extractions from API failed.", e);
             }
 
             @Override
