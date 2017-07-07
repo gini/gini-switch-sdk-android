@@ -38,6 +38,27 @@ Therefore the SDK provides the possibility to add a okHttpClient which is being 
 
   public TariffSdk init(…, OkHttpClient okhttpClient);
 
+
+Enable Logging
+------------
+
+You can enable logging inside the SDK to get some information what is going on there. The logging is disabled by default and should only turned on for testing and debugging purposes. With logging the usual Android Logcat output is meant and there are also the same log levels, which can also be defined. See ``Logging Level`` for more information about it.
+
+.. code-block:: java
+
+  public TariffSdk showLogging(boolean show);
+
+
+Set Logging Level
+------------
+
+You can define the level of what should be printed in the logs. They are similar to the once from the Android Log class. There are: VERBOSE, INFO, DEBUG, WARN and ERROR. By default all of them are shown.
+
+.. code-block:: java
+
+  public TariffSdk setLoggingLevel(Logging.LogLevel logLevel)
+
+
 Accent Color
 ------------
 
@@ -230,6 +251,8 @@ Client ID                            String         No
 Client Secret                        String         No
 Domain                               String         No
 OkHttpClient                         OkHttpClient   Yes
+Enable Logging                       boolean        Yes
+Logging Level                        LoggingLevel   Yes
 Accent Color                         int            Yes
 Button Style                         int            Yes
 Positive Color                       int            Yes
