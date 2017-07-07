@@ -1,7 +1,10 @@
 package net.gini.tariffsdk;
 
 
-import android.accounts.NetworkErrorException;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.CREATE_USER;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.REQUEST_CLIENT_TOKEN;
+import static net.gini.tariffsdk.utils.SwitchException.ErrorCode.REQUEST_USER_TOKEN;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
@@ -11,6 +14,8 @@ import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.UserApi;
+import net.gini.tariffsdk.utils.Logging;
+import net.gini.tariffsdk.utils.SwitchException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +33,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UserApiImpl implements UserApi {
+class UserApiImpl implements UserApi {
 
     private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
     private final HttpUrl mBaseUrl;
@@ -55,7 +60,13 @@ public class UserApiImpl implements UserApi {
     public void createUser(@NonNull final UserCredentials userCredentials,
             @NonNull final AccessToken accessToken, @NonNull final NetworkCallback<Void> callback) {
 
-        final String credentialsJson = createCredentialsJson(userCredentials);
+        final String credentialsJson;
+        try {
+            credentialsJson = createCredentialsJson(userCredentials);
+        } catch (SwitchException e) {
+            callback.onError(new SwitchException(CREATE_USER, e.getMessage()));
+            return;
+        }
 
         final RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
@@ -70,7 +81,7 @@ public class UserApiImpl implements UserApi {
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(CREATE_USER, e.getMessage()));
             }
 
             @Override
@@ -78,7 +89,7 @@ public class UserApiImpl implements UserApi {
                 if (response.isSuccessful()) {
                     callback.onSuccess(null);
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(CREATE_USER));
                 }
             }
         });
@@ -93,7 +104,7 @@ public class UserApiImpl implements UserApi {
         mHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(REQUEST_CLIENT_TOKEN, e.getMessage()));
             }
 
             @Override
@@ -105,10 +116,10 @@ public class UserApiImpl implements UserApi {
                         final AccessToken accessToken = getAccessToken(obj);
                         callback.onSuccess(accessToken);
                     } catch (JSONException e) {
-                        callback.onError(e);
+                        callback.onError(new SwitchException(REQUEST_CLIENT_TOKEN, e.getMessage()));
                     }
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(REQUEST_CLIENT_TOKEN));
                 }
             }
         });
@@ -156,7 +167,7 @@ public class UserApiImpl implements UserApi {
         mHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                callback.onError(e);
+                callback.onError(new SwitchException(REQUEST_USER_TOKEN, e.getMessage()));
             }
 
             @Override
@@ -167,10 +178,10 @@ public class UserApiImpl implements UserApi {
                         final AccessToken accessToken = getAccessToken(obj);
                         callback.onSuccess(accessToken);
                     } catch (JSONException e) {
-                        callback.onError(e);
+                        callback.onError(new SwitchException(REQUEST_USER_TOKEN, e.getMessage()));
                     }
                 } else {
-                    callback.onError(new NetworkErrorException("TODO SOME ERROR"));
+                    callback.onError(new SwitchException(REQUEST_USER_TOKEN));
                 }
             }
         });
@@ -187,14 +198,15 @@ public class UserApiImpl implements UserApi {
                 .build();
     }
 
-    private String createCredentialsJson(final @NonNull UserCredentials userCredentials) {
+    private String createCredentialsJson(final @NonNull UserCredentials userCredentials)
+            throws SwitchException {
         final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", userCredentials.getEmail());
             jsonObject.put("password", userCredentials.getPassword());
         } catch (JSONException e) {
-            //TODO log this
-            throw new RuntimeException(e);
+            Logging.e("Could not create credentials.", e);
+            throw new SwitchException(e.getMessage());
         }
 
         return jsonObject.toString();

@@ -3,7 +3,6 @@ package net.gini.tariffsdk;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 
 import net.gini.tariffsdk.authentication.models.AccessToken;
@@ -11,6 +10,7 @@ import net.gini.tariffsdk.authentication.models.ClientCredentials;
 import net.gini.tariffsdk.authentication.models.UserCredentials;
 import net.gini.tariffsdk.network.NetworkCallback;
 import net.gini.tariffsdk.network.UserApi;
+import net.gini.tariffsdk.utils.SwitchException;
 import net.jodah.concurrentunit.Waiter;
 
 import org.json.JSONException;
@@ -132,7 +132,7 @@ public class UserApiImplTest {
                 new NetworkCallback<Void>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 
@@ -273,7 +273,7 @@ public class UserApiImplTest {
                 new NetworkCallback<AccessToken>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 

@@ -7,8 +7,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import android.accounts.NetworkErrorException;
-
 import net.gini.tariffsdk.authentication.AuthenticationService;
 import net.gini.tariffsdk.authentication.models.AccessToken;
 import net.gini.tariffsdk.configuration.models.ClientInformation;
@@ -18,6 +16,7 @@ import net.gini.tariffsdk.network.ExtractionOrderPage;
 import net.gini.tariffsdk.network.ExtractionOrderState;
 import net.gini.tariffsdk.network.Extractions;
 import net.gini.tariffsdk.network.NetworkCallback;
+import net.gini.tariffsdk.utils.SwitchException;
 import net.jodah.concurrentunit.Waiter;
 
 import org.json.JSONException;
@@ -114,7 +113,7 @@ public class TariffApiImplTest {
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 
@@ -208,7 +207,7 @@ public class TariffApiImplTest {
         mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
-                mWaiter.assertTrue(e instanceof JSONException);
+                mWaiter.assertTrue(e instanceof SwitchException);
                 mWaiter.resume();
             }
 
@@ -265,7 +264,7 @@ public class TariffApiImplTest {
         mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
-                mWaiter.assertTrue(e instanceof NetworkErrorException);
+                mWaiter.assertTrue(e instanceof SwitchException);
                 mWaiter.resume();
             }
 
@@ -412,7 +411,7 @@ public class TariffApiImplTest {
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 
@@ -598,7 +597,7 @@ public class TariffApiImplTest {
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 
@@ -767,7 +766,7 @@ public class TariffApiImplTest {
                 new NetworkCallback<Configuration>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 
@@ -816,7 +815,7 @@ public class TariffApiImplTest {
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
-                        mWaiter.assertTrue(e instanceof NetworkErrorException);
+                        mWaiter.assertTrue(e instanceof SwitchException);
                         mWaiter.resume();
                     }
 
