@@ -267,11 +267,15 @@ class TariffApiImpl implements TariffApi {
                                 "value");
                         final String energyMeterNumber = obj.optJSONObject(
                                 "energyMeterNumber").optString("value");
-                        JSONObject consumptionJsonObject = obj.optJSONObject(
-                                "consumption").optJSONObject(
-                                "value");
-                        final double consumptionValue = consumptionJsonObject.optDouble("value");
-                        final String consumptionUnit = consumptionJsonObject.optString("unit");
+                        JSONObject consumption = obj.optJSONObject("consumption");
+                        double consumptionValue = 0;
+                        String consumptionUnit = null;
+                        if (consumption != null) {
+                            JSONObject consumptionJsonObject = consumption.optJSONObject("value");
+                            consumptionValue = consumptionJsonObject.optDouble(
+                                    "value");
+                            consumptionUnit = consumptionJsonObject.optString("unit");
+                        }
                         callback.onSuccess(new Extractions(selfUrl, companyName, energyMeterNumber,
                                 consumptionValue,
                                 consumptionUnit));
