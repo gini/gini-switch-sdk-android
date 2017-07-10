@@ -16,6 +16,8 @@ interface DocumentService {
 
     void deleteImage(@NonNull final Uri uri);
 
+    String getExtractionUrl();
+
     List<Image> getImageList();
 
     void keepImage(@NonNull final Uri uri);

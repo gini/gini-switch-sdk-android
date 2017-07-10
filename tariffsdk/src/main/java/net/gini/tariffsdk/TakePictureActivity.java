@@ -533,32 +533,36 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         Point size = new Point();
         display.getSize(size);
         final int height = size.y;
-        mSplashContainer.setVisibility(View.VISIBLE);
-        mSplashContainer.setTranslationY(height);
-        ViewCompat.animate(mSplashContainer)
-                .translationY(0)
-                .setDuration(ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS)
-                .setListener(new ViewPropertyAnimatorListener() {
-                    @Override
-                    public void onAnimationCancel(final View view) {
-                    }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSplashContainer.setVisibility(View.VISIBLE);
+                mSplashContainer.setTranslationY(height);
+                ViewCompat.animate(mSplashContainer)
+                        .translationY(0)
+                        .setDuration(ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS)
+                        .setListener(new ViewPropertyAnimatorListener() {
+                            @Override
+                            public void onAnimationCancel(final View view) {
+                            }
 
-                    @Override
-                    public void onAnimationEnd(final View view) {
-                        ViewCompat.animate(view)
-                                .translationY(height)
-                                .setDuration(ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS)
-                                .setStartDelay(ANALYSE_COMPLETE_SHOW_DURATION_IN_MS)
-                                .setListener(animatorListener)
-                                .start();
-                    }
+                            @Override
+                            public void onAnimationEnd(final View view) {
+                                ViewCompat.animate(view)
+                                        .translationY(height)
+                                        .setDuration(ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS)
+                                        .setStartDelay(ANALYSE_COMPLETE_SHOW_DURATION_IN_MS)
+                                        .setListener(animatorListener)
+                                        .start();
+                            }
 
-                    @Override
-                    public void onAnimationStart(final View view) {
-                    }
-                })
-                .start();
-
+                            @Override
+                            public void onAnimationStart(final View view) {
+                            }
+                        })
+                        .start();
+            }
+        });
     }
 
     private void showCameraPreview() {

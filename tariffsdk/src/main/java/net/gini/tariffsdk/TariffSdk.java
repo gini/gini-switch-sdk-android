@@ -32,6 +32,7 @@ public class TariffSdk {
 
 
     public static final int EXTRACTIONS_AVAILABLE = 4;
+    public static final int NO_EXTRACTIONS_AVAILABLE = 5;
     public static final int REQUEST_CODE = 666;
     @VisibleForTesting
     @SuppressLint("StaticFieldLeak") //application context is fine
