@@ -47,6 +47,8 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
         // If image is bigger then display fit it to screen.
         if (width < bmWidth || height < bmHeight) {
             scale = width > height ? height / bmHeight : width / bmWidth;
+        } else {
+            scale = width > height ? width / bmWidth : height / bmHeight;
         }
 
         mMatrix.setScale(scale, scale);
