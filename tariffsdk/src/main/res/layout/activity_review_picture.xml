@@ -19,16 +19,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_rotate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/footer"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_rotate"
-        app:backgroundTint="@color/secondaryColor" />
-
     <FrameLayout
         android:id="@+id/image_preview_container"
         android:layout_width="match_parent"
@@ -44,6 +34,16 @@
             android:layout_gravity="center"
             android:scaleType="fitCenter" />
     </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_rotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/footer"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_rotate"
+        app:backgroundTint="@color/secondaryColor" />
 
 
     <LinearLayout
