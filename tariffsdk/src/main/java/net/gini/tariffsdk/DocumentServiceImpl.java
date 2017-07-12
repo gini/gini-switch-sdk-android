@@ -44,6 +44,7 @@ class DocumentServiceImpl implements DocumentService {
 
     @VisibleForTesting
     ExtractionOrder mExtractionOrder;
+    private String mExtractionUrl;
     private Handler mPollingHandler;
     private final Runnable mPollingRunnable = new Runnable() {
         @Override
@@ -122,6 +123,11 @@ class DocumentServiceImpl implements DocumentService {
         if (url != null) {
             mTariffApi.deletePage(url);
         }
+    }
+
+    @Override
+    public String getExtractionUrl() {
+        return mExtractionUrl;
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -213,10 +219,10 @@ class DocumentServiceImpl implements DocumentService {
                                 updateImageState(image);
                             }
                         }
+                        mExtractionUrl = extractionOrderState.getExtractionUrl();
                         if (extractionOrderState.isOrderComplete()) {
-                            final String extractionUrl = extractionOrderState.getExtractionUrl();
                             for (final DocumentListener documentListener : mDocumentListeners) {
-                                documentListener.onOrderCompleted(extractionUrl);
+                                documentListener.onOrderCompleted(mExtractionUrl);
                             }
                             //if the order is complete there is no need for polling anymore
                             stopStatePolling();
