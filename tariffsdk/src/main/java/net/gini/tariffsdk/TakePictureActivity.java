@@ -10,9 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -87,26 +84,13 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
     @Override
     public void displayImageProcessingState(final Image image) {
-        final Drawable drawable;
         if (image.getProcessingState() != ImageState.PROCESSING) {
             if (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED) {
-                drawable = ContextCompat.getDrawable(this, R.drawable.ic_check);
                 mPreviewTitle.setText(getAnalyzeSuccessTextFromBundle());
             } else {
-                drawable = ContextCompat.getDrawable(this, R.drawable.ic_cross);
                 mPreviewTitle.setText(getAnalyzeFailedTextFromBundle());
             }
-            final int processingColor =
-                    (image.getProcessingState() == ImageState.SUCCESSFULLY_PROCESSED)
-                            ? ContextCompat.getColor(this, getPositiveColor())
-                            : ContextCompat.getColor(this, getNegativeColor());
-            drawable.setAlpha(255);
-            drawable.setColorFilter(
-                    new PorterDuffColorFilter(processingColor, PorterDuff.Mode.SRC_IN));
-            mImagePreviewState.setImageDrawable(drawable);
-            mImagePreviewState.setVisibility(View.VISIBLE);
         } else {
-            mImagePreviewState.setVisibility(View.GONE);
             mPreviewTitle.setText(null);
         }
 
