@@ -17,14 +17,15 @@ class GiniCameraUtil {
     }
 
     @Nullable
-    static Camera.Size getLargestSize(@NonNull List<Camera.Size> sizes) {
-        Camera.Size largest = null;
+    static Camera.Size getLargestSize(List<Camera.Size> sizes) {
+        Camera.Size bestFit = null;
         for (Camera.Size size : sizes) {
-            if (largest == null || getArea(largest) < getArea(size)) {
-                largest = size;
+            if (hasFourThreeRatio(size) && (bestFit == null
+                    || getArea(bestFit) < getArea(size))) {
+                bestFit = size;
             }
         }
-        return largest;
+        return bestFit;
     }
 
     @Nullable
@@ -81,6 +82,10 @@ class GiniCameraUtil {
             }
         }
         return sameAspectSizes;
+    }
+
+    private static boolean hasFourThreeRatio(@NonNull final Camera.Size size) {
+        return Math.abs((float) size.width / (float) size.height - 4.f / 3.f) < 0.001;
     }
 
     private static boolean isSimilarAspectRatio(final float aspectRatio,

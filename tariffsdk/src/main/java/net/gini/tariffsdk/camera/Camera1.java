@@ -115,6 +115,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
                             supportedPreviewSizes,
                             largestSize != null ? largestSize : supportedPictureSizes.get(0));
 
+                    parameters.setPictureSize(largestSize.width, largestSize.height);
                     if (parameters.getSupportedPreviewSizes().contains(optimalPreviewSize)) {
                         parameters.setPreviewSize(optimalPreviewSize.width,
                                 optimalPreviewSize.height);
