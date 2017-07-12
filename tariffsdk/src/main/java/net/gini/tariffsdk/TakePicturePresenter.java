@@ -43,15 +43,27 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
-    public void onAllPicturesTaken() {
-        final int resultCode = mExtractionService.getResultCodeForActivity();
-        mView.exitSdk(resultCode);
-    }
-
-    @Override
     public void onBoardingFinished() {
         mView.hideOnboarding();
         mOnboardingManager.storeOnboardingShown();
+    }
+
+    @Override
+    public void onFinishedClicked() {
+        String extractionUrl = mDocumentService.getExtractionUrl();
+        if (extractionUrl != null) {
+            mExtractionService.fetchExtractions(extractionUrl,
+                    new ExtractionService.ExtractionListener() {
+                        @Override
+                        public void onExtractionsReceived() {
+                            //Check if the user is in the camera screen
+                            final int resultCode = mExtractionService.getResultCodeForActivity();
+                            mView.exitSdk(resultCode);
+                        }
+                    });
+        } else {
+            mView.exitSdk(TariffSdk.NO_EXTRACTIONS_AVAILABLE);
+        }
     }
 
     @Override

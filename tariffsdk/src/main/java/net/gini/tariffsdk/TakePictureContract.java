@@ -11,9 +11,9 @@ interface TakePictureContract {
 
         void deleteSelectedImage();
 
-        void onAllPicturesTaken();
-
         void onBoardingFinished();
+
+        void onFinishedClicked();
 
         void onImageSelected(final Image image, final int imageNumber);
 
