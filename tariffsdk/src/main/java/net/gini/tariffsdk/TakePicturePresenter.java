@@ -43,7 +43,13 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
-    public void onAllPicturesTaken() {
+    public void onBoardingFinished() {
+        mView.hideOnboarding();
+        mOnboardingManager.storeOnboardingShown();
+    }
+
+    @Override
+    public void onFinishedClicked() {
         String extractionUrl = mDocumentService.getExtractionUrl();
         if (extractionUrl != null) {
             mExtractionService.fetchExtractions(extractionUrl,
@@ -58,12 +64,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         } else {
             mView.exitSdk(TariffSdk.NO_EXTRACTIONS_AVAILABLE);
         }
-    }
-
-    @Override
-    public void onBoardingFinished() {
-        mView.hideOnboarding();
-        mOnboardingManager.storeOnboardingShown();
     }
 
     @Override

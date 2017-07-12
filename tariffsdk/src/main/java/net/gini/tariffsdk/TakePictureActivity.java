@@ -236,7 +236,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                mPresenter.onAllPicturesTaken();
+                mPresenter.onFinishedClicked();
             }
         });
 
