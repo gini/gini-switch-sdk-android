@@ -50,7 +50,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         TakePictureContract.View {
 
     public static final int ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS = 250;
-    public static final int ANALYSE_COMPLETE_SHOW_DURATION_IN_MS = 3000;
+    public static final int ANALYSE_COMPLETE_SHOW_DURATION_IN_MS = 4000;
     static final String BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE = "BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE";
     static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT = "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT";
     static final String BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR =
