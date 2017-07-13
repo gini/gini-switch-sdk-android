@@ -64,9 +64,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private GiniCamera mCamera;
     private View mCameraFrame;
     private CameraSurfacePreview mCameraPreview;
-    private TextView mImageNumberText;
     private AutoRotateImageView mImagePreview;
-    private ImageView mImagePreviewState;
     private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
     private TakePictureContract.Presenter mPresenter;
@@ -127,11 +125,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void hideImageNumberTitle() {
-        mImageNumberText.setText(null);
     }
 
     @Override
@@ -229,7 +222,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
-        mImagePreviewState = (ImageView) findViewById(R.id.image_state);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
         setUpDocumentBar();
@@ -340,7 +332,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mSelectedImage = null;
         showCameraPreview();
         mImagePreview.setVisibility(View.GONE);
-        mImagePreviewState.setVisibility(View.GONE);
     }
 
     @Override
@@ -358,12 +349,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public void setImages(@NonNull final List<Image> imageList) {
         mAdapter.setImages(imageList);
         mImageRecyclerView.scrollToPosition(mAdapter.getLastPosition());
-    }
-
-    @Override
-    public void showImageNumberTitle(final int imageNumber) {
-        //Hardcoded because I hope we will remove this
-        mImageNumberText.setText("Foto " + imageNumber);
     }
 
     @Override
@@ -436,7 +421,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private void setUpDocumentBar() {
-        mImageNumberText = (TextView) mToolbar.findViewById(R.id.image_number_text);
         mImageRecyclerView = (RecyclerView) mToolbar.findViewById(R.id.image_overview);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this,
@@ -462,7 +446,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
                 }
                 if (newState == SCREEN_STATE_ON) {
                     mAdapter.showPlus();
-                    hideImageNumberTitle();
                 }
                 super.onScrollStateChanged(recyclerView, newState);
             }

@@ -73,6 +73,9 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             final Drawable drawable = getImageDrawableFromState(processingState);
             viewHolder.mStateImageView.setImageDrawable(drawable);
 
+            viewHolder.mItemLabel.setText(
+                    mContext.getString(R.string.documentbar_item_label, (position + 1)));
+
             viewHolder.mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
@@ -179,10 +182,10 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static class ViewHolder extends RecyclerView.ViewHolder {
 
         AutoRotateImageView mImageView;
+        TextView mItemLabel;
         ProgressBar mProgressBar;
         ImageView mStateImageView;
         View mStatusIndicator;
-
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -190,6 +193,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
             mStatusIndicator = itemView.findViewById(R.id.status_indicator_view);
             mStateImageView = (ImageView) itemView.findViewById(R.id.image_state);
+            mItemLabel = (TextView) itemView.findViewById(R.id.item_label);
         }
     }
 
