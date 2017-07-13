@@ -25,18 +25,4 @@
         android:layout_height="match_parent"
         tools:showIn="@layout/activity_take_picture" />
     </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/image_state"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_gravity="center"
-        android:background="@drawable/circle"
-        android:padding="16dp"
-        android:visibility="gone"
-        tools:src="@drawable/ic_cross"
-        tools:visibility="visible" />
-
-
 </FrameLayout>
