@@ -67,7 +67,7 @@ interface TakePictureContract {
 
         void showImagePreview(final Image image);
 
-        void showOnboardingDelayedAnimation();
+        void showOnboardingWithDelayedAnimation();
 
         void showPreviewButtons();
 

@@ -377,31 +377,18 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void showOnboardingDelayedAnimation() {
+    public void showOnboardingWithDelayedAnimation() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         final int height = size.y;
-                mOnboardingContainer.setVisibility(View.VISIBLE);
-                mOnboardingContainer.setTranslationY(height);
-                ViewCompat.animate(mOnboardingContainer)
-                        .translationY(0)
-                        .setStartDelay(ONBOARDING_ANIMATION_DELAY_IN_MS)
-                        .setDuration(ONBOARDING_ANIMATION_DURATION_IN_MS)
-                        .setListener(new ViewPropertyAnimatorListener() {
-                            @Override
-                            public void onAnimationCancel(final View view) {
-                            }
-
-                            @Override
-                            public void onAnimationEnd(final View view) {
-                            }
-
-                            @Override
-                            public void onAnimationStart(final View view) {
-                            }
-                        })
-                        .start();
+        mOnboardingContainer.setVisibility(View.VISIBLE);
+        mOnboardingContainer.setTranslationY(height);
+        ViewCompat.animate(mOnboardingContainer)
+                .translationY(0)
+                .setStartDelay(ONBOARDING_ANIMATION_DELAY_IN_MS)
+                .setDuration(ONBOARDING_ANIMATION_DURATION_IN_MS)
+                .start();
     }
 
     @Override
