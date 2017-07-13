@@ -24,6 +24,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -257,6 +259,23 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         });
 
         styleButtons(finishButton, deleteImageButton, retakeImageButton);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        final MenuItem menuItem = menu.add(R.string.menu_entry_help);
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
+                if (item.getItemId() == menuItem.getItemId()) {
+                    showOnboarding();
+                    return false;
+                }
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
 
     }
 
