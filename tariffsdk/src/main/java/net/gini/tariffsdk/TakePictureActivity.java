@@ -13,7 +13,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +58,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
     static final String BUNDLE_EXTRA_PREVIEW_FAILED_TEXT = "BUNDLE_EXTRA_PREVIEW_FAILED_TEXT";
     static final String BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT = "BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT";
+    private static final long ONBOARDING_ANIMATION_DELAY_IN_MS = 1500;
+    private static final long ONBOARDING_ANIMATION_DURATION_IN_MS = 500;
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
@@ -376,8 +377,18 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     @Override
-    public void showOnboarding() {
+    public void showOnboardingWithDelayedAnimation() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int height = size.y;
         mOnboardingContainer.setVisibility(View.VISIBLE);
+        mOnboardingContainer.setTranslationY(height);
+        ViewCompat.animate(mOnboardingContainer)
+                .translationY(0)
+                .setStartDelay(ONBOARDING_ANIMATION_DELAY_IN_MS)
+                .setDuration(ONBOARDING_ANIMATION_DURATION_IN_MS)
+                .start();
     }
 
     @Override
@@ -388,6 +399,10 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void showTakePictureButtons() {
         mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
+    }
+
+    public void showOnboarding() {
+        mOnboardingContainer.setVisibility(View.VISIBLE);
     }
 
     private int getAnalyzeFailedTextFromBundle() {
@@ -497,8 +512,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private void setUpOnboarding() {
-        final FloatingActionButton onboardingNextButton = (FloatingActionButton) findViewById(
-                R.id.button_onboarding_next);
         mOnboardingContainer = findViewById(R.id.onBoardingContainer);
         final ViewPager onboardingViewPager = (ViewPager) findViewById(R.id.onBoardingViewPager);
         final OnboardingAdapter adapter = new OnboardingAdapter(this);
@@ -519,14 +532,8 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
             public void onPageSelected(final int position) {
                 if (adapter.isLastItem(position)) {
                     mPresenter.onBoardingFinished();
+                    onboardingViewPager.setCurrentItem(0, false);
                 }
-            }
-        });
-        onboardingNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                int nextItem = onboardingViewPager.getCurrentItem() + 1;
-                onboardingViewPager.setCurrentItem(nextItem, true);
             }
         });
     }
