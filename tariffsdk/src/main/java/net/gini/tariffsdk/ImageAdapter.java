@@ -28,7 +28,8 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Listener mListener;
     private final int mNegativeColor;
     private final int mPositiveColor;
-    private boolean mShowPlus;
+    private int mSelectedElement;
+
 
     ImageAdapter(Context context, Listener listener, final int positiveColor,
             final int negativeColor) {
@@ -37,6 +38,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mPositiveColor = positiveColor;
         mNegativeColor = negativeColor;
         mImageList = new ArrayList<>();
+        mSelectedElement = 0;
     }
 
     @Override
@@ -72,6 +74,8 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             final Drawable drawable = getImageDrawableFromState(processingState);
             viewHolder.mStateImageView.setImageDrawable(drawable);
+            viewHolder.mSelector.setVisibility(
+                    mSelectedElement == position ? View.VISIBLE : View.GONE);
 
             viewHolder.mItemLabel.setText(
                     mContext.getString(R.string.documentbar_item_label, (position + 1)));
@@ -85,6 +89,9 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (holder instanceof EmptyViewHolder) {
             final EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
             viewHolder.mText.setText(shouldShowPlusSymbol() ? "+" : null);
+            viewHolder.mSelector.setVisibility(
+                    mSelectedElement == position ? View.VISIBLE : View.GONE);
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
@@ -106,6 +113,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return new ViewHolder(view);
     }
 
+
     void deleteImage(final Image selectedImage) {
         final int position = mImageList.indexOf(selectedImage);
         mImageList.remove(position);
@@ -121,20 +129,15 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return getItemCount() - 1;
     }
 
-    void hidePlus() {
-        mShowPlus = false;
-        notifyItemChanged(getLastPosition());
-    }
-
     void setImages(List<Image> images) {
         mImageList.clear();
         mImageList.addAll(images);
         notifyDataSetChanged();
     }
 
-    void showPlus() {
-        mShowPlus = true;
-        notifyItemChanged(getLastPosition());
+    void setSelectedElement(final int position) {
+        mSelectedElement = position;
+        notifyDataSetChanged();
     }
 
     void updateImageState(final Image image) {
@@ -166,16 +169,18 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private boolean shouldShowPlusSymbol() {
-        return mImageList.size() > 0 && mShowPlus;
+        return mImageList.size() > 0 && mSelectedElement != getLastPosition();
     }
 
     private static class EmptyViewHolder extends RecyclerView.ViewHolder {
 
+        View mSelector;
         TextView mText;
 
         EmptyViewHolder(final View itemView) {
             super(itemView);
-            mText = (TextView) itemView.findViewById(R.id.text_view);
+            mSelector = itemView.findViewById(R.id.selector);
+            mText = (TextView) itemView.findViewById(R.id.plus_text);
         }
     }
 
@@ -184,6 +189,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         AutoRotateImageView mImageView;
         TextView mItemLabel;
         ProgressBar mProgressBar;
+        View mSelector;
         ImageView mStateImageView;
         View mStatusIndicator;
 
@@ -194,6 +200,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mStatusIndicator = itemView.findViewById(R.id.status_indicator_view);
             mStateImageView = (ImageView) itemView.findViewById(R.id.image_state);
             mItemLabel = (TextView) itemView.findViewById(R.id.item_label);
+            mSelector = itemView.findViewById(R.id.selector);
         }
     }
 
