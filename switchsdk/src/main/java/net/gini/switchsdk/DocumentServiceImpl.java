@@ -14,7 +14,7 @@ import net.gini.switchsdk.network.ExtractionOrder;
 import net.gini.switchsdk.network.ExtractionOrderPage;
 import net.gini.switchsdk.network.ExtractionOrderState;
 import net.gini.switchsdk.network.NetworkCallback;
-import net.gini.switchsdk.network.TariffApi;
+import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.ExifUtils;
 import net.gini.switchsdk.utils.Logging;
 
@@ -40,7 +40,7 @@ class DocumentServiceImpl implements DocumentService {
     private final Context mContext;
     private final Set<DocumentListener> mDocumentListeners;
     private final List<Image> mImageList;
-    private final TariffApi mTariffApi;
+    private final SwitchApi mSwitchApi;
 
     @VisibleForTesting
     ExtractionOrder mExtractionOrder;
@@ -57,9 +57,9 @@ class DocumentServiceImpl implements DocumentService {
         }
     };
 
-    DocumentServiceImpl(final Context context, final TariffApi tariffApi) {
+    DocumentServiceImpl(final Context context, final SwitchApi switchApi) {
         mContext = context.getApplicationContext();
-        mTariffApi = tariffApi;
+        mSwitchApi = switchApi;
         mImageList = new ArrayList<>();
         mDocumentListeners = new CopyOnWriteArraySet<>();
         mImageUrls = new HashMap<>();
@@ -93,7 +93,7 @@ class DocumentServiceImpl implements DocumentService {
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createExtractionOrder() {
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mSwitchApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 //TODO
@@ -121,7 +121,7 @@ class DocumentServiceImpl implements DocumentService {
         notifyListeners(image);
         final String url = mImageUrls.get(image);
         if (url != null) {
-            mTariffApi.deletePage(url);
+            mSwitchApi.deletePage(url);
         }
     }
 
@@ -200,7 +200,7 @@ class DocumentServiceImpl implements DocumentService {
     }
 
     private void fetchOrderState() {
-        mTariffApi.getOrderState(mExtractionOrder.getSelf(),
+        mSwitchApi.getOrderState(mExtractionOrder.getSelf(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -312,7 +312,7 @@ class DocumentServiceImpl implements DocumentService {
     private void replaceImage(@NonNull final String url, final Image image) {
         if (mExtractionOrder != null) {
             byte[] data = getBytesFromImage(image);
-            mTariffApi.replacePage(url, data, getImageUploadingCallback(image));
+            mSwitchApi.replacePage(url, data, getImageUploadingCallback(image));
         }
     }
 
@@ -340,7 +340,7 @@ class DocumentServiceImpl implements DocumentService {
     private void uploadImage(final Image image) {
         if (mExtractionOrder != null) {
             byte[] data = getBytesFromImage(image);
-            mTariffApi.addPage(mExtractionOrder.getPages(), data, getImageUploadingCallback(image));
+            mSwitchApi.addPage(mExtractionOrder.getPages(), data, getImageUploadingCallback(image));
         }
     }
 

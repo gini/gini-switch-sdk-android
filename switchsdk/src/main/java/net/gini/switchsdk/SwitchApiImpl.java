@@ -22,7 +22,7 @@ import net.gini.switchsdk.network.ExtractionOrderPage;
 import net.gini.switchsdk.network.ExtractionOrderState;
 import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
-import net.gini.switchsdk.network.TariffApi;
+import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.SwitchException;
 
 import org.json.JSONArray;
@@ -41,18 +41,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-class TariffApiImpl implements TariffApi {
+class SwitchApiImpl implements SwitchApi {
 
     private final OkHttpClient mOkHttpClient;
     private final HttpUrl mTariffApiUrl;
 
-    TariffApiImpl(final OkHttpClient okHttpClient,
+    SwitchApiImpl(final OkHttpClient okHttpClient,
             final AuthenticationService authenticationService) {
         this(okHttpClient, authenticationService, HttpUrl.parse(BuildConfig.TARIFF_API_URL));
     }
 
     @VisibleForTesting
-    TariffApiImpl(final OkHttpClient okHttpClient,
+    SwitchApiImpl(final OkHttpClient okHttpClient,
             final AuthenticationService authenticationService, final HttpUrl url) {
         mTariffApiUrl = url;
         mOkHttpClient = okHttpClient.newBuilder()

@@ -10,7 +10,7 @@ import net.gini.switchsdk.configuration.models.ClientInformation;
 import net.gini.switchsdk.configuration.models.Configuration;
 import net.gini.switchsdk.configuration.models.FlashMode;
 import net.gini.switchsdk.network.NetworkCallback;
-import net.gini.switchsdk.network.TariffApi;
+import net.gini.switchsdk.network.SwitchApi;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class RemoteConfigManagerTest {
     @Mock
     NetworkCallback<Configuration> mMockConfigurationNetworkCallback;
     @Mock
-    TariffApi mMockTariffApi;
+    SwitchApi mMockSwitchApi;
     @Captor
     ArgumentCaptor<NetworkCallback<Configuration>> mNetworkCallbackConfigurationCaptor;
     @Mock
@@ -38,11 +38,11 @@ public class RemoteConfigManagerTest {
     @Test
     public void requestConfigFails_shouldGiveDefaultValues() {
 
-        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(mMockTariffApi);
+        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(mMockSwitchApi);
 
         remoteConfigManager.requestRemoteConfig();
 
-        verify(mMockTariffApi).requestConfiguration(any(ClientInformation.class),
+        verify(mMockSwitchApi).requestConfiguration(any(ClientInformation.class),
                 mNetworkCallbackConfigurationCaptor.capture());
         mNetworkCallbackConfigurationCaptor.getValue().onError(mMockException);
 
@@ -57,11 +57,11 @@ public class RemoteConfigManagerTest {
 
         when(mMockConfiguration.getFlashMode()).thenReturn(FlashMode.AUTO);
 
-        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(mMockTariffApi);
+        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(mMockSwitchApi);
 
         remoteConfigManager.requestRemoteConfig();
 
-        verify(mMockTariffApi).requestConfiguration(any(ClientInformation.class),
+        verify(mMockSwitchApi).requestConfiguration(any(ClientInformation.class),
                 mNetworkCallbackConfigurationCaptor.capture());
         mNetworkCallbackConfigurationCaptor.getValue().onSuccess(mMockConfiguration);
 

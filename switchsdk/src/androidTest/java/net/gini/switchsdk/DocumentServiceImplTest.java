@@ -17,7 +17,7 @@ import android.support.test.runner.AndroidJUnit4;
 import net.gini.switchsdk.network.ExtractionOrder;
 import net.gini.switchsdk.network.ExtractionOrderPage;
 import net.gini.switchsdk.network.NetworkCallback;
-import net.gini.switchsdk.network.TariffApi;
+import net.gini.switchsdk.network.SwitchApi;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class DocumentServiceImplTest {
 
     private Context mContext;
     private DocumentServiceImpl mDocumentService;
-    private TariffApi mMockTariffApi;
+    private SwitchApi mMockSwitchApi;
     private Uri mMockUri;
 
     @Test
@@ -48,7 +48,7 @@ public class DocumentServiceImplTest {
     @SmallTest
     public void keepImage_shouldNotUploadAgainWhenNoRotation() throws IOException {
         mDocumentService.keepImage(mMockUri);
-        verify(mMockTariffApi, never()).addPage(anyString(), any(byte[].class),
+        verify(mMockSwitchApi, never()).addPage(anyString(), any(byte[].class),
                 Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }
 
@@ -57,7 +57,7 @@ public class DocumentServiceImplTest {
     public void replaceImage_shouldReplacePageWhenThereIsRotation() throws IOException {
         mDocumentService.mImageUrls.put(new Image(mMockUri, ImageState.PROCESSING), "");
         mDocumentService.replaceImage(mMockUri, 1);
-        verify(mMockTariffApi).replacePage(anyString(), any(byte[].class),
+        verify(mMockSwitchApi).replacePage(anyString(), any(byte[].class),
                 Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }
 
@@ -65,17 +65,17 @@ public class DocumentServiceImplTest {
     @SmallTest
     public void replaceImage_shouldUploadWhenImageWasNotUploadedBefore() throws IOException {
         mDocumentService.replaceImage(mMockUri, 1);
-        verify(mMockTariffApi).addPage(anyString(), any(byte[].class),
+        verify(mMockSwitchApi).addPage(anyString(), any(byte[].class),
                 Matchers.<NetworkCallback<ExtractionOrderPage>>any());
     }
 
     @Before
     public void setUp() throws Exception {
         mContext = InstrumentationRegistry.getTargetContext();
-        mMockTariffApi = Mockito.mock(TariffApi.class);
+        mMockSwitchApi = Mockito.mock(SwitchApi.class);
         mMockUri = Mockito.mock(Uri.class);
         when(mMockUri.getPath()).thenReturn("/");
-        mDocumentService = new DocumentServiceImpl(mContext, mMockTariffApi);
+        mDocumentService = new DocumentServiceImpl(mContext, mMockSwitchApi);
         mDocumentService.mExtractionOrder = Mockito.mock(ExtractionOrder.class);
     }
 }

@@ -6,16 +6,16 @@ import android.support.annotation.RestrictTo;
 
 import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
-import net.gini.switchsdk.network.TariffApi;
+import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.Logging;
 
 class ExtractionServiceImpl implements ExtractionService {
 
-    private final TariffApi mTariffApi;
+    private final SwitchApi mSwitchApi;
     private Extractions mExtractionsFromApi;
 
-    ExtractionServiceImpl(TariffApi tariffApi) {
-        mTariffApi = tariffApi;
+    ExtractionServiceImpl(SwitchApi switchApi) {
+        mSwitchApi = switchApi;
     }
 
     @Override
@@ -26,7 +26,7 @@ class ExtractionServiceImpl implements ExtractionService {
     @Override
     public void fetchExtractions(@NonNull final String extractionsUrl,
             @NonNull final ExtractionListener listener) {
-        mTariffApi.retrieveExtractions(extractionsUrl, new NetworkCallback<Extractions>() {
+        mSwitchApi.retrieveExtractions(extractionsUrl, new NetworkCallback<Extractions>() {
             @Override
             public void onError(final Exception e) {
                 //TODO
@@ -49,7 +49,7 @@ class ExtractionServiceImpl implements ExtractionService {
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public int getResultCodeForActivity() {
-        return TariffSdk.EXTRACTIONS_AVAILABLE;
+        return SwitchSdk.EXTRACTIONS_AVAILABLE;
     }
 
 }

@@ -18,7 +18,7 @@ import android.view.MenuItem;
 
 import net.gini.switchsdk.utils.ExitDialogFragment;
 
-class TariffSdkBaseActivity extends AppCompatActivity implements
+class SwitchSdkBaseActivity extends AppCompatActivity implements
         ExitDialogFragment.ExitDialogListener {
 
     protected static final String BUNDLE_EXTRA_EXIT_DIALOG_TEXT = "BUNDLE_EXTRA_EXIT_DIALOG_TEXT";
@@ -63,7 +63,7 @@ class TariffSdkBaseActivity extends AppCompatActivity implements
     @Override
     public void onPositive() {
         //TODO track etc.
-        TariffSdk.getSdk().cleanUp();
+        SwitchSdk.getSdk().cleanUp();
         finishAffinity();
     }
 
@@ -135,7 +135,7 @@ class TariffSdkBaseActivity extends AppCompatActivity implements
         if (getIntent().getExtras() == null || !getIntent().getBooleanExtra(
                 IntentFactory.BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
             throw new IllegalArgumentException(
-                    "Do not create this Intent by yourself, use the provided TariffSdk"
+                    "Do not create this Intent by yourself, use the provided SwitchSdk"
                             + ".getTariffSdkIntent() method for it!");
         }
 

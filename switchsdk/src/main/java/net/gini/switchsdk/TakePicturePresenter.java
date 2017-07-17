@@ -62,7 +62,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                         }
                     });
         } else {
-            mView.exitSdk(TariffSdk.NO_EXTRACTIONS_AVAILABLE);
+            mView.exitSdk(SwitchSdk.NO_EXTRACTIONS_AVAILABLE);
         }
     }
 
@@ -88,7 +88,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                     public void onExtractionsReceived() {
                         //Check if the user is in the camera screen
                         if (canExitSdk()) {
-                            mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+                            mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
                         }
                     }
                 });
@@ -109,7 +109,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         //if there are extractions available we finish the sdk
         if (mExtractionService.extractionsAvailable()) {
             //TODO maybe add delay here
-            mView.exitSdk(TariffSdk.EXTRACTIONS_AVAILABLE);
+            mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
         }
     }
 

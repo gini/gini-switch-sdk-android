@@ -5,18 +5,18 @@ import static net.gini.switchsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_DISCA
 import static net.gini.switchsdk.ReviewPictureActivity.BUNDLE_EXTRA_BUTTON_KEEP;
 import static net.gini.switchsdk.ReviewPictureActivity.BUNDLE_EXTRA_IMAGE_URI;
 import static net.gini.switchsdk.ReviewPictureActivity.BUNDLE_EXTRA_TITLE;
+import static net.gini.switchsdk.SwitchSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
+import static net.gini.switchsdk.SwitchSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
+import static net.gini.switchsdk.SwitchSdkBaseActivity.BUNDLE_EXTRA_EXIT_DIALOG_TEXT;
+import static net.gini.switchsdk.SwitchSdkBaseActivity.BUNDLE_EXTRA_NEGATIVE_COLOR;
+import static net.gini.switchsdk.SwitchSdkBaseActivity.BUNDLE_EXTRA_POSITIVE_COLOR;
+import static net.gini.switchsdk.SwitchSdkBaseActivity.BUNDLE_EXTRA_THEME;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_FAILED_TEXT;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT;
-import static net.gini.switchsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE;
-import static net.gini.switchsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_BUTTON_TEXT_COLOR;
-import static net.gini.switchsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_EXIT_DIALOG_TEXT;
-import static net.gini.switchsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_NEGATIVE_COLOR;
-import static net.gini.switchsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_POSITIVE_COLOR;
-import static net.gini.switchsdk.TariffSdkBaseActivity.BUNDLE_EXTRA_THEME;
 
 import android.content.Context;
 import android.content.Intent;
@@ -48,29 +48,29 @@ final class IntentFactory {
     private final int mReviewTitle;
     private final int mTheme;
 
-    IntentFactory(final TariffSdk tariffSdk) {
-        mContext = tariffSdk.getContext();
-        mButtonSelectorStyle = tariffSdk.getButtonSelector();
-        mButtonTextColor = tariffSdk.getButtonTextColor();
-        mPositiveColor = tariffSdk.getPositiveColor();
-        mNegativeColor = tariffSdk.getNegativeColor();
-        mTheme = tariffSdk.getTheme();
-        mExitDialogText = tariffSdk.getExitDialogText();
-        mAnalyzedText = tariffSdk.getAnalyzedText();
-        mAnalyzedImage = tariffSdk.getAnalyzedImage();
-        mAnalyzedTextColor = tariffSdk.getAnalyzedTextColor();
-        mAnalyzedTextSize = tariffSdk.getAnalyzedTextSize();
-        mExtractionEditTextColor = tariffSdk.getExtractionEditTextColor();
-        mExtractionHintColor = tariffSdk.getExtractionHintColor();
-        mExtractionLineColor = tariffSdk.getExtractionLineColor();
-        mExtractionEditTextBackgroundColor = tariffSdk.getExtractionEditTextBackgroundColor();
-        mExtractionButtonText = tariffSdk.getExtractionButtonText();
-        mExtractionTitleText = tariffSdk.getExtractionTitleText();
-        mReviewTitle = tariffSdk.getReviewTitleText();
-        mReviewDiscardText = tariffSdk.getReviewDiscardText();
-        mReviewKeepText = tariffSdk.getReviewKeepText();
-        mPreviewSuccessText = tariffSdk.getPreviewSuccessText();
-        mPreviewFailedText = tariffSdk.getPreviewFailedText();
+    IntentFactory(final SwitchSdk switchSdk) {
+        mContext = switchSdk.getContext();
+        mButtonSelectorStyle = switchSdk.getButtonSelector();
+        mButtonTextColor = switchSdk.getButtonTextColor();
+        mPositiveColor = switchSdk.getPositiveColor();
+        mNegativeColor = switchSdk.getNegativeColor();
+        mTheme = switchSdk.getTheme();
+        mExitDialogText = switchSdk.getExitDialogText();
+        mAnalyzedText = switchSdk.getAnalyzedText();
+        mAnalyzedImage = switchSdk.getAnalyzedImage();
+        mAnalyzedTextColor = switchSdk.getAnalyzedTextColor();
+        mAnalyzedTextSize = switchSdk.getAnalyzedTextSize();
+        mExtractionEditTextColor = switchSdk.getExtractionEditTextColor();
+        mExtractionHintColor = switchSdk.getExtractionHintColor();
+        mExtractionLineColor = switchSdk.getExtractionLineColor();
+        mExtractionEditTextBackgroundColor = switchSdk.getExtractionEditTextBackgroundColor();
+        mExtractionButtonText = switchSdk.getExtractionButtonText();
+        mExtractionTitleText = switchSdk.getExtractionTitleText();
+        mReviewTitle = switchSdk.getReviewTitleText();
+        mReviewDiscardText = switchSdk.getReviewDiscardText();
+        mReviewKeepText = switchSdk.getReviewKeepText();
+        mPreviewSuccessText = switchSdk.getPreviewSuccessText();
+        mPreviewFailedText = switchSdk.getPreviewFailedText();
     }
 
     Intent createReviewActivity(final Uri uri) {

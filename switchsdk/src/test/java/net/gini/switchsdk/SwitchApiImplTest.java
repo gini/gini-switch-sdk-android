@@ -39,7 +39,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
-public class TariffApiImplTest {
+public class SwitchApiImplTest {
 
     @Mock
     NetworkCallback<Configuration> mMockConfigurationNetworkCallback;
@@ -62,7 +62,7 @@ public class TariffApiImplTest {
     private HttpUrl mMockUrl;
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
-    private TariffApiImpl mTariffApi;
+    private SwitchApiImpl mTariffApi;
     private Waiter mWaiter;
 
     @Test
@@ -967,7 +967,7 @@ public class TariffApiImplTest {
 
         when(mMockFile.getName()).thenReturn("file");
 
-        mTariffApi = new TariffApiImpl(mOkHttpClient, mMockAuthenticationService, mMockUrl);
+        mTariffApi = new SwitchApiImpl(mOkHttpClient, mMockAuthenticationService, mMockUrl);
     }
 
     @After

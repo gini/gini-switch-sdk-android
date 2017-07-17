@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.gini.switchsdk.BuildConfig;
-import net.gini.switchsdk.TariffSdk;
+import net.gini.switchsdk.SwitchSdk;
 import net.gini.switchsdk.network.Extractions;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
@@ -18,16 +18,16 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TariffSdk mTariffSdk;
+    private SwitchSdk mSwitchSdk;
 
     private TextView mTextView;
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
-        if (requestCode == TariffSdk.REQUEST_CODE) {
-            if (resultCode == TariffSdk.EXTRACTIONS_AVAILABLE) {
-                Extractions extractions = mTariffSdk.getExtractions();
+        if (requestCode == SwitchSdk.REQUEST_CODE) {
+            if (resultCode == SwitchSdk.EXTRACTIONS_AVAILABLE) {
+                Extractions extractions = mSwitchSdk.getExtractions();
                 if (extractions != null) {
                     mTextView.setText(extractions.toString());
                 }
@@ -45,23 +45,23 @@ public class MainActivity extends AppCompatActivity {
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
-        mTariffSdk = TariffSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
+        mSwitchSdk = SwitchSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
                 "gini.net", okHttpClient);
-        mTariffSdk.showLogging(true);
+        mSwitchSdk.showLogging(true);
 
         Button viewById = (Button) findViewById(R.id.button_start);
         viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent tariffSdkIntent = mTariffSdk.getTariffSdkIntent();
-                startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
+                final Intent tariffSdkIntent = mSwitchSdk.getTariffSdkIntent();
+                startActivityForResult(tariffSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
 
         findViewById(R.id.button_start_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent tariffSdkIntent = mTariffSdk
+                final Intent tariffSdkIntent = mSwitchSdk
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.custom_positiveColor)
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         .setExtractionTitleText(R.string.custom_extractions_title)
                         .setExtractionButtonText(R.string.custom_extractions_button_text)
                         .getTariffSdkIntent();
-                startActivityForResult(tariffSdkIntent, TariffSdk.REQUEST_CODE);
+                startActivityForResult(tariffSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
         checkForUpdates();

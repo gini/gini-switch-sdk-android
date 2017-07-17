@@ -45,7 +45,7 @@ import net.gini.switchsdk.utils.CenterSnapHelper;
 
 import java.util.List;
 
-final public class TakePictureActivity extends TariffSdkBaseActivity implements
+final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         TakePictureContract.View {
 
     public static final int ANALYSE_COMPLETE_ANIMATION_DURATION_IN_MS = 250;
@@ -187,9 +187,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
 
         setUpOnboarding();
 
-        final TariffSdk tariffSdk = TariffSdk.getSdk();
-        final DocumentService documentService = tariffSdk.getDocumentService();
-        final ExtractionService extractionService = tariffSdk.getExtractionService();
+        final SwitchSdk switchSdk = SwitchSdk.getSdk();
+        final DocumentService documentService = switchSdk.getDocumentService();
+        final ExtractionService extractionService = switchSdk.getExtractionService();
         mPresenter = new TakePicturePresenter(this, documentService, extractionService,
                 new OnboardingManager(this));
 
@@ -323,7 +323,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public void openImageReview(@NonNull final Image image) {
 
         final IntentFactory tariffSdkIntentFactory = new IntentFactory(
-                TariffSdk.getSdk());
+                SwitchSdk.getSdk());
         final Intent intent = tariffSdkIntentFactory.createReviewActivity(image.getUri());
         startActivity(intent);
     }

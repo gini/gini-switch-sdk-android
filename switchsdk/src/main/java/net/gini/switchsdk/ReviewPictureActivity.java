@@ -21,7 +21,7 @@ import net.gini.switchsdk.utils.ExifUtils;
 
 import java.io.IOException;
 
-final public class ReviewPictureActivity extends TariffSdkBaseActivity implements
+final public class ReviewPictureActivity extends SwitchSdkBaseActivity implements
         ReviewPictureContract.View {
 
     static final String BUNDLE_EXTRA_BUTTON_DISCARD = "BUNDLE_EXTRA_BUTTON_DISCARD";
@@ -80,7 +80,7 @@ final public class ReviewPictureActivity extends TariffSdkBaseActivity implement
         });
 
         final Uri uri = getIntent().getExtras().getParcelable(BUNDLE_EXTRA_IMAGE_URI);
-        mPresenter = new ReviewPicturePresenter(this, TariffSdk.getSdk().getDocumentService(),
+        mPresenter = new ReviewPicturePresenter(this, SwitchSdk.getSdk().getDocumentService(),
                 uri);
 
 

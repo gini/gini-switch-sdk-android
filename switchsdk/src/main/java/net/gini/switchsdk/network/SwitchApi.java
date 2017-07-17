@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import net.gini.switchsdk.configuration.models.ClientInformation;
 import net.gini.switchsdk.configuration.models.Configuration;
 
-public interface TariffApi {
+public interface SwitchApi {
 
     void addPage(@NonNull final String pagesUrl, @NonNull final byte[] page,
             @NonNull final NetworkCallback<ExtractionOrderPage> callback);

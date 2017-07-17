@@ -18,7 +18,7 @@ import net.gini.switchsdk.authentication.models.ClientCredentials;
 import net.gini.switchsdk.authentication.user.UserManager;
 import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
-import net.gini.switchsdk.network.TariffApi;
+import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.Logging;
 
 import okhttp3.OkHttpClient;
@@ -28,7 +28,7 @@ import okhttp3.OkHttpClient;
  * This class represents the Gini Tariff SDK.
  * </p>
  */
-public class TariffSdk {
+public class SwitchSdk {
 
 
     public static final int EXTRACTIONS_AVAILABLE = 4;
@@ -36,7 +36,7 @@ public class TariffSdk {
     public static final int REQUEST_CODE = 666;
     @VisibleForTesting
     @SuppressLint("StaticFieldLeak") //application context is fine
-    static volatile TariffSdk mSingleton;
+    static volatile SwitchSdk mSingleton;
     private final Context mContext;
     private final DocumentService mDocumentService;
     private final ExtractionService mExtractionService;
@@ -63,7 +63,7 @@ public class TariffSdk {
     private int mReviewTitleText;
     private int mTheme;
 
-    private TariffSdk(final Context context,
+    private SwitchSdk(final Context context,
             final DocumentService documentService,
             final ExtractionService extractionService,
             final RemoteConfigManager remoteConfigManager) {
@@ -97,14 +97,14 @@ public class TariffSdk {
     }
 
 
-    public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
+    public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
             @NonNull final String clientPw, @NonNull final String domain) {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
         return init(context, clientId, clientPw, domain, okHttpClient);
     }
 
-    public static TariffSdk init(@NonNull final Context context, @NonNull final String clientId,
+    public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
             @NonNull final String clientPw, @NonNull final String domain,
             @NonNull final OkHttpClient okHttpClient) {
         assertNotNull(context);
@@ -112,11 +112,11 @@ public class TariffSdk {
         assertNotNull(clientPw);
         assertNotNull(domain);
         assertNotNull(okHttpClient);
-        TariffApi tariffApi = createTariffApi(context, clientId, clientPw, domain, okHttpClient);
-        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(tariffApi);
+        SwitchApi switchApi = createTariffApi(context, clientId, clientPw, domain, okHttpClient);
+        RemoteConfigManager remoteConfigManager = new RemoteConfigManager(switchApi);
 
-        return create(context, new DocumentServiceImpl(context, tariffApi),
-                new ExtractionServiceImpl(tariffApi),
+        return create(context, new DocumentServiceImpl(context, switchApi),
+                new ExtractionServiceImpl(switchApi),
                 remoteConfigManager);
     }
 
@@ -141,7 +141,7 @@ public class TariffSdk {
      * Only use this method to instantiate an intent of this activity, otherwise an exception will
      * be thrown.
      * To start the activity the method {@link android.app.Activity#startActivityForResult(Intent,
-     * int)} with the request code init {@link TariffSdk#REQUEST_CODE} has to be used.
+     * int)} with the request code init {@link SwitchSdk#REQUEST_CODE} has to be used.
      *
      * @return an intent of {@link TakePictureActivity}
      */
@@ -160,7 +160,7 @@ public class TariffSdk {
      * @param selector as a drawable resource.
      * @return the instance of the available SDK
      */
-    public TariffSdk setButtonStyleSelector(@DrawableRes final int selector) {
+    public SwitchSdk setButtonStyleSelector(@DrawableRes final int selector) {
         mButtonSelector = selector;
         return this;
     }
@@ -173,7 +173,7 @@ public class TariffSdk {
      *
      * @param logLevel the desired log level
      */
-    public TariffSdk setLoggingLevel(final Logging.LogLevel logLevel) {
+    public SwitchSdk setLoggingLevel(final Logging.LogLevel logLevel) {
         Logging.LOG_LEVEL = logLevel;
         return this;
     }
@@ -185,7 +185,7 @@ public class TariffSdk {
      * @param show true if logging should be shown, false if not
      * @return the instance of the available SDK
      */
-    public TariffSdk showLogging(final boolean show) {
+    public SwitchSdk showLogging(final boolean show) {
         Logging.SHOW_LOGS = show;
         return this;
     }
@@ -195,12 +195,12 @@ public class TariffSdk {
     }
 
     @VisibleForTesting
-    static TariffSdk create(final Context context, DocumentService documentService,
+    static SwitchSdk create(final Context context, DocumentService documentService,
             ExtractionService extractionService, RemoteConfigManager remoteConfigManager) {
         if (mSingleton == null) {
-            synchronized (TariffSdk.class) {
+            synchronized (SwitchSdk.class) {
                 if (mSingleton == null) {
-                    mSingleton = new TariffSdk(context, documentService, extractionService,
+                    mSingleton = new SwitchSdk(context, documentService, extractionService,
                             remoteConfigManager);
                 }
             }
@@ -218,7 +218,7 @@ public class TariffSdk {
      * @param image the resource id of the image
      * @return the instance of the available SDK
      */
-    public TariffSdk setAnalyzedImage(@DrawableRes final int image) {
+    public SwitchSdk setAnalyzedImage(@DrawableRes final int image) {
         mAnalyzedImage = image;
         return this;
     }
@@ -233,7 +233,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setAnalyzedText(@StringRes final int text) {
+    public SwitchSdk setAnalyzedText(@StringRes final int text) {
         mAnalyzedText = text;
         return this;
     }
@@ -248,7 +248,7 @@ public class TariffSdk {
      * @param color the resource id of the text color
      * @return the instance of the available SDK
      */
-    public TariffSdk setAnalyzedTextColor(@ColorRes final int color) {
+    public SwitchSdk setAnalyzedTextColor(@ColorRes final int color) {
         mAnalyzedTextColor = color;
         return this;
     }
@@ -266,7 +266,7 @@ public class TariffSdk {
      * @param size the size of the analyzed text
      * @return the instance of the available SDK
      */
-    public TariffSdk setAnalyzedTextSize(final int size) {
+    public SwitchSdk setAnalyzedTextSize(final int size) {
         mAnalyzedTextSize = size;
         return this;
     }
@@ -285,7 +285,7 @@ public class TariffSdk {
      * @param color as a color resource id.
      * @return the instance of the available SDK
      */
-    public TariffSdk setButtonTextColor(@ColorRes final int color) {
+    public SwitchSdk setButtonTextColor(@ColorRes final int color) {
         mButtonTextColor = color;
         return this;
     }
@@ -308,7 +308,7 @@ public class TariffSdk {
      * @param text as a string resource id.
      * @return the instance of the available SDK
      */
-    public TariffSdk setExitDialogText(@StringRes final int text) {
+    public SwitchSdk setExitDialogText(@StringRes final int text) {
         mExitDialogText = text;
         return this;
     }
@@ -323,7 +323,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setExtractionButtonText(@StringRes final int text) {
+    public SwitchSdk setExtractionButtonText(@StringRes final int text) {
         mExtractionButtonText = text;
         return this;
     }
@@ -338,7 +338,7 @@ public class TariffSdk {
      * @param color the resource id of the text color
      * @return the instance of the available SDK
      */
-    public TariffSdk setExtractionEditTextBackgroundColor(@ColorRes final int color) {
+    public SwitchSdk setExtractionEditTextBackgroundColor(@ColorRes final int color) {
         mExtractionEditTextBackgroundColor = color;
         return this;
     }
@@ -353,7 +353,7 @@ public class TariffSdk {
      * @param color the resource id of the text color
      * @return the instance of the available SDK
      */
-    public TariffSdk setExtractionEditTextColor(@ColorRes final int color) {
+    public SwitchSdk setExtractionEditTextColor(@ColorRes final int color) {
         mExtractionEditTextColor = color;
         return this;
     }
@@ -368,7 +368,7 @@ public class TariffSdk {
      * @param color the resource id of the text color
      * @return the instance of the available SDK
      */
-    public TariffSdk setExtractionHintColor(@ColorRes final int color) {
+    public SwitchSdk setExtractionHintColor(@ColorRes final int color) {
         mExtractionHintColor = color;
         return this;
     }
@@ -383,7 +383,7 @@ public class TariffSdk {
      * @param color the resource id of the text color
      * @return the instance of the available SDK
      */
-    public TariffSdk setExtractionLineColor(@ColorRes final int color) {
+    public SwitchSdk setExtractionLineColor(@ColorRes final int color) {
         mExtractionLineColor = color;
         return this;
     }
@@ -402,7 +402,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setExtractionTitleText(@StringRes final int text) {
+    public SwitchSdk setExtractionTitleText(@StringRes final int text) {
         mExtractionTitleText = text;
         return this;
     }
@@ -418,7 +418,7 @@ public class TariffSdk {
      * @param color as a color resource int.
      * @return the instance of the available SDK
      */
-    public TariffSdk setNegativeColor(@ColorRes final int color) {
+    public SwitchSdk setNegativeColor(@ColorRes final int color) {
         mNegativeColor = color;
         return this;
     }
@@ -434,7 +434,7 @@ public class TariffSdk {
      * @param color as a color resource int.
      * @return the instance of the available SDK
      */
-    public TariffSdk setPositiveColor(@ColorRes final int color) {
+    public SwitchSdk setPositiveColor(@ColorRes final int color) {
         mPositiveColor = color;
         return this;
     }
@@ -449,7 +449,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setPreviewFailedText(@StringRes final int text) {
+    public SwitchSdk setPreviewFailedText(@StringRes final int text) {
         mPreviewFailedText = text;
         return this;
     }
@@ -464,7 +464,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setPreviewSuccessText(@StringRes final int text) {
+    public SwitchSdk setPreviewSuccessText(@StringRes final int text) {
         mPreviewSuccessText = text;
         return this;
     }
@@ -479,7 +479,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setReviewDiscardText(@StringRes final int text) {
+    public SwitchSdk setReviewDiscardText(@StringRes final int text) {
         mReviewDiscardText = text;
         return this;
     }
@@ -494,7 +494,7 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setReviewKeepText(@StringRes final int text) {
+    public SwitchSdk setReviewKeepText(@StringRes final int text) {
         mReviewKeepText = text;
         return this;
     }
@@ -509,12 +509,12 @@ public class TariffSdk {
      * @param text the resource id of the text
      * @return the instance of the available SDK
      */
-    public TariffSdk setReviewTitleText(@StringRes final int text) {
+    public SwitchSdk setReviewTitleText(@StringRes final int text) {
         mReviewTitleText = text;
         return this;
     }
 
-    static TariffSdk getSdk() {
+    static SwitchSdk getSdk() {
         return mSingleton;
     }
 
@@ -530,7 +530,7 @@ public class TariffSdk {
      * @param theme the resource id of the theme
      * @return the instance of the available SDK
      */
-    public TariffSdk setTheme(@StyleRes final int theme) {
+    public SwitchSdk setTheme(@StyleRes final int theme) {
         mTheme = theme;
         return this;
     }
@@ -543,14 +543,14 @@ public class TariffSdk {
     }
 
     @NonNull
-    private static TariffApi createTariffApi(final @NonNull Context context,
+    private static SwitchApi createTariffApi(final @NonNull Context context,
             final @NonNull String clientId, final @NonNull String clientPw,
             final @NonNull String domain, final OkHttpClient okHttpClient) {
         ClientCredentials clientCredentials = new ClientCredentials(clientId, clientPw);
         UserApiImpl userApi = new UserApiImpl(clientCredentials, okHttpClient);
         AuthenticationService authenticationService = new AuthenticationServiceImpl(
                 userApi, new UserManager(context, domain));
-        final TariffApiImpl tariffApi = new TariffApiImpl(okHttpClient, authenticationService);
+        final SwitchApiImpl tariffApi = new SwitchApiImpl(okHttpClient, authenticationService);
         authenticationService.init(new NetworkCallback<Void>() {
             @Override
             public void onError(final Exception e) {
