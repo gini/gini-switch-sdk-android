@@ -41,8 +41,6 @@ interface TakePictureContract {
 
         boolean hasCameraPermissions();
 
-        void hideImageNumberTitle();
-
         void hideOnboarding();
 
         void hidePreviewButtons();
@@ -62,8 +60,6 @@ interface TakePictureContract {
         void requestPermissions();
 
         void setImages(@NonNull final List<Image> imageList);
-
-        void showImageNumberTitle(int imageNumber);
 
         void showImagePreview(final Image image);
 

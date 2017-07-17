@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 public class CenterSnapHelper extends LinearSnapHelper {
+    public int mViewPosition;
     private OrientationHelper mHorizontalHelper;
-    private int mViewPosition;
 
     @Override
     public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager,
@@ -36,6 +36,10 @@ public class CenterSnapHelper extends LinearSnapHelper {
 
     public int getCenteredPosition() {
         return mViewPosition;
+    }
+
+    public void setCenteredPosition(final int position) {
+        mViewPosition = position;
     }
 
     private int distanceToCenter(@NonNull RecyclerView.LayoutManager layoutManager,

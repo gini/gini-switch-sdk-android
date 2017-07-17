@@ -19,4 +19,5 @@
     <string name="onboarding_parallel">Handy parallel zur Seite halten</string>
     <string name="onboarding_align">Seite vollständig in Rahmen einpassen</string>
     <string name="menu_entry_help">Hilfe</string>
+    <string name="documentbar_item_label">Foto %d</string>
 </resources>

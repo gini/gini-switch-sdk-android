@@ -73,7 +73,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mView.displayImageProcessingState(image);
         mView.showPreviewButtons();
         mView.hideTakePictureButtons();
-        mView.showImageNumberTitle(imageNumber);
     }
 
     @Override
@@ -107,7 +106,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mView.openTakePictureScreen();
         mView.showTakePictureButtons();
         mView.hidePreviewButtons();
-        mView.hideImageNumberTitle();
         //if there are extractions available we finish the sdk
         if (mExtractionService.extractionsAvailable()) {
             //TODO maybe add delay here

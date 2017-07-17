@@ -1,9 +1,8 @@
 package net.gini.tariffsdk;
 
 
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
-import static android.view.View.SCREEN_STATE_ON;
 
 import android.Manifest;
 import android.content.Context;
@@ -41,6 +40,7 @@ import net.gini.tariffsdk.camera.GiniCameraException;
 import net.gini.tariffsdk.onboarding.OnboardingAdapter;
 import net.gini.tariffsdk.utils.AutoRotateImageView;
 import net.gini.tariffsdk.utils.CenterItemDecoration;
+import net.gini.tariffsdk.utils.CenterLayoutManager;
 import net.gini.tariffsdk.utils.CenterSnapHelper;
 
 import java.util.List;
@@ -65,9 +65,7 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     private GiniCamera mCamera;
     private View mCameraFrame;
     private CameraSurfacePreview mCameraPreview;
-    private TextView mImageNumberText;
     private AutoRotateImageView mImagePreview;
-    private ImageView mImagePreviewState;
     private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
     private TakePictureContract.Presenter mPresenter;
@@ -128,11 +126,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void hideImageNumberTitle() {
-        mImageNumberText.setText(null);
     }
 
     @Override
@@ -230,7 +223,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
-        mImagePreviewState = (ImageView) findViewById(R.id.image_state);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
         setUpDocumentBar();
@@ -341,7 +333,6 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
         mSelectedImage = null;
         showCameraPreview();
         mImagePreview.setVisibility(View.GONE);
-        mImagePreviewState.setVisibility(View.GONE);
     }
 
     @Override
@@ -358,13 +349,9 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     @Override
     public void setImages(@NonNull final List<Image> imageList) {
         mAdapter.setImages(imageList);
-        mImageRecyclerView.scrollToPosition(mAdapter.getLastPosition());
-    }
-
-    @Override
-    public void showImageNumberTitle(final int imageNumber) {
-        //Hardcoded because I hope we will remove this
-        mImageNumberText.setText("Foto " + imageNumber);
+        final int lastItem = mAdapter.getLastPosition();
+        mImageRecyclerView.smoothScrollToPosition(lastItem);
+        mAdapter.setSelectedElement(lastItem);
     }
 
     @Override
@@ -451,53 +438,53 @@ final public class TakePictureActivity extends TariffSdkBaseActivity implements
     }
 
     private void setUpDocumentBar() {
-        mImageNumberText = (TextView) mToolbar.findViewById(R.id.image_number_text);
         mImageRecyclerView = (RecyclerView) mToolbar.findViewById(R.id.image_overview);
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL,
-                false);
-        mImageRecyclerView.setLayoutManager(
-                layoutManager);
         final CenterSnapHelper centerSnapHelper = new CenterSnapHelper();
         centerSnapHelper.attachToRecyclerView(mImageRecyclerView);
-        mImageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                if (newState == SCROLL_STATE_IDLE) {
-                    final int position = centerSnapHelper.getCenteredPosition();
-                    if (position < mAdapter.getLastPosition()) {
-                        final Image item = mAdapter.getItem(position);
-                        mPresenter.onImageSelected(item, position + 1);
-                        mAdapter.showPlus();
-                    } else {
-                        mPresenter.onTakePictureSelected();
-                        mAdapter.hidePlus();
-                    }
-                }
-                if (newState == SCREEN_STATE_ON) {
-                    mAdapter.showPlus();
-                    hideImageNumberTitle();
-                }
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
+
+
+        CenterLayoutManager layoutManager = new CenterLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
+        mImageRecyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
             public void onCameraClicked() {
                 mPresenter.onTakePictureSelected();
-                layoutManager.scrollToPosition(mAdapter.getLastPosition());
+                mImageRecyclerView.smoothScrollToPosition(mAdapter.getLastPosition());
+                centerSnapHelper.setCenteredPosition(mAdapter.getLastPosition());
             }
 
             @Override
             public void onImageClicked(final Image image, final int position) {
                 mPresenter.onImageSelected(image, position + 1);
-                layoutManager.scrollToPosition(position);
+                mImageRecyclerView.smoothScrollToPosition(position);
+                centerSnapHelper.setCenteredPosition(position);
             }
 
         }, getPositiveColor(), getNegativeColor());
 
+        mImageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private int oldPosition = -1;
+
+            @Override
+            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
+                if (newState == SCROLL_STATE_SETTLING) {
+                    final int position = centerSnapHelper.getCenteredPosition();
+                    if (position != oldPosition) {
+                        oldPosition = position;
+                        mAdapter.setSelectedElement(position);
+                        if (position < mAdapter.getLastPosition()) {
+                            final Image item = mAdapter.getItem(position);
+                            mPresenter.onImageSelected(item, position + 1);
+                        } else {
+                            mPresenter.onTakePictureSelected();
+                        }
+                    }
+                }
+            }
+        });
         mImageRecyclerView.setAdapter(mAdapter);
         mImageRecyclerView.addItemDecoration(new CenterItemDecoration());
         mImageRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
