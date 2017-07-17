@@ -128,7 +128,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         if (mOnboardingManager.onBoardingShown()) {
             mView.hideOnboarding();
         } else {
-            mView.showOnboarding();
+            mView.showOnboardingWithDelayedAnimation();
         }
         startCameraProcess();
     }
