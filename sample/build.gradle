@@ -29,5 +29,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
     compile 'net.hockeyapp.android:HockeySDK:4.1.4'
-    compile project(':tariffsdk')
+    compile project(':switchsdk')
 }
