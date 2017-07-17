@@ -83,7 +83,7 @@ final class IntentFactory {
         return intent;
     }
 
-    Intent createTariffSdkIntent() {
+    Intent createSwitchSdkIntent() {
         final Intent intent = new Intent(mContext, TakePictureActivity.class);
         addDefaultExtras(intent);
         intent.putExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, mPreviewSuccessText);

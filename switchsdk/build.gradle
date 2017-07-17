@@ -23,7 +23,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "USER_API_URL", "\"https://user.stage.gini.net\""
-        buildConfigField "String", "TARIFF_API_URL", "\"https://switch-api.stage.gini.net\""
+        buildConfigField "String", "SWITCH_API_URL", "\"https://switch-api.stage.gini.net\""
         buildConfigField "String", "CLIENT_ID", "\"${clientId}\""
         buildConfigField "String", "CLIENT_SECRET", "\"${clientSecret}\""
 

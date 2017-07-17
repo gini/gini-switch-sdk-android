@@ -34,7 +34,7 @@ public class SwitchSdkTest {
     @SmallTest
     public void customSettingsSDK_shouldSetButtonStyle() {
         mSwitchSdk.setButtonStyleSelector(12345);
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE, 0);
         assertEquals(12345, buttonTextColor);
     }
@@ -43,7 +43,7 @@ public class SwitchSdkTest {
     @SmallTest
     public void customSettingsSDK_shouldSetButtonTextColor() {
         mSwitchSdk.setButtonTextColor(12345);
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, 0);
         assertEquals(12345, buttonTextColor);
     }
@@ -52,7 +52,7 @@ public class SwitchSdkTest {
     @SmallTest
     public void customSettingsSDK_shouldSetExitDialogText() {
         mSwitchSdk.setExitDialogText(12345);
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int exitDialogText = intent.getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, 0);
         assertEquals(12345, exitDialogText);
     }
@@ -61,7 +61,7 @@ public class SwitchSdkTest {
     @SmallTest
     public void customSettingsSDK_shouldSetNegativeColor() {
         mSwitchSdk.setNegativeColor(12345);
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int negativeColor = intent.getIntExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, 0);
         assertEquals(12345, negativeColor);
     }
@@ -70,7 +70,7 @@ public class SwitchSdkTest {
     @SmallTest
     public void customSettingsSDK_shouldSetPositiveColor() {
         mSwitchSdk.setPositiveColor(12345);
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int positiveColor = intent.getIntExtra(BUNDLE_EXTRA_POSITIVE_COLOR, 0);
         assertEquals(12345, positiveColor);
     }
@@ -79,7 +79,7 @@ public class SwitchSdkTest {
     @SmallTest
     public void customSettingsSDK_shouldSetTheme() {
         mSwitchSdk.setTheme(12345);
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int theme = intent.getIntExtra(BUNDLE_EXTRA_THEME, 0);
         assertEquals(12345, theme);
     }
@@ -87,7 +87,7 @@ public class SwitchSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldDefaultNegativeColor() {
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int negativeColor = intent.getIntExtra(BUNDLE_EXTRA_NEGATIVE_COLOR, 0);
         assertEquals(R.color.negativeColor, negativeColor);
     }
@@ -95,7 +95,7 @@ public class SwitchSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldDefaultPositiveColor() {
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int positiveColor = intent.getIntExtra(BUNDLE_EXTRA_POSITIVE_COLOR, 0);
         assertEquals(R.color.positiveColor, positiveColor);
     }
@@ -103,7 +103,7 @@ public class SwitchSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldHaveGiniTheme() {
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int theme = intent.getIntExtra(BUNDLE_EXTRA_THEME, 0);
         assertEquals(R.style.GiniTheme, theme);
     }
@@ -111,7 +111,7 @@ public class SwitchSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldNotSetButtonStyle() {
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int buttonStyle = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_SELECTOR_STYLE, 0);
         assertEquals(0, buttonStyle);
     }
@@ -119,7 +119,7 @@ public class SwitchSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldNotSetButtonTextColor() {
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int buttonTextColor = intent.getIntExtra(BUNDLE_EXTRA_BUTTON_TEXT_COLOR, 0);
         assertEquals(0, buttonTextColor);
     }
@@ -127,7 +127,7 @@ public class SwitchSdkTest {
     @Test
     @SmallTest
     public void defaultSettingsSDK_shouldNotSetExitDialogText() {
-        Intent intent = mSwitchSdk.getTariffSdkIntent();
+        Intent intent = mSwitchSdk.getSwitchSdkIntent();
         final int exitDialogText = intent.getIntExtra(BUNDLE_EXTRA_EXIT_DIALOG_TEXT, 0);
         assertEquals(R.string.exit_dialog_text, exitDialogText);
     }

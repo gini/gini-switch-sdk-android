@@ -62,13 +62,13 @@ public class SwitchApiImplTest {
     private HttpUrl mMockUrl;
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
-    private SwitchApiImpl mTariffApi;
+    private SwitchApiImpl mSwitchApi;
     private Waiter mWaiter;
 
     @Test
     public void addPage_shouldBeAPostRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("POST", request.getMethod());
     }
@@ -76,7 +76,7 @@ public class SwitchApiImplTest {
     @Test
     public void addPage_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -87,7 +87,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, TimeoutException {
         final byte[] page = new byte[Short.MAX_VALUE];
         new Random().nextBytes(page);
-        mTariffApi.addPage(mMockUrl.toString(), page, mMockStringNetworkCallback);
+        mSwitchApi.addPage(mMockUrl.toString(), page, mMockStringNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         final byte[] body = request.getBody().readByteArray();
@@ -99,7 +99,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -109,7 +109,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, JSONException, TimeoutException {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -133,7 +133,7 @@ public class SwitchApiImplTest {
                 createMockCreatePagesResponse("",
                         ExtractionOrderPage.Status.processing));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -158,7 +158,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse(pagesLink, ExtractionOrderPage.Status.processing));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -182,7 +182,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("", status));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.addPage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.addPage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -204,7 +204,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, JSONException, TimeoutException {
         MockResponse mJSONMockResponse = new MockResponse().setBody("");
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mSwitchApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.assertTrue(e instanceof SwitchException);
@@ -223,7 +223,7 @@ public class SwitchApiImplTest {
     @Test
     public void createExtractionOrder_shouldBeAPostRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
+        mSwitchApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("POST", request.getMethod());
     }
@@ -231,7 +231,7 @@ public class SwitchApiImplTest {
     @Test
     public void createExtractionOrder_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
+        mSwitchApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -240,7 +240,7 @@ public class SwitchApiImplTest {
     @Test
     public void createExtractionOrder_shouldContainEmptyJson()
             throws InterruptedException, TimeoutException {
-        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
+        mSwitchApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String body = request.getBody().readUtf8();
         assertEquals("{ }", body);
@@ -251,7 +251,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
+        mSwitchApi.createExtractionOrder(mMockExtractionOrderNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
@@ -261,7 +261,7 @@ public class SwitchApiImplTest {
     public void createExtractionOrder_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mSwitchApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.assertTrue(e instanceof SwitchException);
@@ -283,7 +283,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse("", ""));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mSwitchApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
@@ -307,7 +307,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse("", pagesLink));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mSwitchApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
@@ -331,7 +331,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderResponse(selfLink, ""));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
+        mSwitchApi.createExtractionOrder(new NetworkCallback<ExtractionOrder>() {
             @Override
             public void onError(final Exception e) {
                 mWaiter.fail(e);
@@ -350,7 +350,7 @@ public class SwitchApiImplTest {
     @Test
     public void deletePage_shouldBeADeleteRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.deletePage(mMockUrl.toString());
+        mSwitchApi.deletePage(mMockUrl.toString());
         RecordedRequest request = mServer.takeRequest();
         assertEquals("Delete Page should be a DELETE request!", "DELETE", request.getMethod());
     }
@@ -358,7 +358,7 @@ public class SwitchApiImplTest {
     @Test
     public void deletePage_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-        mTariffApi.deletePage(mMockUrl.toString());
+        mSwitchApi.deletePage(mMockUrl.toString());
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse("Delete Page should contain an Authorization Header!",
@@ -370,7 +370,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.deletePage(mMockUrl.toString());
+        mSwitchApi.deletePage(mMockUrl.toString());
         RecordedRequest request = mServer.takeRequest();
         assertEquals("Delete Page should contain a Bearer token as Authorization Header!",
                 "BEARER " + bearerToken, request.getHeader("Authorization"));
@@ -379,7 +379,7 @@ public class SwitchApiImplTest {
     @Test
     public void getOrderState_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
+        mSwitchApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
     }
@@ -387,7 +387,7 @@ public class SwitchApiImplTest {
     @Test
     public void getOrderState_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-        mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
+        mSwitchApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -398,7 +398,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
+        mSwitchApi.getOrderState(mMockUrl.toString(), mMockOrderStateNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -407,7 +407,7 @@ public class SwitchApiImplTest {
     public void getOrderState_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        mTariffApi.getOrderState(mMockUrl.toString(),
+        mSwitchApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -430,7 +430,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, null));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.getOrderState(mMockUrl.toString(),
+        mSwitchApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -454,7 +454,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, pagesLink, true));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.getOrderState(mMockUrl.toString(),
+        mSwitchApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -478,7 +478,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), null, pagesLink));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.getOrderState(mMockUrl.toString(),
+        mSwitchApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -502,7 +502,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(new ArrayList<String>(), selfLink, null));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.getOrderState(mMockUrl.toString(),
+        mSwitchApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -533,7 +533,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionOrderState(pages, null, null));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.getOrderState(mMockUrl.toString(),
+        mSwitchApi.getOrderState(mMockUrl.toString(),
                 new NetworkCallback<ExtractionOrderState>() {
                     @Override
                     public void onError(final Exception e) {
@@ -553,7 +553,7 @@ public class SwitchApiImplTest {
     @Test
     public void replacePage_shouldBeAPutRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("PUT", request.getMethod());
     }
@@ -561,7 +561,7 @@ public class SwitchApiImplTest {
     @Test
     public void replacePage_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -572,7 +572,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, TimeoutException {
         final byte[] page = new byte[Short.MAX_VALUE];
         new Random().nextBytes(page);
-        mTariffApi.replacePage(mMockUrl.toString(), page, mMockStringNetworkCallback);
+        mSwitchApi.replacePage(mMockUrl.toString(), page, mMockStringNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         final byte[] body = request.getBody().readByteArray();
@@ -584,7 +584,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1], mMockStringNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -593,7 +593,7 @@ public class SwitchApiImplTest {
     public void replacePage_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -617,7 +617,7 @@ public class SwitchApiImplTest {
                 createMockCreatePagesResponse("",
                         ExtractionOrderPage.Status.processing));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -642,7 +642,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse(pagesLink, ExtractionOrderPage.Status.processing));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -666,7 +666,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockCreatePagesResponse("", status));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.replacePage(mMockUrl.toString(), new byte[1],
+        mSwitchApi.replacePage(mMockUrl.toString(), new byte[1],
                 new NetworkCallback<ExtractionOrderPage>() {
                     @Override
                     public void onError(final Exception e) {
@@ -686,7 +686,7 @@ public class SwitchApiImplTest {
     @Test
     public void requestConfiguration_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
     }
@@ -694,7 +694,7 @@ public class SwitchApiImplTest {
     @Test
     public void requestConfiguration_shouldContainAnAuthorizationHeader()
             throws InterruptedException {
-        mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -706,7 +706,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, TimeoutException {
         final String deviceModel = "Pixel";
         final ClientInformation clientInformation = new ClientInformation(0, null, deviceModel);
-        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -718,7 +718,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, TimeoutException {
         final int osVersion = 19;
         final ClientInformation clientInformation = new ClientInformation(osVersion, null, null);
-        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -729,7 +729,7 @@ public class SwitchApiImplTest {
     public void requestConfiguration_shouldContainClientPlatform()
             throws InterruptedException, TimeoutException {
         final ClientInformation clientInformation = new ClientInformation(0, null, null);
-        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -741,7 +741,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, TimeoutException {
         final String sdkVersion = "1.0.1";
         final ClientInformation clientInformation = new ClientInformation(0, sdkVersion, null);
-        mTariffApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(clientInformation, mMockConfigurationNetworkCallback);
 
         RecordedRequest request = mServer.takeRequest();
         assertTrue(request.getPath().contains(ClientInformation.PLATFORM_NAME));
@@ -753,7 +753,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
+        mSwitchApi.requestConfiguration(mMockClientInformation, mMockConfigurationNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -762,7 +762,7 @@ public class SwitchApiImplTest {
     public void requestConfiguration_wasNotSuccessfulShouldCallOnError()
             throws InterruptedException, JSONException, TimeoutException {
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        mTariffApi.requestConfiguration(mMockClientInformation,
+        mSwitchApi.requestConfiguration(mMockClientInformation,
                 new NetworkCallback<Configuration>() {
                     @Override
                     public void onError(final Exception e) {
@@ -782,7 +782,7 @@ public class SwitchApiImplTest {
     @Test
     public void retrieveExtractions_shouldBeAGetRequest()
             throws InterruptedException, TimeoutException {
-        mTariffApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("GET", request.getMethod());
     }
@@ -790,7 +790,7 @@ public class SwitchApiImplTest {
     @Test
     public void retrieveExtractions_shouldContainAuthorizationHeader()
             throws InterruptedException, TimeoutException {
-        mTariffApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         assertFalse(authorizationHeader.isEmpty());
@@ -801,7 +801,7 @@ public class SwitchApiImplTest {
             throws InterruptedException {
         final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
         when(mMockAccessToken.getToken()).thenReturn(bearerToken);
-        mTariffApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(), mMockExtractionsNetworkCallback);
         RecordedRequest request = mServer.takeRequest();
         assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
     }
@@ -811,7 +811,7 @@ public class SwitchApiImplTest {
             throws InterruptedException, JSONException, TimeoutException {
 
         mServer.enqueue(new MockResponse().setResponseCode(500));
-        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(),
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
@@ -834,7 +834,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionsResponse(""));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(),
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
@@ -858,7 +858,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionsResponse(null, companyName));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(),
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
@@ -883,7 +883,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionsResponse(null, null, null, consumptionValue, consumptionUnit));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(),
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
@@ -908,7 +908,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionsResponse(selfLink));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(),
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
@@ -932,7 +932,7 @@ public class SwitchApiImplTest {
         MockResponse mJSONMockResponse = new MockResponse().setBody(
                 createMockExtractionsResponse(null, null, energyMeterNumber));
         mServer.enqueue(mJSONMockResponse);
-        mTariffApi.retrieveExtractions(mMockUrl.toString(),
+        mSwitchApi.retrieveExtractions(mMockUrl.toString(),
                 new NetworkCallback<Extractions>() {
                     @Override
                     public void onError(final Exception e) {
@@ -967,7 +967,7 @@ public class SwitchApiImplTest {
 
         when(mMockFile.getName()).thenReturn("file");
 
-        mTariffApi = new SwitchApiImpl(mOkHttpClient, mMockAuthenticationService, mMockUrl);
+        mSwitchApi = new SwitchApiImpl(mOkHttpClient, mMockAuthenticationService, mMockUrl);
     }
 
     @After

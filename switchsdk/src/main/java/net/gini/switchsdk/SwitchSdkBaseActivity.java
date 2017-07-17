@@ -136,7 +136,7 @@ class SwitchSdkBaseActivity extends AppCompatActivity implements
                 IntentFactory.BUNDLE_EXTRA_RIGHT_INSTANTIATED, false)) {
             throw new IllegalArgumentException(
                     "Do not create this Intent by yourself, use the provided SwitchSdk"
-                            + ".getTariffSdkIntent() method for it!");
+                            + ".getSwitchSdkIntent() method for it!");
         }
 
         final TypedValue typedValue = new TypedValue();

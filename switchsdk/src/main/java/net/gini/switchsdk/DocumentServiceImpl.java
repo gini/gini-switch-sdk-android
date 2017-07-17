@@ -170,7 +170,7 @@ class DocumentServiceImpl implements DocumentService {
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public Image saveImage(@NonNull final byte[] data, final int cameraOrientation) {
-        final File directory = mContext.getDir("tariffsdk", Context.MODE_PRIVATE);
+        final File directory = mContext.getDir("switchsdk", Context.MODE_PRIVATE);
         final String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(
                 new Date());
         final File file = new File(directory, fileName + ".jpeg");

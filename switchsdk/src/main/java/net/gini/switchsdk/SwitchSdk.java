@@ -25,7 +25,7 @@ import okhttp3.OkHttpClient;
 
 /**
  * <p>
- * This class represents the Gini Tariff SDK.
+ * This class represents the Gini Switch SDK.
  * </p>
  */
 public class SwitchSdk {
@@ -112,7 +112,7 @@ public class SwitchSdk {
         assertNotNull(clientPw);
         assertNotNull(domain);
         assertNotNull(okHttpClient);
-        SwitchApi switchApi = createTariffApi(context, clientId, clientPw, domain, okHttpClient);
+        SwitchApi switchApi = createSwitchApi(context, clientId, clientPw, domain, okHttpClient);
         RemoteConfigManager remoteConfigManager = new RemoteConfigManager(switchApi);
 
         return create(context, new DocumentServiceImpl(context, switchApi),
@@ -135,7 +135,7 @@ public class SwitchSdk {
     }
 
     /**
-     * Use this to get an intent of the Tariff SDK
+     * Use this to get an intent of the Switch SDK
      * {@link TakePictureActivity}
      * activity.
      * Only use this method to instantiate an intent of this activity, otherwise an exception will
@@ -146,9 +146,9 @@ public class SwitchSdk {
      * @return an intent of {@link TakePictureActivity}
      */
     @NonNull
-    public Intent getTariffSdkIntent() {
+    public Intent getSwitchSdkIntent() {
 
-        return new IntentFactory(this).createTariffSdkIntent();
+        return new IntentFactory(this).createSwitchSdkIntent();
     }
 
     /**
@@ -543,14 +543,14 @@ public class SwitchSdk {
     }
 
     @NonNull
-    private static SwitchApi createTariffApi(final @NonNull Context context,
+    private static SwitchApi createSwitchApi(final @NonNull Context context,
             final @NonNull String clientId, final @NonNull String clientPw,
             final @NonNull String domain, final OkHttpClient okHttpClient) {
         ClientCredentials clientCredentials = new ClientCredentials(clientId, clientPw);
         UserApiImpl userApi = new UserApiImpl(clientCredentials, okHttpClient);
         AuthenticationService authenticationService = new AuthenticationServiceImpl(
                 userApi, new UserManager(context, domain));
-        final SwitchApiImpl tariffApi = new SwitchApiImpl(okHttpClient, authenticationService);
+        final SwitchApiImpl switchApi = new SwitchApiImpl(okHttpClient, authenticationService);
         authenticationService.init(new NetworkCallback<Void>() {
             @Override
             public void onError(final Exception e) {
@@ -563,6 +563,6 @@ public class SwitchSdk {
             }
         });
 
-        return tariffApi;
+        return switchApi;
     }
 }

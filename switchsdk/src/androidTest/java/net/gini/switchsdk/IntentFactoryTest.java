@@ -202,7 +202,7 @@ public class IntentFactoryTest {
 
     private Intent getPreviewIntent() {
         final IntentFactory intentFactory = new IntentFactory(mSwitchSdk);
-        return intentFactory.createTariffSdkIntent();
+        return intentFactory.createSwitchSdkIntent();
     }
 
     private Intent getReviewIntent() {

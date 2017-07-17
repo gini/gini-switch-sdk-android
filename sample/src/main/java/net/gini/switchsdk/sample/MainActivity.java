@@ -53,15 +53,15 @@ public class MainActivity extends AppCompatActivity {
         viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent tariffSdkIntent = mSwitchSdk.getTariffSdkIntent();
-                startActivityForResult(tariffSdkIntent, SwitchSdk.REQUEST_CODE);
+                final Intent switchSdkIntent = mSwitchSdk.getSwitchSdkIntent();
+                startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
 
         findViewById(R.id.button_start_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent tariffSdkIntent = mSwitchSdk
+                final Intent switchSdkIntent = mSwitchSdk
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.custom_positiveColor)
@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
                         .setExtractionEditTextBackgroundColor(R.color.primaryColor)
                         .setExtractionTitleText(R.string.custom_extractions_title)
                         .setExtractionButtonText(R.string.custom_extractions_button_text)
-                        .getTariffSdkIntent();
-                startActivityForResult(tariffSdkIntent, SwitchSdk.REQUEST_CODE);
+                        .getSwitchSdkIntent();
+                startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
         checkForUpdates();

@@ -322,9 +322,9 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     @Override
     public void openImageReview(@NonNull final Image image) {
 
-        final IntentFactory tariffSdkIntentFactory = new IntentFactory(
+        final IntentFactory switchSdkIntentFactory = new IntentFactory(
                 SwitchSdk.getSdk());
-        final Intent intent = tariffSdkIntentFactory.createReviewActivity(image.getUri());
+        final Intent intent = switchSdkIntentFactory.createReviewActivity(image.getUri());
         startActivity(intent);
     }
 

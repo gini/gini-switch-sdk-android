@@ -44,17 +44,17 @@ import okhttp3.Response;
 class SwitchApiImpl implements SwitchApi {
 
     private final OkHttpClient mOkHttpClient;
-    private final HttpUrl mTariffApiUrl;
+    private final HttpUrl mSwitchApiUrl;
 
     SwitchApiImpl(final OkHttpClient okHttpClient,
             final AuthenticationService authenticationService) {
-        this(okHttpClient, authenticationService, HttpUrl.parse(BuildConfig.TARIFF_API_URL));
+        this(okHttpClient, authenticationService, HttpUrl.parse(BuildConfig.SWITCH_API_URL));
     }
 
     @VisibleForTesting
     SwitchApiImpl(final OkHttpClient okHttpClient,
             final AuthenticationService authenticationService, final HttpUrl url) {
-        mTariffApiUrl = url;
+        mSwitchApiUrl = url;
         mOkHttpClient = okHttpClient.newBuilder()
                 .addInterceptor(new AuthenticationInterceptor(authenticationService))
                 .authenticator(new BearerAuthenticator(authenticationService))
@@ -81,7 +81,7 @@ class SwitchApiImpl implements SwitchApi {
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Override
     public void createExtractionOrder(@NonNull final NetworkCallback<ExtractionOrder> callback) {
-        final HttpUrl url = mTariffApiUrl.newBuilder()
+        final HttpUrl url = mSwitchApiUrl.newBuilder()
                 .addPathSegment("extractionOrders")
                 .build();
 
@@ -209,7 +209,7 @@ class SwitchApiImpl implements SwitchApi {
     @Override
     public void requestConfiguration(@NonNull final ClientInformation clientInformation,
             @NonNull final NetworkCallback<Configuration> callback) {
-        final HttpUrl url = mTariffApiUrl.newBuilder()
+        final HttpUrl url = mSwitchApiUrl.newBuilder()
                 .addEncodedPathSegment("config")
                 .addQueryParameter(ClientInformation.PLATFORM_NAME,
                         clientInformation.getPlatformName())
