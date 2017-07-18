@@ -26,7 +26,7 @@ Next step is to add the SDK to your applications ``build.gradle`` file with:
 
   dependencies {
     …
-    compile 'net.gini.tariffsdk:tariffsdk-release@aar'
+    compile 'net.gini.switchsdk:switchsdk-release@aar'
     …
   }
 
@@ -55,11 +55,11 @@ Where the version has to be bigger or equal to 25.2.0. so the following lines sh
 Integrating the SDK
 ===================
 
-To integrate the SDK into your code, simple use the provided ``TariffSdk.init`` method to generate a TariffSdk instance.
+To integrate the SDK into your code, simple use the provided ``SwitchSdk.init`` method to generate a SwitchSdk instance.
 Hereby a Context, your client id, your client secret and your domain is needed(For more information about those parameters and how to configure the SDK see the chapter: :ref:`Configuration`)
 
 .. code-block:: java
 
-  final TariffSdk tariffSdk = TariffSdk.init(this, "clientId", "clientPw", "domain");
+  final SwitchSdk switchSdk = SwitchSdk.init(this, "clientId", "clientPw", "domain");
 
-The generated TariffSdk instance can now be used to generate the needed Activity and to get the found extractions.
+The generated SwitchSdk instance can now be used to generate the needed Activity and to get the found extractions.
