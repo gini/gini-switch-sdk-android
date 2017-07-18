@@ -8,7 +8,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "net.gini.tariffsdk.sample"
+        applicationId "net.gini.switchsdk.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode versionBuild
@@ -29,5 +29,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
     compile 'net.hockeyapp.android:HockeySDK:4.1.4'
-    compile project(':tariffsdk')
+    compile project(':switchsdk')
 }

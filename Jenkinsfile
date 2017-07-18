@@ -3,18 +3,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh './gradlew tariffsdk::assembleDebug'
+                sh './gradlew switchsdk::assembleDebug'
             }
         }
         stage('Unit tests') {
             steps {
-                sh './gradlew tariffsdk::test'
+                sh './gradlew switchsdk::test'
                 junit '**/test-results/**/*.xml'
             }
         }
         stage('Instrumentation tests') {
             steps {
-                sh './gradlew tariffsdk::connectedAndroidTest'
+                sh './gradlew switchsdk::connectedAndroidTest'
             }
         }
     }

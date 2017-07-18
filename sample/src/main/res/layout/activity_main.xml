@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context="net.gini.tariffsdk.sample.MainActivity">
+    tools:context="net.gini.switchsdk.sample.MainActivity">
 
     <Button
         android:id="@+id/button_start"

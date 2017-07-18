@@ -1,5 +1,5 @@
-# Android Repository of the Tariff SDK
-This is the repository of the Android SDK of the Tariff Cell.
+# Android Repository of the Switch SDK
+This is the repository of the Android SDK of the Switch Cell.
 
 ## <a name="build_jobs"/>Build Jobs
 * TODO => with the move to the new Mobile CI system this will be created in the near future
