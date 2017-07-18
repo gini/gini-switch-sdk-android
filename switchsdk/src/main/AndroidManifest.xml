@@ -10,15 +10,11 @@
     <application>
         <activity
             android:name="net.gini.switchsdk.TakePictureActivity"
-            android:taskAffinity="net.gini.tariffsdk"
+            android:taskAffinity="net.gini.switchsdk"
             android:theme="@style/GiniTheme" />
         <activity
             android:name="net.gini.switchsdk.ReviewPictureActivity"
-            android:taskAffinity="net.gini.tariffsdk"
-            android:theme="@style/GiniTheme" />
-        <activity
-            android:name=".ExtractionsActivity"
-            android:taskAffinity="net.gini.tariffsdk"
+            android:taskAffinity="net.gini.switchsdk"
             android:theme="@style/GiniTheme" />
     </application>
 
