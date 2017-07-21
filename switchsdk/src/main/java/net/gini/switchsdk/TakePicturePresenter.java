@@ -3,6 +3,7 @@ package net.gini.switchsdk;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.List;
@@ -42,6 +43,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
         mView.showTakePictureButtons();
     }
 
+    @Nullable
+    @Override
+    public Image getSelectedImage() {
+        return mSelectedImage;
+    }
+
     @Override
     public void onBoardingFinished() {
         mView.hideOnboarding();
@@ -67,7 +74,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     @Override
-    public void onImageSelected(final Image image, final int imageNumber) {
+    public void onImageSelected(final Image image) {
         mSelectedImage = image;
         mView.showImagePreview(image);
         mView.displayImageProcessingState(image);

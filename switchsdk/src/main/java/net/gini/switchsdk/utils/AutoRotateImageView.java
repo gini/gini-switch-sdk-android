@@ -55,8 +55,13 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
     public void displayImage(@Nullable final Uri uri) {
         mDegrees = getRequiredRotationDegrees(uri);
         mUri = uri;
-        setImageBitmap();
-        rotateImage();
+        if (getHeight() <= 0 || getWidth() <= 0) {
+            //layouting is not done yet, we have to wait
+            observeViewTree(this);
+        } else {
+            setImageBitmap();
+            rotateImage();
+        }
     }
 
     public void setImageURI(@Nullable final Uri uri) {
@@ -121,7 +126,7 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
     }
 
     private void setImageBitmap() {
-        if (mUri != null) {
+        if (mUri != null && getWidth() > 0 && getHeight() > 0) {
             if (shouldUseThumbnail()) {
                 BitmapMemoryCache.getInstance().loadThumbnailAsync(mUri, getHeight(), getWidth(),
                         getContext(), this);
