@@ -26,6 +26,16 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
     }
 
     @Override
+    public int getRotation() {
+        return mRotationCount;
+    }
+
+    @Override
+    public void setRotation(final int rotation) {
+        mRotationCount = rotation;
+    }
+
+    @Override
     public void keepImage() {
         if (mRotationCount > 0) {
             mDocumentService.replaceImage(mUri, mRotationCount);
@@ -38,7 +48,7 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
     @Override
     public void rotateImage() {
         mRotationCount++;
-        mView.rotateView();
+        mView.rotateViewAnimated();
     }
 
 

@@ -7,6 +7,10 @@ interface ReviewPictureContract {
     interface Presenter {
         void discardImage();
 
+        int getRotation();
+
+        void setRotation(int rotation);
+
         void keepImage();
 
         void rotateImage();
@@ -16,7 +20,7 @@ interface ReviewPictureContract {
 
         void finishReview();
 
-        void rotateView();
+        void rotateViewAnimated();
 
         void setImage(final Uri uri);
     }
