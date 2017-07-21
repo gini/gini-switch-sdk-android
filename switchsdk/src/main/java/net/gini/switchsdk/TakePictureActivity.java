@@ -67,6 +67,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private View mCameraFrame;
     private CameraSurfacePreview mCameraPreview;
     private AutoRotateImageView mImagePreview;
+    private View mImagePreviewContainer;
     private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
     private TakePictureContract.Presenter mPresenter;
@@ -224,6 +225,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
+        mImagePreviewContainer = findViewById(R.id.container_image);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
         setUpDocumentBar();
@@ -355,7 +357,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     @Override
     public void openTakePictureScreen() {
         showCameraPreview();
-        mImagePreview.setVisibility(View.GONE);
+        mImagePreviewContainer.setVisibility(View.GONE);
         final int lastItem = mAdapter.getLastPosition();
         mImageRecyclerView.smoothScrollToPosition(lastItem);
         mAdapter.setSelectedElement(lastItem);
@@ -381,7 +383,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     public void showImagePreview(final Image image) {
         mImagePreview.displayImage(image.getUri());
         hideCameraPreview();
-        mImagePreview.setVisibility(View.VISIBLE);
+        mImagePreviewContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
