@@ -8,7 +8,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -199,6 +203,11 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         mProgressBar.setVisibility(View.GONE);
 
         mTakePictureButton = (ImageButton) findViewById(R.id.button_take_picture);
+
+        Drawable cameraIcon = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_camera);
+        ColorFilter filter = new LightingColorFilter(Color.WHITE, Color.WHITE);
+        cameraIcon.setColorFilter(filter);
+        mTakePictureButton.setImageDrawable(cameraIcon);
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -238,6 +247,9 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
 
         ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
+        Drawable deleteIcon = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_delete);
+        deleteIcon.setColorFilter(filter);
+        deleteImageButton.setImageDrawable(deleteIcon);
         deleteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

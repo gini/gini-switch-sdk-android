@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -14,7 +15,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:paddingStart="4dp"
-        android:src="@android:drawable/ic_menu_delete" />
+        tools:src="@android:drawable/ic_menu_delete" />
 
     <Button
         android:id="@+id/button_take_new_image"
