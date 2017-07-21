@@ -8,7 +8,7 @@ Configuration
 Configuration of the SDK
 ========================
 
-The Gini Tariff SDK offers possibilities to configure it to your needs.
+The Gini Switch SDK offers possibilities to configure it to your needs.
 
 Mandatory Configurations
 ========================
@@ -32,11 +32,32 @@ OkHttpClient
 
 Since the SDK uses the library okHttp for its network operations an okHttp client has to be used.
 OkHttp clients are encouraged to be singletons due to caching, joining and canceling of calls.
-Therefore the SDK provides the possibility to add a okHttpClient which is being reused in the SDK:
+Therefore the SDK provides the possibility to add a okHttpClient which is being reused in the SDK via an overloaded init method:
 
 .. code-block:: java
 
-  public TariffSdk withOkHttpClient(@NonNull OkHttpClient okHttpClient)
+  public SwitchSdk init(…, OkHttpClient okhttpClient);
+
+
+Enable Logging
+------------
+
+You can enable logging inside the SDK to get some information what is going on there. The logging is disabled by default and should only be turned on for testing and debugging purposes. The log output is printed into the usual Android Logcat output and there are also the same log levels, which can also be defined. See ``Logging Level`` for more information about it.
+
+.. code-block:: java
+
+  public SwitchSdk showLogging(boolean show);
+
+
+Set Logging Level
+------------
+
+You can define the level of what should be printed in the logs. They are similar to the ones in the Android Log class. There are: VERBOSE, INFO, DEBUG, WARN and ERROR. By default all of them are shown.
+
+.. code-block:: java
+
+  public SwitchSdk setLoggingLevel(Logging.LogLevel logLevel)
+
 
 Accent Color
 ------------
@@ -53,7 +74,7 @@ This style can be applied to the SDK with the ``setTheme()`` method.
 
 .. code-block:: java
 
-  tariffSdk.setTheme(R.style.CustomTheme);
+  switchSdk.setTheme(R.style.CustomTheme);
 
 
 Button Style
@@ -63,7 +84,7 @@ To set a custom button style a stateList drawable has to be created. This drawab
 
 .. code-block:: java
 
-  tariffSdk.setButtonStyleSelector(R.drawable.custom_button);
+  switchSdk.setButtonStyleSelector(R.drawable.custom_button);
 
 .. note:: See `official Android documentation <https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList>`_ to StateList for more information.
 
@@ -76,7 +97,7 @@ The color has to be a resource id.
 
 .. code-block:: java
 
-  tariffSdk.setButtonTextColor(R.color.your_color);
+  switchSdk.setButtonTextColor(R.color.your_color);
 
 
 Positive Color
@@ -87,7 +108,7 @@ The color has to be a resource id.
 
 .. code-block:: java
 
-  tariffSdk.setPositiveColor(R.color.your_positiveColor)
+  switchSdk.setPositiveColor(R.color.your_positiveColor)
 
 .. note:: The color should indicate success and can therefore be something like green.
 
@@ -100,7 +121,7 @@ The color has to be a resource id.
 
 .. code-block:: java
 
-  tariffSdk.setNegativeColor(R.color.your_negativeColor)
+  switchSdk.setNegativeColor(R.color.your_negativeColor)
 
 .. note:: The color should indicate failure and can therefore be something like red.
 
@@ -114,7 +135,7 @@ The text has to be a string resource id.
 
 .. code-block:: java
 
-  tariffSdk.setExitDialogText(R.string.exit_text);
+  switchSdk.setExitDialogText(R.string.exit_text);
 
 
 Title Text (Review Screen)
@@ -125,7 +146,7 @@ The text should be a string resource.
 
 .. code-block:: java
 
-  tariffSdk.setReviewTitleText(R.string.your_title_text);
+  switchSdk.setReviewTitleText(R.string.your_title_text);
 
 
 Discard Button Text (Review Screen)
@@ -136,7 +157,7 @@ The text should be a string resource.
 
 .. code-block:: java
 
-  tariffSdk.setReviewDiscardText(R.string.your_discard_button_text);
+  switchSdk.setReviewDiscardText(R.string.your_discard_button_text);
 
 
 Keep Button Text (Review Screen)
@@ -147,7 +168,7 @@ The text should be a string resource.
 
 .. code-block:: java
 
-  tariffSdk.setReviewKeepText(R.string.your_keep_button_text);
+  switchSdk.setReviewKeepText(R.string.your_keep_button_text);
 
 
 Title Success Text (Preview Screen)
@@ -158,7 +179,7 @@ The text should be a string resource.
 
 .. code-block:: java
 
-  tariffSdk.setPreviewSuccessText(R.string.your_success_text);
+  switchSdk.setPreviewSuccessText(R.string.your_success_text);
 
 
 Title Failed Text (Preview Screen)
@@ -169,7 +190,7 @@ The text should be a string resource.
 
 .. code-block:: java
 
-  tariffSdk.setPreviewFailedText(R.string.your_failed_text);
+  switchSdk.setPreviewFailedText(R.string.your_failed_text);
 
 
 Text (Analyze Completed Screen)
@@ -180,7 +201,7 @@ The string has to be a resource id.
 
 .. code-block:: java
 
-  tariffSdk.setAnalyzedText(R.string.your_string);
+  switchSdk.setAnalyzedText(R.string.your_string);
 
 
 Text Color (Analyze Completed Screen)
@@ -191,7 +212,7 @@ The color has to be a resource id.
 
 .. code-block:: java
 
-  tariffSdk.setAnalyzedTextColor(R.color.your_color);
+  switchSdk.setAnalyzedTextColor(R.color.your_color);
 
 
 Image (Analyze Completed Screen)
@@ -202,7 +223,7 @@ The image has to be a resource id of a drawable. The image will be displayed in 
 
 .. code-block:: java
 
-  tariffSdk.setAnalyzedImage(R.drawable.your_analyzed_image);
+  switchSdk.setAnalyzedImage(R.drawable.your_analyzed_image);
 
 
 Text Size (Analyze Completed Screen)
@@ -213,76 +234,9 @@ The size has to be in ``sp``.
 
 .. code-block:: java
 
-  tariffSdk.setAnalyzedTextSize(16);
+  switchSdk.setAnalyzedTextSize(16);
 
 .. note:: See `official Android documentation <https://developer.android.com/guide/topics/resources/more-resources.html#Dimension>`_ about dimensions for more information.
-
-
-Title Text (Extractions Screen)
---------------------------------
-
-To set the title in the extractions screen use the ``setExtractionTitleText()`` method. This text is shown in the extractions screen as a title and should hint your user to validate the fields.
-The text should be a string resource.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionTitleText(R.string.your_title_text);
-
-
-Button Text (Extractions Screen)
---------------------------------
-
-To set the text of the button in the extractions screen use the ``setExtractionButtonText()`` method. This text is shown on the button in the extractions screen.
-The text should be a string resource.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionButtonText(R.string.your_button_text);
-
-
-
-Edit Text Color (Extractions Screen)
---------------------------------
-
-To set the text color of the input field in the extraction screen use the ``setExtractionEditTextColor()`` method.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionEditTextColor(R.color.your_input_text_color);
-
-
-Edit Text Line Color (Extractions Screen)
---------------------------------
-
-To set the color of the line of the input field in the extraction screen use the ``setExtractionLineColor()`` method.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionLineColor(R.color.your_input_text_line_color);
-
-
-Edit Text Background Color (Extractions Screen)
---------------------------------
-
-To set the background color of the line of the input field in the extraction screen use the ``setExtractionEditTextBackgroundColor()`` method.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionEditTextBackgroundColor(R.color.your_input_text_background_color);
-
-
-Edit Text Background Color (Extractions Screen)
---------------------------------
-
-To set the text color of the hint of the input field in the extraction screen use the ``setExtractionHintColor()`` method. This color is applied to the input text field seen in the extraction screen.
-The color has to be a resource id.
-
-.. code-block:: java
-
-  tariffSdk.setExtractionHintColor(R.color.your_input_text_hint_color);
 
 
 
@@ -297,6 +251,8 @@ Client ID                            String         No
 Client Secret                        String         No
 Domain                               String         No
 OkHttpClient                         OkHttpClient   Yes
+Enable Logging                       boolean        Yes
+Logging Level                        LoggingLevel   Yes
 Accent Color                         int            Yes
 Button Style                         int            Yes
 Positive Color                       int            Yes
@@ -308,9 +264,4 @@ Text (ACS)                           int            Yes
 Text Color (ACS)                     int            Yes
 Text Size (ACS)                      int            Yes
 Image (ACS)                          int            Yes
-Title Text (ES)                      int            Yes
-Edit Text Color (ES)                 int            Yes
-Edit Text Line Color (ES)            int            Yes
-Edit Text Hint Color (ES)            int            Yes
-Edit Text Background Color (ES)      int            Yes
 ==================================   ============   ============

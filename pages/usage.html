@@ -91,6 +91,8 @@
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#mandatory-configurations">Mandatory Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#optional-configurations">Optional Configurations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#okhttpclient">OkHttpClient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#enable-logging">Enable Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#set-logging-level">Set Logging Level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#accent-color">Accent Color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#button-style">Button Style</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#button-text-color">Button Text Color</a></li>
@@ -106,12 +108,6 @@
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#text-color-analyze-completed-screen">Text Color (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#image-analyze-completed-screen">Image (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#text-size-analyze-completed-screen">Text Size (Analyze Completed Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#title-text-extractions-screen">Title Text (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#button-text-extractions-screen">Button Text (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#edit-text-color-extractions-screen">Edit Text Color (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#edit-text-line-color-extractions-screen">Edit Text Line Color (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#edit-text-background-color-extractions-screen">Edit Text Background Color (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#id3">Edit Text Background Color (Extractions Screen)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#overview-of-configurations">Overview Of Configurations</a></li>
@@ -158,28 +154,65 @@
 <span id="id1"></span><h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="usage-of-the-sdk">
 <h2>Usage of the SDK<a class="headerlink" href="#usage-of-the-sdk" title="Permalink to this headline">¶</a></h2>
-<p>The only class that should be used to interact with the SDK is the <code class="docutils literal"><span class="pre">TariffSdk</span></code> and its created instance from the chapter before(<a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a>).
-To start the SDK a method to get a configured Activity is provided by in the <code class="docutils literal"><span class="pre">TariffSdk</span></code> class.</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">Intent</span> <span class="n">tariffSdkIntent</span> <span class="o">=</span> <span class="n">tariffSdk</span><span class="o">.</span><span class="na">getTariffSdkIntent</span><span class="o">();</span>
-<span class="n">startActivityForResult</span><span class="o">(</span><span class="n">tariffSdkIntent</span><span class="o">,</span> <span class="n">TariffSdk</span><span class="o">.</span><span class="na">REQUEST_CODE</span><span class="o">);</span>
+<p>The only class that should be used to interact with the SDK is the <code class="docutils literal"><span class="pre">SwitchSdk</span></code> and its created instance from the chapter before(<a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a>).
+To start the SDK a method to get a configured Activity is provided by in the <code class="docutils literal"><span class="pre">SwitchSdk</span></code> class.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">Intent</span> <span class="n">switchSdkIntent</span> <span class="o">=</span> <span class="n">switchSdk</span><span class="o">.</span><span class="na">getSwitchSdkIntent</span><span class="o">();</span>
+<span class="n">startActivityForResult</span><span class="o">(</span><span class="n">switchSdkIntent</span><span class="o">,</span> <span class="n">SwitchSdk</span><span class="o">.</span><span class="na">REQUEST_CODE</span><span class="o">);</span>
 </pre></div>
 </div>
 <p>At this point the SDK takes care of taking pictures, camera access, image upload and retrieving the extractions.
 After the SDK has been finished(successfully as well as with a failure) a result code is set and can be received via the usual Activity&#8217;s <code class="docutils literal"><span class="pre">onActivityResult</span></code> method.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Using the SDK other than via the provided <code class="docutils literal"><span class="pre">TariffSdk</span></code> instance can lead to faulty behaviour and is not supported by us.</p>
+<p class="last">Using the SDK other than via the provided <code class="docutils literal"><span class="pre">SwitchSdk</span></code> instance can lead to faulty behaviour and is not supported by us.</p>
 </div>
 </div>
 <div class="section" id="receiving-extractions">
 <h2>Receiving Extractions<a class="headerlink" href="#receiving-extractions" title="Permalink to this headline">¶</a></h2>
 <p>The found information inside a bill are called extractions, to receive those extractions the SDK offers a method to get them.
-The extractions are provided inside a set of <code class="docutils literal"><span class="pre">Extraction</span></code> classes and can be received when the result code of the previous started activity was <code class="docutils literal"><span class="pre">TariffSdk.EXTRACTIONS_AVAILABLE</span></code>.</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">if</span><span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="n">TariffSdk</span><span class="o">.</span><span class="na">EXTRACTIONS_AVAILABLE</span><span class="o">)</span>
-  <span class="n">Set</span><span class="o">&lt;</span><span class="n">Extraction</span><span class="o">&gt;</span> <span class="n">extractions</span> <span class="o">=</span> <span class="n">mTariffSdk</span><span class="o">.</span><span class="na">getExtractions</span><span class="o">();</span>
+The extractions are provided inside the class <code class="docutils literal"><span class="pre">Extractions</span></code> and they can be received when the result code of the previous started activity was <code class="docutils literal"><span class="pre">SwitchSdk.EXTRACTIONS_AVAILABLE</span></code>. Every extraction offers a corresponding getter, in the form of <code class="docutils literal"><span class="pre">getExtractionName()</span></code>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">if</span><span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="n">SwitchSdk</span><span class="o">.</span><span class="na">EXTRACTIONS_AVAILABLE</span><span class="o">)</span>
+  <span class="n">Extractions</span> <span class="n">extractions</span> <span class="o">=</span> <span class="n">mSwitchSdk</span><span class="o">.</span><span class="na">getExtractions</span><span class="o">();</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">Extraction</span></code> class includes the name of the extraction and its value. These are the extractions that have been found by the SDK. Inside the SDK the user checks the extractions for their correctness, therefore it is possible that the extractions have been altered by the user.</p>
+<p>Supported extractions are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="31%" />
+<col width="17%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Extraction</th>
+<th class="head">Getter</th>
+<th class="head">Type</th>
+<th class="head">Default value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Wholesale supplier</td>
+<td>getCompanyName</td>
+<td>String</td>
+<td>&#8220;&#8221;</td>
+</tr>
+<tr class="row-odd"><td>Consumption value</td>
+<td>getConsumptionValue</td>
+<td>double</td>
+<td>Double.NaN</td>
+</tr>
+<tr class="row-even"><td>Consumptions unit</td>
+<td>getConsumptionUnit</td>
+<td>String</td>
+<td>&#8220;&#8221;</td>
+</tr>
+<tr class="row-odd"><td>Energy meter number</td>
+<td>getEnergyMeterNumber</td>
+<td>String</td>
+<td>&#8220;&#8221;</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

@@ -55,7 +55,7 @@
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Gini Tariff SDK 0.0.0 documentation" href="../index.html"/>
         <link rel="next" title="Configuration" href="configuration.html"/>
-        <link rel="prev" title="Welcome to Gini Tariff SDK’s documentation!" href="../index.html"/> 
+        <link rel="prev" title="Welcome to Gini Switch SDK’s documentation!" href="../index.html"/> 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
@@ -92,6 +92,8 @@
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#mandatory-configurations">Mandatory Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#optional-configurations">Optional Configurations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#okhttpclient">OkHttpClient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#enable-logging">Enable Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#set-logging-level">Set Logging Level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#accent-color">Accent Color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#button-style">Button Style</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#button-text-color">Button Text Color</a></li>
@@ -107,12 +109,6 @@
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#text-color-analyze-completed-screen">Text Color (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#image-analyze-completed-screen">Image (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#text-size-analyze-completed-screen">Text Size (Analyze Completed Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#title-text-extractions-screen">Title Text (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#button-text-extractions-screen">Button Text (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#edit-text-color-extractions-screen">Edit Text Color (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#edit-text-line-color-extractions-screen">Edit Text Line Color (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#edit-text-background-color-extractions-screen">Edit Text Background Color (Extractions Screen)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="configuration.html#id3">Edit Text Background Color (Extractions Screen)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#overview-of-configurations">Overview Of Configurations</a></li>
@@ -172,7 +168,7 @@ Then add this folder, if not already done, to your projects dependencies with:</
 <p>Next step is to add the SDK to your applications <code class="docutils literal"><span class="pre">build.gradle</span></code> file with:</p>
 <div class="highlight-groovy"><div class="highlight"><pre><span></span>dependencies {
   …
-  compile &#39;net.gini.tariffsdk:tariffsdk-release@aar&#39;
+  compile &#39;net.gini.switchsdk:switchsdk-release@aar&#39;
   …
 }
 </pre></div>
@@ -201,12 +197,12 @@ This is also the reason that the dependencies that are needed by the SDK have to
 </div>
 <div class="section" id="integrating-the-sdk">
 <h2>Integrating the SDK<a class="headerlink" href="#integrating-the-sdk" title="Permalink to this headline">¶</a></h2>
-<p>To integrate the SDK into your code, simple use the provided <code class="docutils literal"><span class="pre">TariffSdk.init</span></code> method to generate a TariffSdk instance.
+<p>To integrate the SDK into your code, simple use the provided <code class="docutils literal"><span class="pre">SwitchSdk.init</span></code> method to generate a SwitchSdk instance.
 Hereby a Context, your client id, your client secret and your domain is needed(For more information about those parameters and how to configure the SDK see the chapter: <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a>)</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">TariffSdk</span> <span class="n">tariffSdk</span> <span class="o">=</span> <span class="n">TariffSdk</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;clientId&quot;</span><span class="o">,</span> <span class="s">&quot;clientPw&quot;</span><span class="o">,</span> <span class="s">&quot;domain&quot;</span><span class="o">);</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">SwitchSdk</span> <span class="n">switchSdk</span> <span class="o">=</span> <span class="n">SwitchSdk</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;clientId&quot;</span><span class="o">,</span> <span class="s">&quot;clientPw&quot;</span><span class="o">,</span> <span class="s">&quot;domain&quot;</span><span class="o">);</span>
 </pre></div>
 </div>
-<p>The generated TariffSdk instance can now be used to generate the needed Activity and to get the found extractions.</p>
+<p>The generated SwitchSdk instance can now be used to generate the needed Activity and to get the found extractions.</p>
 </div>
 </div>
 
@@ -219,7 +215,7 @@ Hereby a Context, your client id, your client secret and your domain is needed(F
         <a href="configuration.html" class="btn btn-neutral float-right" title="Configuration">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../index.html" class="btn btn-neutral" title="Welcome to Gini Tariff SDK’s documentation!"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral" title="Welcome to Gini Switch SDK’s documentation!"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
