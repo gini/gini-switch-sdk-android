@@ -7,7 +7,7 @@ The SDK takes care of all interactions with our backend and provides you with cu
 
 Even though a lot of the UI's appearance is customizable, the overall user flow and UX is not. We have worked hard to find the best way to navigate our users through the process and would like partners to follow the same path.
 
-The Gini Vision Library has been designed for portrait orientation. The UI is automatically forced to portrait when being displayed.
+The Gini Switch SDK has been designed for portrait orientation. The UI is automatically forced to portrait when being displayed.
 
 
 ### Documentation
