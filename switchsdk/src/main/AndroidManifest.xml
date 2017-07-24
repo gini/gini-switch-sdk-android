@@ -10,10 +10,12 @@
     <application>
         <activity
             android:name="net.gini.switchsdk.TakePictureActivity"
+            android:screenOrientation="portrait"
             android:taskAffinity="net.gini.switchsdk"
             android:theme="@style/GiniTheme" />
         <activity
             android:name="net.gini.switchsdk.ReviewPictureActivity"
+            android:screenOrientation="portrait"
             android:taskAffinity="net.gini.switchsdk"
             android:theme="@style/GiniTheme" />
     </application>

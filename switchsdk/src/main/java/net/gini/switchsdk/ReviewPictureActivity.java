@@ -28,6 +28,8 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
     static final String BUNDLE_EXTRA_BUTTON_KEEP = "BUNDLE_EXTRA_BUTTON_KEEP";
     static final String BUNDLE_EXTRA_IMAGE_URI = "BUNDLE_EXTRA_IMAGE_URI";
     static final String BUNDLE_EXTRA_TITLE = "BUNDLE_EXTRA_TITLE";
+    private static final String STATE_KEY_ROTATION = "STATE_KEY_ROTATION";
+    private static final String STATE_KEY_VIEW_ROTATION = "STATE_KEY_VIEW_ROTATION";
     private ImageView mImagePreview;
     private FrameLayout mImagePreviewContainer;
     private ReviewPictureContract.Presenter mPresenter;
@@ -103,6 +105,10 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
             keepButton.setTextColor(textColor);
         }
 
+        if (savedInstanceState != null) {
+            mViewRotationInDegrees = savedInstanceState.getFloat(STATE_KEY_VIEW_ROTATION);
+        }
+
         mImagePreviewContainer.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -115,7 +121,36 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
     }
 
     @Override
-    public void rotateView() {
+    protected void onPause() {
+        super.onPause();
+        getIntent().putExtra(STATE_KEY_ROTATION, mPresenter.getRotation());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            final int rotation = savedInstanceState.getInt(STATE_KEY_ROTATION, 0);
+            getIntent().putExtra(STATE_KEY_ROTATION, rotation);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final int rotation = getIntent().getIntExtra(STATE_KEY_ROTATION, 0);
+        mPresenter.setRotation(rotation);
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_KEY_ROTATION, mPresenter.getRotation());
+        outState.putFloat(STATE_KEY_VIEW_ROTATION, mViewRotationInDegrees);
+    }
+
+    @Override
+    public void rotateViewAnimated() {
         mViewRotationInDegrees += 90;
         rotateView(mViewRotationInDegrees, 300);
     }

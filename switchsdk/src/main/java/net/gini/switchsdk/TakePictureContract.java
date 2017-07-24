@@ -2,6 +2,7 @@ package net.gini.switchsdk;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -11,11 +12,14 @@ interface TakePictureContract {
 
         void deleteSelectedImage();
 
+        @Nullable
+        Image getSelectedImage();
+
         void onBoardingFinished();
 
         void onFinishedClicked();
 
-        void onImageSelected(final Image image, final int imageNumber);
+        void onImageSelected(final Image image);
 
         void onPictureTaken(@NonNull final byte[] data, final int orientation);
 
