@@ -1,7 +1,7 @@
 package net.gini.switchsdk;
 
 
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 import android.Manifest;
@@ -368,11 +368,12 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
     @Override
     public void openTakePictureScreen() {
-        showCameraPreview();
         mImagePreviewContainer.setVisibility(View.GONE);
+
         final int lastItem = mAdapter.getLastPosition();
         mImageRecyclerView.smoothScrollToPosition(lastItem);
         mAdapter.setSelectedElement(lastItem);
+        showCameraPreview();
     }
 
     @Override
@@ -486,14 +487,12 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
             public void onCameraClicked() {
-                mPresenter.onTakePictureSelected();
                 mImageRecyclerView.smoothScrollToPosition(mAdapter.getLastPosition());
                 centerSnapHelper.setCenteredPosition(mAdapter.getLastPosition());
             }
 
             @Override
             public void onImageClicked(final Image image, final int position) {
-                mPresenter.onImageSelected(image);
                 mImageRecyclerView.smoothScrollToPosition(position);
                 centerSnapHelper.setCenteredPosition(position);
             }
@@ -505,7 +504,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
             @Override
             public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                if (newState == SCROLL_STATE_SETTLING) {
+                if (newState == SCROLL_STATE_IDLE) {
                     final int position = centerSnapHelper.getCenteredPosition();
                     if (position != oldPosition) {
                         oldPosition = position;
@@ -598,8 +597,13 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     }
 
     private void showCameraPreview() {
-        mCameraPreview.setVisibility(View.VISIBLE);
-        mCameraFrame.setVisibility(View.VISIBLE);
+        mCameraPreview.post(new Runnable() {
+            @Override
+            public void run() {
+                mCameraPreview.setVisibility(View.VISIBLE);
+                mCameraFrame.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void styleButtons(final Button finishButton, final ImageButton deleteImageButton,
