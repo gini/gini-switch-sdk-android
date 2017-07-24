@@ -11,7 +11,7 @@ The Gini Vision Library has been designed for portrait orientation. The UI is au
 
 
 ### Documentation
-See [documentation](http://developer.gini.net/gini-tariff-sdk-android/index.html) for how to integrate the SDK with your app and customize it's UI.
+See [documentation](http://developer.gini.net/gini-switch-sdk-android/index.html) for how to integrate the SDK with your app and customize it's UI.
 
 
 ### Third party libraries
