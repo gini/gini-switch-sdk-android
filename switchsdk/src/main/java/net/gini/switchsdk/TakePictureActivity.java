@@ -1,14 +1,18 @@
 package net.gini.switchsdk;
 
 
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -67,6 +71,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private View mCameraFrame;
     private CameraSurfacePreview mCameraPreview;
     private AutoRotateImageView mImagePreview;
+    private View mImagePreviewContainer;
     private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
     private TakePictureContract.Presenter mPresenter;
@@ -198,6 +203,11 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         mProgressBar.setVisibility(View.GONE);
 
         mTakePictureButton = (ImageButton) findViewById(R.id.button_take_picture);
+
+        Drawable cameraIcon = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_camera);
+        ColorFilter filter = new LightingColorFilter(Color.WHITE, Color.WHITE);
+        cameraIcon.setColorFilter(filter);
+        mTakePictureButton.setImageDrawable(cameraIcon);
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -224,6 +234,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
         mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
+        mImagePreviewContainer = findViewById(R.id.container_image);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
         setUpDocumentBar();
@@ -236,6 +247,9 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
 
         ImageButton deleteImageButton = (ImageButton) findViewById(R.id.button_delete_image);
+        Drawable deleteIcon = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_delete);
+        deleteIcon.setColorFilter(filter);
+        deleteImageButton.setImageDrawable(deleteIcon);
         deleteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -354,11 +368,12 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
     @Override
     public void openTakePictureScreen() {
-        showCameraPreview();
-        mImagePreview.setVisibility(View.GONE);
+        mImagePreviewContainer.setVisibility(View.GONE);
+
         final int lastItem = mAdapter.getLastPosition();
         mImageRecyclerView.smoothScrollToPosition(lastItem);
         mAdapter.setSelectedElement(lastItem);
+        showCameraPreview();
     }
 
     @Override
@@ -381,7 +396,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     public void showImagePreview(final Image image) {
         mImagePreview.displayImage(image.getUri());
         hideCameraPreview();
-        mImagePreview.setVisibility(View.VISIBLE);
+        mImagePreviewContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -472,14 +487,12 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         mAdapter = new ImageAdapter(this, new ImageAdapter.Listener() {
             @Override
             public void onCameraClicked() {
-                mPresenter.onTakePictureSelected();
                 mImageRecyclerView.smoothScrollToPosition(mAdapter.getLastPosition());
                 centerSnapHelper.setCenteredPosition(mAdapter.getLastPosition());
             }
 
             @Override
             public void onImageClicked(final Image image, final int position) {
-                mPresenter.onImageSelected(image);
                 mImageRecyclerView.smoothScrollToPosition(position);
                 centerSnapHelper.setCenteredPosition(position);
             }
@@ -491,7 +504,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
             @Override
             public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                if (newState == SCROLL_STATE_SETTLING) {
+                if (newState == SCROLL_STATE_IDLE) {
                     final int position = centerSnapHelper.getCenteredPosition();
                     if (position != oldPosition) {
                         oldPosition = position;
@@ -584,8 +597,13 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     }
 
     private void showCameraPreview() {
-        mCameraPreview.setVisibility(View.VISIBLE);
-        mCameraFrame.setVisibility(View.VISIBLE);
+        mCameraPreview.post(new Runnable() {
+            @Override
+            public void run() {
+                mCameraPreview.setVisibility(View.VISIBLE);
+                mCameraFrame.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void styleButtons(final Button finishButton, final ImageButton deleteImageButton,

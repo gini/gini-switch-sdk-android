@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<net.gini.switchsdk.utils.CenterToolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar"
@@ -11,15 +11,6 @@
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     tools:showIn="@layout/activity_take_picture">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/negative_offset"
-        android:layout_marginLeft="@dimen/negative_offset"
-        android:layout_marginRight="@dimen/negative_offset"
-        android:layout_marginStart="@dimen/negative_offset"
-        android:clipChildren="false">
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/image_overview"
@@ -30,9 +21,6 @@
             android:layout_gravity="center"
             android:clipChildren="false"
             android:scrollbars="horizontal"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="gone" />
 
-    </RelativeLayout>
-
-</android.support.v7.widget.Toolbar>
+</net.gini.switchsdk.utils.CenterToolbar>

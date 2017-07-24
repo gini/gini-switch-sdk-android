@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="analyzed_text">Wir haben alles, was wir für Deinen Stromanbieter Wechsel benötigen.</string>
-    <string name="confirm">Yes</string>
-    <string name="cancel">No</string>
-    <string name="exit_dialog_text">Abort Scanning Process?</string>
-    <string name="menu_entry_cancel">Cancel</string>
+    <string name="confirm">Ja</string>
+    <string name="cancel">Nein</string>
+    <string name="exit_dialog_text">Foto-Modus verlassen?</string>
+    <string name="menu_entry_cancel">Abbrechen</string>
     <string name="extractions_title">Fast geschafft. Bitte prüfe noch kurz ob all Deine Daten korrekt ausgelesen wurden.</string>
     <string name="button_extractions">Jetzt wechseln</string>
     <string name="extractions_error_empty_input">Darf nicht leer sein!</string>
