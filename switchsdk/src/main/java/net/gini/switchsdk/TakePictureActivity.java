@@ -61,6 +61,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private static final long ONBOARDING_ANIMATION_DELAY_IN_MS = 1500;
     private static final long ONBOARDING_ANIMATION_DURATION_IN_MS = 500;
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
+    private static final String STATE_KEY_SELECTED_IMAGE = "STATE_KEY_SELECTED_IMAGE";
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private View mCameraFrame;
@@ -72,7 +73,6 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private View mPreviewButtonsContainer;
     private TextView mPreviewTitle;
     private ProgressBar mProgressBar;
-    private Image mSelectedImage;
     private View mSplashContainer;
     private ImageButton mTakePictureButton;
     private View mTakePictureButtonsContainer;
@@ -149,7 +149,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
             @Override
             public void run() {
                 mAdapter.updateImageState(image);
-                if (mSelectedImage == image) {
+                if (mPresenter.getSelectedImage() == image) {
                     displayImageProcessingState(image);
                 }
             }
@@ -158,6 +158,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
     @Override
     public void initCamera() {
+        showCameraPreview();
         final WindowManager windowManager =
                 (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mCamera = new Camera1(mCameraPreview);
@@ -279,6 +280,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
             mCamera.stop();
             hideCameraPreview();
         }
+        getIntent().putExtra(STATE_KEY_SELECTED_IMAGE, mPresenter.getSelectedImage());
     }
 
     @Override
@@ -297,6 +299,15 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     }
 
     @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            final Image selectedImage = savedInstanceState.getParcelable(STATE_KEY_SELECTED_IMAGE);
+            getIntent().putExtra(STATE_KEY_SELECTED_IMAGE, selectedImage);
+        }
+    }
+
+    @Override
     protected void onResume() {
         if (hasCameraPermissions() && mCamera != null) {
             mCamera.start();
@@ -304,7 +315,20 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
             mTakePictureButton.setEnabled(true);
             mProgressBar.setVisibility(View.GONE);
         }
+
+        final Image selectedImage = getIntent().getParcelableExtra(STATE_KEY_SELECTED_IMAGE);
+        if (selectedImage != null) {
+            mPresenter.onImageSelected(selectedImage);
+        } else {
+            mPresenter.onTakePictureSelected();
+        }
         super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(STATE_KEY_SELECTED_IMAGE, mPresenter.getSelectedImage());
     }
 
     @Override
@@ -330,9 +354,11 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
     @Override
     public void openTakePictureScreen() {
-        mSelectedImage = null;
         showCameraPreview();
         mImagePreview.setVisibility(View.GONE);
+        final int lastItem = mAdapter.getLastPosition();
+        mImageRecyclerView.smoothScrollToPosition(lastItem);
+        mAdapter.setSelectedElement(lastItem);
     }
 
     @Override
@@ -349,18 +375,13 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     @Override
     public void setImages(@NonNull final List<Image> imageList) {
         mAdapter.setImages(imageList);
-        final int lastItem = mAdapter.getLastPosition();
-        mImageRecyclerView.smoothScrollToPosition(lastItem);
-        mAdapter.setSelectedElement(lastItem);
     }
 
     @Override
     public void showImagePreview(final Image image) {
-        mSelectedImage = image;
         mImagePreview.displayImage(image.getUri());
         hideCameraPreview();
         mImagePreview.setVisibility(View.VISIBLE);
-        //TODO save this state and retrieve it
     }
 
     @Override
@@ -458,7 +479,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
             @Override
             public void onImageClicked(final Image image, final int position) {
-                mPresenter.onImageSelected(image, position + 1);
+                mPresenter.onImageSelected(image);
                 mImageRecyclerView.smoothScrollToPosition(position);
                 centerSnapHelper.setCenteredPosition(position);
             }
@@ -477,7 +498,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
                         mAdapter.setSelectedElement(position);
                         if (position < mAdapter.getLastPosition()) {
                             final Image item = mAdapter.getItem(position);
-                            mPresenter.onImageSelected(item, position + 1);
+                            mPresenter.onImageSelected(item);
                         } else {
                             mPresenter.onTakePictureSelected();
                         }
