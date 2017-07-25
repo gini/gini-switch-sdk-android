@@ -102,7 +102,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
             if (mCamera != null) {
                 mCamera.setPreviewDisplay(surfaceHolder);
                 mCamera.stopPreview();
-                final Camera.Parameters parameters = mCamera.getParameters();
+                Camera.Parameters parameters = mCamera.getParameters();
 
                 final List<Camera.Size> supportedPreviewSizes =
                         parameters.getSupportedPreviewSizes();
@@ -123,16 +123,8 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
                     }
                 }
 
-                final List<String> supportedFocusModes = parameters.getSupportedFocusModes();
-                if (supportedFocusModes != null && supportedFocusModes
-                        .contains(FOCUS_MODE_CONTINUOUS_PICTURE)) {
-                    parameters.setFocusMode(FOCUS_MODE_CONTINUOUS_PICTURE);
-                }
-
-                final List<String> supportedFlashModes = parameters.getSupportedFlashModes();
-                if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-                }
+                parameters = setFocusModeContinues(parameters);
+                parameters = setFlashModeOn(parameters);
 
                 mCamera.setParameters(parameters);
 
@@ -146,7 +138,6 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
             Log.d(TAG, "Error setting camera preview: " + e.getLocalizedMessage());
         }
     }
-
 
     @Override
     public void surfaceCreated(final SurfaceHolder surfaceHolder) {
@@ -201,5 +192,22 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
         } else {  // back-facing
             return (mCameraInfo.orientation - rotation + 360) % 360;
         }
+    }
+
+    private Camera.Parameters setFlashModeOn(final Camera.Parameters parameters) {
+        final List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+        if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+        }
+        return parameters;
+    }
+
+    private Camera.Parameters setFocusModeContinues(final Camera.Parameters parameters) {
+        final List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+        if (supportedFocusModes != null && supportedFocusModes
+                .contains(FOCUS_MODE_CONTINUOUS_PICTURE)) {
+            parameters.setFocusMode(FOCUS_MODE_CONTINUOUS_PICTURE);
+        }
+        return parameters;
     }
 }
