@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="#000000">
 
     <ImageView
         android:id="@+id/image_view"
@@ -19,7 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="16dp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="48dp"
+        android:paddingLeft="48dp"
+        android:paddingRight="48dp"
+        android:paddingStart="48dp"
+        android:paddingTop="16dp"
         android:textColor="@color/primaryText"
         tools:text="@string/onboarding_align" />
 
