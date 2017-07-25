@@ -263,17 +263,14 @@ class SwitchApiImpl implements SwitchApi {
                     try {
                         obj = new JSONObject(response.body().string());
                         final String selfUrl = getSelfLink(obj);
-                        final String companyName = obj.optJSONObject("companyName").optString(
-                                "value");
-                        final String energyMeterNumber = obj.optJSONObject(
-                                "energyMeterNumber").optString("value");
+                        final String companyName = getCompanyName(obj);
+                        final String energyMeterNumber = getEnergyMeterNumber(obj);
                         JSONObject consumption = obj.optJSONObject("consumption");
                         double consumptionValue = 0;
                         String consumptionUnit = null;
                         if (consumption != null) {
                             JSONObject consumptionJsonObject = consumption.optJSONObject("value");
-                            consumptionValue = consumptionJsonObject.optDouble(
-                                    "value");
+                            consumptionValue = consumptionJsonObject.optDouble("value");
                             consumptionUnit = consumptionJsonObject.optString("unit");
                         }
                         callback.onSuccess(new Extractions(selfUrl, companyName, energyMeterNumber,
@@ -285,6 +282,16 @@ class SwitchApiImpl implements SwitchApi {
                 } else {
                     callback.onError(new SwitchException(RETRIEVE_EXTRACTIONS));
                 }
+            }
+
+            private String getCompanyName(final JSONObject obj) {
+                JSONObject jsonObject = obj.optJSONObject("companyName");
+                return jsonObject != null ? jsonObject.optString("value") : "";
+            }
+
+            private String getEnergyMeterNumber(final JSONObject obj) {
+                JSONObject jsonObject = obj.optJSONObject("energyMeterNumber");
+                return jsonObject != null ? jsonObject.optString("value") : "";
             }
         });
     }
