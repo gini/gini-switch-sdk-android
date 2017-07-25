@@ -129,6 +129,11 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
                     parameters.setFocusMode(FOCUS_MODE_CONTINUOUS_PICTURE);
                 }
 
+                final List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+                if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                }
+
                 mCamera.setParameters(parameters);
 
                 mCamera.setDisplayOrientation(
