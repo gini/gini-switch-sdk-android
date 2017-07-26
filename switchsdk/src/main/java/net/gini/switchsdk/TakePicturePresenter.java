@@ -63,12 +63,14 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                     new ExtractionService.ExtractionListener() {
                         @Override
                         public void onExtractionsReceived() {
+                            mDocumentService.cleanup();
                             //Check if the user is in the camera screen
                             final int resultCode = mExtractionService.getResultCodeForActivity();
                             mView.exitSdk(resultCode);
                         }
                     });
         } else {
+            mDocumentService.cleanup();
             mView.exitSdk(SwitchSdk.NO_EXTRACTIONS_AVAILABLE);
         }
     }
@@ -95,6 +97,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                     public void onExtractionsReceived() {
                         //Check if the user is in the camera screen
                         if (canExitSdk()) {
+                            mDocumentService.cleanup();
                             mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
                         }
                     }
@@ -117,6 +120,7 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
             //if there are extractions available we finish the sdk
             if (mExtractionService.extractionsAvailable()) {
                 //TODO maybe add delay here
+                mDocumentService.cleanup();
                 mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
             }
         }
