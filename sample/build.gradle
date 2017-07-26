@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 
 def hockeyAppId = project.hasProperty('hockeyAppId') ? hockeyAppId.toString() : ""
 def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
+def clientId = project.hasProperty('clientId') ? clientId.toString() : "clientId"
+def clientSecret = project.hasProperty('clientSecret') ? clientSecret.toString() : "clientSecret"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -14,6 +16,8 @@ android {
         versionCode versionBuild
         versionName "1.0"
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "${hockeyAppId}"]
+        buildConfigField "String", "CLIENT_ID", "\"${clientId}\""
+        buildConfigField "String", "CLIENT_SECRET", "\"${clientSecret}\""
     }
 
     buildTypes {
