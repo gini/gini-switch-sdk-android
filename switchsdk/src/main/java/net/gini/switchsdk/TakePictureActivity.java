@@ -13,9 +13,12 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -85,7 +88,24 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
     @Override
     public void cameraPermissionsDenied() {
-
+        Snackbar.make(mTakePictureButtonsContainer,
+                getString(R.string.snackbar_text_no_camera_access,
+                        getApplicationInfo().loadLabel(getPackageManager())),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_action_settings, new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.addCategory(Intent.CATEGORY_DEFAULT);
+                        intent.setData(Uri.parse("package:" + getPackageName()));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        startActivity(intent);
+                    }
+                })
+                .show();
     }
 
     @Override
