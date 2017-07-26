@@ -11,6 +11,8 @@ The Gini Switch SDK has been designed for portrait orientation. The UI is automa
 
 ### Integration
 [ ![Download](https://api.bintray.com/packages/gini/maven/switch/images/download.svg) ](https://bintray.com/gini/maven/switch/_latestVersion)
+
+Add the latest version of the SDK to your gradle dependencies:
 ```Groovy
 compile 'net.gini:switch:${version}'
 ```
