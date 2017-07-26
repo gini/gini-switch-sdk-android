@@ -20,4 +20,6 @@
     <string name="onboarding_align">Seite vollständig in Rahmen einpassen</string>
     <string name="menu_entry_help">Hilfe</string>
     <string name="documentbar_item_label">Foto %d</string>
+    <string name="snackbar_action_settings">Einstellungen</string>
+    <string name="snackbar_text_no_camera_access">%s braucht Kamerazugriff.</string>
 </resources>

@@ -5,9 +5,6 @@ def versionMinor = 0
 def versionPatch = 0
 def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
 
-def clientId = project.hasProperty('clientId') ? clientId.toString() : "clientId"
-def clientSecret = project.hasProperty('clientSecret') ? clientSecret.toString() : "clientSecret"
-
 android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -24,8 +21,6 @@ android {
 
         buildConfigField "String", "USER_API_URL", "\"https://user.gini.net\""
         buildConfigField "String", "SWITCH_API_URL", "\"https://switch-api.gini.net\""
-        buildConfigField "String", "CLIENT_ID", "\"${clientId}\""
-        buildConfigField "String", "CLIENT_SECRET", "\"${clientSecret}\""
 
     }
     buildTypes {
