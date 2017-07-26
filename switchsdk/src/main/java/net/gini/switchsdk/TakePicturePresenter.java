@@ -109,14 +109,16 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     @Override
     public void onTakePictureSelected() {
-        mSelectedImage = null;
-        mView.openTakePictureScreen();
-        mView.showTakePictureButtons();
-        mView.hidePreviewButtons();
-        //if there are extractions available we finish the sdk
-        if (mExtractionService.extractionsAvailable()) {
-            //TODO maybe add delay here
-            mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
+        if (mView.hasCameraPermissions()) {
+            mSelectedImage = null;
+            mView.openTakePictureScreen();
+            mView.showTakePictureButtons();
+            mView.hidePreviewButtons();
+            //if there are extractions available we finish the sdk
+            if (mExtractionService.extractionsAvailable()) {
+                //TODO maybe add delay here
+                mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
+            }
         }
     }
 

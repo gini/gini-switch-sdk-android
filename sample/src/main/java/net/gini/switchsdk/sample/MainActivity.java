@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import net.gini.switchsdk.BuildConfig;
 import net.gini.switchsdk.SwitchSdk;
 import net.gini.switchsdk.network.Extractions;
 import net.hockeyapp.android.CrashManager;
