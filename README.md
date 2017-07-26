@@ -9,6 +9,13 @@ Even though a lot of the UI's appearance is customizable, the overall user flow 
 
 The Gini Switch SDK has been designed for portrait orientation. The UI is automatically forced to portrait when being displayed.
 
+### Integration
+[ ![Download](https://api.bintray.com/packages/gini/maven/switch/images/download.svg) ](https://bintray.com/gini/maven/switch/_latestVersion)
+
+Add the latest version of the SDK to your gradle dependencies:
+```Groovy
+compile 'net.gini:switch:${version}'
+```
 
 ### Documentation
 See [documentation](http://developer.gini.net/gini-switch-sdk-android/index.html) for how to integrate the SDK with your app and customize it's UI.
