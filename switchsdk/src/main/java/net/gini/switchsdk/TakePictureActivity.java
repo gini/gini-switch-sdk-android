@@ -163,7 +163,6 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
     @Override
     public void initCamera() {
-        showCameraPreview();
         final WindowManager windowManager =
                 (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mCamera = new Camera1(mCameraPreview);
@@ -325,8 +324,6 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     protected void onResume() {
         if (hasCameraPermissions() && mCamera != null) {
             mCamera.start();
-            showCameraPreview();
-            mTakePictureButton.setEnabled(true);
             mProgressBar.setVisibility(View.GONE);
         }
 
