@@ -1,6 +1,7 @@
 package net.gini.switchsdk.authentication;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 import static org.mockito.Mockito.when;
 
@@ -62,21 +63,21 @@ public class AuthenticationInterceptorTest {
 
 
     @Test
-    public void shouldNotSendRequestWhenTokenIsNotAvailable()
+    public void shouldNotInterceptRequestWhenTokenIsNotAvailable()
             throws IOException, InterruptedException {
 
         when(mMockAuthenticationService.getUserToken()).thenReturn(null);
 
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor(mMockAuthenticationService))
+                .addNetworkInterceptor(new AuthenticationInterceptor(mMockAuthenticationService))
                 .build();
         Request request = getDefaultRequest();
 
         client.newCall(request).execute();
 
-        int requestCount = mServer.getRequestCount();
+        RecordedRequest serverRequest = mServer.takeRequest();
 
-        assertEquals(0, requestCount);
+        assertNull(serverRequest.getHeader("Authorization"));
     }
 
     @Test
