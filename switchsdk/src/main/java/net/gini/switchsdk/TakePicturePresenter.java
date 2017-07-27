@@ -65,11 +65,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                         public void onExtractionsReceived() {
                             //Check if the user is in the camera screen
                             final int resultCode = mExtractionService.getResultCodeForActivity();
-                            mView.exitSdk(resultCode);
+                            exitSdkWithCleanup(resultCode);
                         }
                     });
         } else {
-            mView.exitSdk(SwitchSdk.NO_EXTRACTIONS_AVAILABLE);
+            int resultCode = SwitchSdk.NO_EXTRACTIONS_AVAILABLE;
+            exitSdkWithCleanup(resultCode);
         }
     }
 
@@ -95,7 +96,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                     public void onExtractionsReceived() {
                         //Check if the user is in the camera screen
                         if (canExitSdk()) {
-                            mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
+                            int resultCode = SwitchSdk.EXTRACTIONS_AVAILABLE;
+                            exitSdkWithCleanup(resultCode);
                         }
                     }
                 });
@@ -117,7 +119,8 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
             //if there are extractions available we finish the sdk
             if (mExtractionService.extractionsAvailable()) {
                 //TODO maybe add delay here
-                mView.exitSdk(SwitchSdk.EXTRACTIONS_AVAILABLE);
+                int resultCode = SwitchSdk.EXTRACTIONS_AVAILABLE;
+                exitSdkWithCleanup(resultCode);
             }
         }
     }
@@ -149,6 +152,11 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
 
     private boolean canExitSdk() {
         return mSelectedImage == null;
+    }
+
+    private void exitSdkWithCleanup(final int resultCode) {
+        mDocumentService.cleanup();
+        mView.exitSdk(resultCode);
     }
 
     private boolean hasToCheckForPermissions() {

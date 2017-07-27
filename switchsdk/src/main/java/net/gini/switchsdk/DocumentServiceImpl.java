@@ -224,8 +224,6 @@ class DocumentServiceImpl implements DocumentService {
                             for (final DocumentListener documentListener : mDocumentListeners) {
                                 documentListener.onOrderCompleted(mExtractionUrl);
                             }
-                            //if the order is complete there is no need for polling anymore
-                            stopStatePolling();
                         }
                     }
                 });

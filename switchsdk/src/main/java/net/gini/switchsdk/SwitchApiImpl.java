@@ -56,8 +56,8 @@ class SwitchApiImpl implements SwitchApi {
             final AuthenticationService authenticationService, final HttpUrl url) {
         mSwitchApiUrl = url;
         mOkHttpClient = okHttpClient.newBuilder()
-                .addInterceptor(new AuthenticationInterceptor(authenticationService))
                 .authenticator(new BearerAuthenticator(authenticationService))
+                .addNetworkInterceptor(new AuthenticationInterceptor(authenticationService))
                 .build();
     }
 

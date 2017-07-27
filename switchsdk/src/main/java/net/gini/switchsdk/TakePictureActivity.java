@@ -345,6 +345,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         if (hasCameraPermissions() && mCamera != null) {
             mCamera.start();
             mProgressBar.setVisibility(View.GONE);
+            mTakePictureButton.setEnabled(true);
         }
 
         final Image selectedImage = getIntent().getParcelableExtra(STATE_KEY_SELECTED_IMAGE);

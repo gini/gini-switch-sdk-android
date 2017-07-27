@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def hockeyAppId = project.hasProperty('hockeyAppId') ? hockeyAppId.toString() : ""
+def hockeyAppId = project.hasProperty('hockeyAppId') ? hockeyAppId.toString() : "".padLeft(32, 'a')
 def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
 def clientId = project.hasProperty('clientId') ? clientId.toString() : "clientId"
 def clientSecret = project.hasProperty('clientSecret') ? clientSecret.toString() : "clientSecret"
