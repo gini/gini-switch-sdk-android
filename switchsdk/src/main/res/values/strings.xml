@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="analyzed_text">Wir haben alles, was wir für Deinen Stromanbieter Wechsel benötigen.</string>
+    <string name="confirm">Ja</string>
+    <string name="cancel">Nein</string>
+    <string name="exit_dialog_text">Foto-Modus verlassen?</string>
+    <string name="menu_entry_cancel">Abbrechen</string>
+    <string name="extractions_title">Fast geschafft. Bitte prüfe noch kurz ob all Deine Daten korrekt ausgelesen wurden.</string>
+    <string name="button_extractions">Jetzt wechseln</string>
+    <string name="extractions_error_empty_input">Darf nicht leer sein!</string>
+    <string name="review_screen_title">Ist die Seite vollständing und in Leserichtung fotografiert?</string>
+    <string name="review_discard_button">Neues Bild</string>
+    <string name="review_keep_button">Ja, verwenden</string>
+    <string name="preview_button_retake">Neu Aufnehmen</string>
+    <string name="take_picture_finish">Fertig</string>
+    <string name="preview_analyze_success">Sehr gut, wir konnten alle Daten aus diesem Foto erfolgreich analysieren.</string>
+    <string name="preview_analyze_failed">Leider ist die Qualität dieser Seite nicht ausreichend. Bitte fotografiere diese Seite nochmal neu.</string>
+    <string name="onboarding_flat">Jede Seite flach fotografieren</string>
+    <string name="onboarding_parallel">Handy parallel zur Seite halten</string>
+    <string name="onboarding_align">Seite vollständig in Rahmen einpassen</string>
+    <string name="menu_entry_help">Hilfe</string>
+    <string name="documentbar_item_label">Foto %d</string>
+    <string name="snackbar_action_settings">Einstellungen</string>
+    <string name="snackbar_text_no_camera_access">%s braucht Kamerazugriff.</string>
+</resources>

@@ -1,15 +1,23 @@
 apply plugin: 'com.android.application'
 
+def hockeyAppId = project.hasProperty('hockeyAppId') ? hockeyAppId.toString() : "".padLeft(32, 'a')
+def versionBuild = project.hasProperty('buildNumber') ? buildNumber.toInteger() : 1
+def clientId = project.hasProperty('clientId') ? clientId.toString() : "clientId"
+def clientSecret = project.hasProperty('clientSecret') ? clientSecret.toString() : "clientSecret"
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "net.gini.tariffsdk.sample"
+        applicationId "net.gini.switchsdk.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode versionBuild
         versionName "1.0"
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "${hockeyAppId}"]
+        buildConfigField "String", "CLIENT_ID", "\"${clientId}\""
+        buildConfigField "String", "CLIENT_SECRET", "\"${clientSecret}\""
     }
 
     buildTypes {
@@ -18,11 +26,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
 
-    compile project(':tariffsdk')
+    compile 'net.hockeyapp.android:HockeySDK:4.1.4'
+    compile project(':switchsdk')
 }
