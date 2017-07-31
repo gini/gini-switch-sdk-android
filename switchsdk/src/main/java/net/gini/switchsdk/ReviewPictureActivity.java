@@ -6,9 +6,11 @@ import android.animation.ValueAnimator;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.media.ExifInterface;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -17,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.gini.switchsdk.onboarding.OnboardingAdapter;
 import net.gini.switchsdk.utils.ExifUtils;
 
 import java.io.IOException;
@@ -30,9 +33,11 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
     static final String BUNDLE_EXTRA_TITLE = "BUNDLE_EXTRA_TITLE";
     private static final String STATE_KEY_ROTATION = "STATE_KEY_ROTATION";
     private static final String STATE_KEY_VIEW_ROTATION = "STATE_KEY_VIEW_ROTATION";
+    private View mHelpContainer;
     private ImageView mImagePreview;
     private FrameLayout mImagePreviewContainer;
     private ReviewPictureContract.Presenter mPresenter;
+    private View mRotateButton;
     private float mViewRotationInDegrees;
 
     @Override
@@ -73,8 +78,8 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
         keepButton.setText(getKeepButtonTextFromBundle());
         mImagePreview = (ImageView) findViewById(R.id.image_preview);
         mImagePreviewContainer = (FrameLayout) findViewById(R.id.image_preview_container);
-        final View rotateButton = findViewById(R.id.button_rotate);
-        rotateButton.setOnClickListener(new View.OnClickListener() {
+        mRotateButton = findViewById(R.id.button_rotate);
+        mRotateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 mPresenter.rotateImage();
@@ -118,6 +123,8 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
                                 this);
                     }
                 });
+
+        setUpHelpScreen();
     }
 
     @Override
@@ -159,6 +166,12 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
     public void setImage(final Uri uri) {
         mViewRotationInDegrees = getRequiredRotationDegrees(uri);
         mImagePreview.setImageURI(uri);
+    }
+
+    @Override
+    protected void showHelpDialog() {
+        mHelpContainer.setVisibility(View.VISIBLE);
+        mRotateButton.setVisibility(View.GONE);
     }
 
     private void addHeightUpdateListener(final ValueAnimator heightAnimation) {
@@ -245,5 +258,34 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
         widthAnimation.start();
         heightAnimation.start();
         rotateAnimation.start();
+    }
+
+    private void setUpHelpScreen() {
+        mHelpContainer = findViewById(R.id.helpContainer);
+        mHelpContainer.setVisibility(View.GONE);
+        final ViewPager onboardingViewPager = (ViewPager) findViewById(R.id.onBoardingViewPager);
+        final OnboardingAdapter adapter = new OnboardingAdapter(this);
+        onboardingViewPager.setAdapter(adapter);
+        final TabLayout onboardingTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        onboardingTabLayout.setupWithViewPager(onboardingViewPager, true);
+        onboardingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+            }
+
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset,
+                    final int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                if (adapter.isLastItem(position)) {
+                    onboardingViewPager.setCurrentItem(0, false);
+                    mHelpContainer.setVisibility(View.GONE);
+                    mRotateButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 }

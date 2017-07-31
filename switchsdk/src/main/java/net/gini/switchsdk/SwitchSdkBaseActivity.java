@@ -14,11 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import net.gini.switchsdk.utils.ExitDialogFragment;
 
-class SwitchSdkBaseActivity extends AppCompatActivity implements
+abstract class SwitchSdkBaseActivity extends AppCompatActivity implements
         ExitDialogFragment.ExitDialogListener {
 
     protected static final String BUNDLE_EXTRA_EXIT_DIALOG_TEXT = "BUNDLE_EXTRA_EXIT_DIALOG_TEXT";
@@ -44,20 +45,28 @@ class SwitchSdkBaseActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item = menu.add(R.string.menu_entry_cancel);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-                showAbortDialog();
-                return false;
-            }
-        });
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.switch_base_menu, menu);
         return true;
     }
 
     @Override
     public void onNegative() {
         //TODO track etc.
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.menu_item_cancel) {
+            showAbortDialog();
+            return true;
+        } else if (i == R.id.menu_item_help) {
+            showHelpDialog();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -125,6 +134,8 @@ class SwitchSdkBaseActivity extends AppCompatActivity implements
         DialogFragment dialog = ExitDialogFragment.newInstance(getExitDialogText());
         dialog.show(getFragmentManager(), "ExitDialogFragment");
     }
+
+    abstract protected void showHelpDialog();
 
     private void applySettings() {
         final int theme = getThemeResourceIdFromBundle();
