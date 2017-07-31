@@ -155,44 +155,15 @@
 <span id="integrate"></span><h1>Integration<a class="headerlink" href="#integration" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="add-the-sdk-to-your-project">
 <h2>Add the SDK to your project<a class="headerlink" href="#add-the-sdk-to-your-project" title="Permalink to this headline">¶</a></h2>
-<p>The gini sdk is provided as an aar archive. To integrate it into your project copy the aar archive file into your projects <code class="docutils literal"><span class="pre">libs</span></code> folder.
-Then add this folder, if not already done, to your projects dependencies with:</p>
-<div class="highlight-groovy"><div class="highlight"><pre><span></span>repositories {
-    …
-    flatDir{
-        dirs &#39;libs&#39;
-    }
-}
-</pre></div>
-</div>
-<p>Next step is to add the SDK to your applications <code class="docutils literal"><span class="pre">build.gradle</span></code> file with:</p>
-<div class="highlight-groovy"><div class="highlight"><pre><span></span>dependencies {
-  …
-  compile &#39;net.gini.switchsdk:switchsdk-release@aar&#39;
-  …
-}
-</pre></div>
-</div>
-<p>During the time of development of version 1.0 this is the only way we provide the SDK. Later Gini will push it to an maven repository and adjust this document.
-This is also the reason that the dependencies that are needed by the SDK have to be provided by the client. Right now now they are the following ones:</p>
-<ol class="arabic simple">
-<li>com.android.support:appcompat-v7</li>
-<li>com.android.support:exifinterface</li>
-<li>com.android.support:design</li>
-</ol>
-<p>Where the version has to be bigger or equal to 25.2.0. so the following lines should also be added to your gradle build file:</p>
-<div class="highlight-groovy"><div class="highlight"><pre><span></span>dependencies {
-  …
-  compile &#39;com.android.support:appcompat-v7:25.2.0&#39;
-  compile &#39;com.android.support:exifinterface:25.2.0&#39;
-  compile &#39;com.android.support:design:25.2.0&#39;
-  …
-}
+<p>The Gini Switch SDK is provided in a maven repository as an aar archive on jcenter. To integrate it into your project add the newest version to your gradle dependencies:</p>
+<div class="highlight-groovy"><div class="highlight"><pre><span></span><span class="n">dependencies</span> <span class="o">{</span>
+  <span class="n">compile</span> <span class="s1">&#39;net.gini:switch:${version}&#39;</span>
+<span class="o">}</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This will be not necessery when the SDK is available on a maven repository.</p>
+<p class="last">You can visit <a class="reference external" href="https://bintray.com/gini/maven/switch/_latestVersion">bintray</a> to get information about the latest version.</p>
 </div>
 </div>
 <div class="section" id="integrating-the-sdk">
