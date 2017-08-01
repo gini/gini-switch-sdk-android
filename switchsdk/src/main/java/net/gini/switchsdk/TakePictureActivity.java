@@ -43,7 +43,7 @@ import net.gini.switchsdk.camera.CameraSurfacePreview;
 import net.gini.switchsdk.camera.GiniCamera;
 import net.gini.switchsdk.camera.GiniCameraException;
 import net.gini.switchsdk.onboarding.OnboardingAdapter;
-import net.gini.switchsdk.utils.AutoRotateImageView;
+import net.gini.switchsdk.utils.AutoRotateZoomableImageView;
 import net.gini.switchsdk.utils.CenterItemDecoration;
 import net.gini.switchsdk.utils.CenterLayoutManager;
 import net.gini.switchsdk.utils.CenterSnapHelper;
@@ -71,7 +71,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private GiniCamera mCamera;
     private View mCameraFrame;
     private CameraSurfacePreview mCameraPreview;
-    private AutoRotateImageView mImagePreview;
+    private AutoRotateZoomableImageView mImagePreview;
     private View mImagePreviewContainer;
     private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
@@ -250,7 +250,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
         mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
-        mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
+        mImagePreview = (AutoRotateZoomableImageView) findViewById(R.id.image_review);
         mImagePreviewContainer = findViewById(R.id.container_image);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
