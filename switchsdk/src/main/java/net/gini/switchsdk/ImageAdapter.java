@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import net.gini.switchsdk.utils.AutoRotateImageView;
+import net.gini.switchsdk.utils.AutoRotateZoomableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,7 +186,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
 
-        AutoRotateImageView mImageView;
+        AutoRotateZoomableImageView mImageView;
         TextView mItemLabel;
         ProgressBar mProgressBar;
         View mSelector;
@@ -195,7 +195,7 @@ class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ViewHolder(final View itemView) {
             super(itemView);
-            mImageView = (AutoRotateImageView) itemView.findViewById(R.id.image_view);
+            mImageView = (AutoRotateZoomableImageView) itemView.findViewById(R.id.image_view);
             mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
             mStatusIndicator = itemView.findViewById(R.id.status_indicator_view);
             mStateImageView = (ImageView) itemView.findViewById(R.id.image_state);
