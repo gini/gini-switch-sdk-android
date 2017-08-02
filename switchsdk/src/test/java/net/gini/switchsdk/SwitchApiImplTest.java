@@ -14,7 +14,6 @@ import net.gini.switchsdk.configuration.models.Configuration;
 import net.gini.switchsdk.network.ExtractionOrder;
 import net.gini.switchsdk.network.ExtractionOrderPage;
 import net.gini.switchsdk.network.ExtractionOrderState;
-import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
 import net.gini.switchsdk.utils.SwitchException;
 import net.jodah.concurrentunit.Waiter;

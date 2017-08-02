@@ -21,7 +21,6 @@ import net.gini.switchsdk.configuration.models.FlashMode;
 import net.gini.switchsdk.network.ExtractionOrder;
 import net.gini.switchsdk.network.ExtractionOrderPage;
 import net.gini.switchsdk.network.ExtractionOrderState;
-import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
 import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.Logging;
@@ -275,9 +274,14 @@ class SwitchApiImpl implements SwitchApi {
                             consumptionValue = consumptionJsonObject.optDouble("value");
                             consumptionUnit = consumptionJsonObject.optString("unit");
                         }
-                        callback.onSuccess(new Extractions(selfUrl, companyName, energyMeterNumber,
-                                consumptionValue,
-                                consumptionUnit));
+                        Extractions extractions = new Extractions.Builder()
+                                .selfLink(selfUrl)
+                                .companyName(companyName)
+                                .energyMeterNumber(energyMeterNumber)
+                                .consumptionUnit(consumptionUnit)
+                                .consumptionValue(consumptionValue)
+                                .build();
+                        callback.onSuccess(extractions);
                     } catch (JSONException e) {
                         callback.onError(new SwitchException(RETRIEVE_EXTRACTIONS, e.getMessage()));
                     }

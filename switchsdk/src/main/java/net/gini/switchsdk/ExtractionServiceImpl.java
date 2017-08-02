@@ -4,7 +4,6 @@ package net.gini.switchsdk;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 
-import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
 import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.Logging;
@@ -50,6 +49,22 @@ class ExtractionServiceImpl implements ExtractionService {
     @Override
     public int getResultCodeForActivity() {
         return SwitchSdk.EXTRACTIONS_AVAILABLE;
+    }
+
+    @Override
+    public void sendExtractions(@NonNull final Extractions extractions) {
+        mSwitchApi.sendExtractions(extractions, new NetworkCallback<Void>() {
+            @Override
+            public void onError(final Exception e) {
+                //TODO
+                Logging.e("Sending extractions to API failed.", e);
+            }
+
+            @Override
+            public void onSuccess(final Void aVoid) {
+                Logging.v("Sending extractions to API succeeded");
+            }
+        });
     }
 
 }

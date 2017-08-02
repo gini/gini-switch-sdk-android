@@ -16,7 +16,6 @@ import net.gini.switchsdk.authentication.AuthenticationService;
 import net.gini.switchsdk.authentication.AuthenticationServiceImpl;
 import net.gini.switchsdk.authentication.models.ClientCredentials;
 import net.gini.switchsdk.authentication.user.UserManager;
-import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
 import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.Logging;
@@ -149,6 +148,13 @@ public class SwitchSdk {
     public Intent getSwitchSdkIntent() {
 
         return new IntentFactory(this).createSwitchSdkIntent();
+    }
+
+    /**
+     * Provide extractions to us weeeee
+     */
+    public void provideFeedbakc(@NonNull final Extractions extractions) {
+        mExtractionService.sendExtractions(extractions);
     }
 
     /**

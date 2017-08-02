@@ -3,6 +3,7 @@ package net.gini.switchsdk.network;
 
 import android.support.annotation.NonNull;
 
+import net.gini.switchsdk.Extractions;
 import net.gini.switchsdk.configuration.models.ClientInformation;
 import net.gini.switchsdk.configuration.models.Configuration;
 
