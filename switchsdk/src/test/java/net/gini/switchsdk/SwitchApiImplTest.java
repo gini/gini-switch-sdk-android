@@ -52,6 +52,8 @@ public class SwitchApiImplTest {
     @Mock
     private NetworkCallback<ExtractionOrder> mMockExtractionOrderNetworkCallback;
     @Mock
+    private Extractions mMockExtractions;
+    @Mock
     private NetworkCallback<Extractions> mMockExtractionsNetworkCallback;
     @Mock
     private File mMockFile;
@@ -60,6 +62,8 @@ public class SwitchApiImplTest {
     @Mock
     private NetworkCallback<ExtractionOrderPage> mMockStringNetworkCallback;
     private HttpUrl mMockUrl;
+    @Mock
+    private NetworkCallback<Void> mMockVoidNetworkCallback;
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private MockWebServer mServer;
     private SwitchApiImpl mSwitchApi;
@@ -949,6 +953,82 @@ public class SwitchApiImplTest {
         mWaiter.await();
     }
 
+    @Test
+    public void sendExtractions_shouldBeAPutRequest()
+            throws InterruptedException, TimeoutException {
+        when(mMockExtractions.getSelf()).thenReturn(mMockUrl.toString());
+        mSwitchApi.sendExtractions(mMockExtractions, mMockVoidNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("PUT", request.getMethod());
+    }
+
+    @Test
+    public void sendExtractions_shouldContainAuthorizationHeader()
+            throws InterruptedException, TimeoutException {
+        when(mMockExtractions.getSelf()).thenReturn(mMockUrl.toString());
+        mSwitchApi.sendExtractions(mMockExtractions, mMockVoidNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        assertFalse(authorizationHeader.isEmpty());
+    }
+
+    @Test
+    public void sendExtractions_shouldContainTheBearerTokenAsAuthorization()
+            throws InterruptedException {
+        final String bearerToken = "1eb7ca49-d99f-40cb-b86d-8dd689ca2345";
+        when(mMockAccessToken.getToken()).thenReturn(bearerToken);
+        when(mMockExtractions.getSelf()).thenReturn(mMockUrl.toString());
+        mSwitchApi.sendExtractions(mMockExtractions, mMockVoidNetworkCallback);
+        RecordedRequest request = mServer.takeRequest();
+        assertEquals("BEARER " + bearerToken, request.getHeader("Authorization"));
+    }
+
+    @Test
+    public void sendExtractions_wasNotSuccessfulShouldCallOnError()
+            throws InterruptedException, JSONException, TimeoutException {
+        when(mMockExtractions.getSelf()).thenReturn(mMockUrl.toString());
+        mServer.enqueue(new MockResponse().setResponseCode(500));
+        mSwitchApi.sendExtractions(mMockExtractions,
+                new NetworkCallback<Void>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.assertTrue(e instanceof SwitchException);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Void v) {
+                        mWaiter.fail();
+                        mWaiter.resume();
+                    }
+                });
+        mWaiter.await();
+    }
+
+    @Test
+    public void sendExtractions_wasSuccessfulShouldCallOnSuccess()
+            throws InterruptedException, JSONException, TimeoutException {
+        mServer.enqueue(new MockResponse());
+        when(mMockExtractions.getSelf()).thenReturn(mMockUrl.toString());
+        mSwitchApi.sendExtractions(mMockExtractions,
+                new NetworkCallback<Void>() {
+                    @Override
+                    public void onError(final Exception e) {
+                        mWaiter.fail(e);
+                        mWaiter.resume();
+                    }
+
+                    @Override
+                    public void onSuccess(final Void p) {
+                        //TODO -> when backend defined answer
+                        mWaiter.assertNull(p);
+                        mWaiter.resume();
+                    }
+                });
+
+        mWaiter.await();
+    }
+
     @Before
     public void setUp() throws Exception {
         mServer = new MockWebServer();
@@ -966,6 +1046,12 @@ public class SwitchApiImplTest {
         when(mMockClientInformation.getOsVersion()).thenReturn("25");
 
         when(mMockFile.getName()).thenReturn("file");
+
+        when(mMockExtractions.getSelf()).thenReturn("");
+        when(mMockExtractions.getCompanyName()).thenReturn("");
+        when(mMockExtractions.getConsumptionUnit()).thenReturn("");
+        when(mMockExtractions.getEnergyMeterNumber()).thenReturn("");
+        when(mMockExtractions.getConsumptionValue()).thenReturn(0.0);
 
         mSwitchApi = new SwitchApiImpl(mOkHttpClient, mMockAuthenticationService, mMockUrl);
     }

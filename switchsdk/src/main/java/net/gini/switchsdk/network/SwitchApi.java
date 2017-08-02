@@ -26,4 +26,7 @@ public interface SwitchApi {
 
     void retrieveExtractions(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<Extractions> callback);
+
+    void sendExtractions(@NonNull final Extractions extractions,
+            @NonNull final NetworkCallback<Void> callback);
 }

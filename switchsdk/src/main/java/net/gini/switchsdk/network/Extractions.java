@@ -2,7 +2,6 @@ package net.gini.switchsdk.network;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import android.support.annotation.VisibleForTesting;
 
 
 /**
@@ -86,7 +85,6 @@ public class Extractions {
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
-    @VisibleForTesting
     public String getSelf() {
         return mSelf;
     }
