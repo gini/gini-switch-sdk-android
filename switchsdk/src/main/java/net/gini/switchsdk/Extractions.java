@@ -119,7 +119,7 @@ public class Extractions {
         }
 
         /**
-         * Sets the {@code companyName} and returns a reference to this Builder so that the methods
+         * Sets the {@code mCompanyName} and returns a reference to this Builder so that the methods
          * can be chained together.
          *
          * @param companyName the {@code mCompanyName} to set
@@ -155,7 +155,7 @@ public class Extractions {
         }
 
         /**
-         * Sets the {@code energyMeterNumber} and returns a reference to this Builder so that the
+         * Sets the {@code mEnergyMeterNumber} and returns a reference to this Builder so that the
          * methods can be chained together.
          *
          * @param energyMeterNumber the {@code mEnergyMeterNumber} to set

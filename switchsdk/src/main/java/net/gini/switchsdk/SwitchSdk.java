@@ -95,12 +95,8 @@ public class SwitchSdk {
 
     }
 
-
-    public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
-            @NonNull final String clientPw, @NonNull final String domain) {
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .build();
-        return init(context, clientId, clientPw, domain, okHttpClient);
+    public static SwitchSdk getSdk() {
+        return mSingleton;
     }
 
     public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -117,6 +113,13 @@ public class SwitchSdk {
         return create(context, new DocumentServiceImpl(context, switchApi),
                 new ExtractionServiceImpl(switchApi),
                 remoteConfigManager);
+    }
+
+    public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
+            @NonNull final String clientPw, @NonNull final String domain) {
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .build();
+        return init(context, clientId, clientPw, domain, okHttpClient);
     }
 
     /**
@@ -518,10 +521,6 @@ public class SwitchSdk {
     public SwitchSdk setReviewTitleText(@StringRes final int text) {
         mReviewTitleText = text;
         return this;
-    }
-
-    static SwitchSdk getSdk() {
-        return mSingleton;
     }
 
     int getTheme() {

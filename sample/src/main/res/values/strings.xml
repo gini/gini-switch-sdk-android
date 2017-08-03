@@ -9,4 +9,5 @@
     <string name="custom_review_discard_text">Custom Discard</string>
     <string name="custom_preview_success_text">Custom Success Text</string>
     <string name="custom_preview_failed_text">Custom failed text</string>
+    <string name="title_activity_extractions">ExtractionsActivity</string>
 </resources>
