@@ -25,13 +25,6 @@ public class MainActivity extends AppCompatActivity {
             final Intent data) {
         if (requestCode == SwitchSdk.REQUEST_CODE) {
             if (resultCode == SwitchSdk.EXTRACTIONS_AVAILABLE) {
-//                Extractions extractions = mSwitchSdk.getExtractions();
-//                if (extractions != null) {
-//                    mTextView.setText(extractions.toString());
-//                    Extractions feedback = Extractions.newBuilder(extractions).companyName
-// ("BLA").build();
-//                    mSwitchSdk.provideFeedbakc(feedback);
-//                }
                 startActivity(new Intent(this, ExtractionsActivity.class));
             }
         }
@@ -45,10 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.textView);
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addNetworkInterceptor(interceptor)
                 .build();
 
         mSwitchSdk = SwitchSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
