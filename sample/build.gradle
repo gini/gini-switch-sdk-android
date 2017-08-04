@@ -15,7 +15,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode versionBuild
         versionName "1.0"
-        manifestPlaceholders = [HOCKEYAPP_APP_ID: "${hockeyAppId}"]
+
         buildConfigField "String", "CLIENT_ID", "\"${clientId}\""
         buildConfigField "String", "CLIENT_SECRET", "\"${clientSecret}\""
     }
@@ -32,6 +32,16 @@ android {
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
         abortOnError false
+    }
+
+    productFlavors {
+        dev {
+            minSdkVersion 21
+        }
+
+        hockey {
+            manifestPlaceholders = [HOCKEYAPP_APP_ID: "${hockeyAppId}"]
+        }
     }
 }
 
