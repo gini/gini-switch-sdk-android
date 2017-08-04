@@ -95,7 +95,18 @@ public class SwitchSdk {
 
     }
 
+    /**
+     * Returns an instance of the Switch SDK. Be sure that it is initialised before calling this
+     * method.
+     *
+     * @return the SDK instance
+     */
+    @NonNull
     public static SwitchSdk getSdk() {
+        if (mSingleton == null) {
+            throw new UnsupportedOperationException(
+                    "SDK has not been initialized, call the init method to do so.");
+        }
         return mSingleton;
     }
 
@@ -154,9 +165,13 @@ public class SwitchSdk {
     }
 
     /**
-     * Provide extractions to us weeeee
+     * Call this to provide valuable feedback about the received extractions. The more feedback we
+     * get the more precise the extractions will be in the future. To create an extractions feedback
+     * object use the provided {@link Extractions#newBuilder(Extractions)} method.
+     *
+     * @param extractions the reviewed extractions
      */
-    public void provideFeedbakc(@NonNull final Extractions extractions) {
+    public void provideFeedback(@NonNull final Extractions extractions) {
         mExtractionService.sendExtractions(extractions);
     }
 

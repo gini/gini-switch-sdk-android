@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import net.gini.switchsdk.SwitchSdk;
 import net.hockeyapp.android.CrashManager;
@@ -17,8 +16,6 @@ import okhttp3.OkHttpClient;
 public class MainActivity extends AppCompatActivity {
 
     private SwitchSdk mSwitchSdk;
-
-    private TextView mTextView;
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
@@ -35,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mTextView = (TextView) findViewById(R.id.textView);
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
@@ -61,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.custom_positiveColor)
-                        .setNegativeColor(R.color.negativeColor)
+                        .setNegativeColor(R.color.custom_negativeColor)
                         .setAnalyzedText(R.string.analyzedText)
                         .setAnalyzedTextColor(R.color.analyzedTextColor)
                         .setAnalyzedImage(R.drawable.ic_analyzed_image)

@@ -37,7 +37,7 @@ public class ExtractionsActivity extends AppCompatActivity {
 
                 Extractions feedbackExtractions = Extractions.newBuilder(extractions).companyName(
                         feedbackCompanyName).energyMeterNumber(feedbackCounterNumber).build();
-                switchSdk.provideFeedbakc(feedbackExtractions);
+                switchSdk.provideFeedback(feedbackExtractions);
             }
         });
     }
