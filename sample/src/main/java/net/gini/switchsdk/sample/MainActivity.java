@@ -2,18 +2,16 @@ package net.gini.switchsdk.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import net.gini.switchsdk.SwitchSdk;
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
+import net.gini.switchsdk.network.Extractions;
 
 import okhttp3.OkHttpClient;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private SwitchSdk mSwitchSdk;
 
@@ -75,36 +73,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
-        checkForUpdates();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterManagers();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterManagers();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkForCrashes();
-    }
-
-    private void checkForCrashes() {
-        CrashManager.register(this);
-    }
-
-    private void checkForUpdates() {
-        UpdateManager.register(this);
-    }
-
-    private void unregisterManagers() {
-        UpdateManager.unregister();
     }
 }
