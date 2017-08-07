@@ -19,27 +19,30 @@ public class ExtractionsActivity extends AppCompatActivity {
 
         final SwitchSdk switchSdk = SwitchSdk.getSdk();
         final Extractions extractions = switchSdk.getExtractions();
+        if (extractions != null) {
 
-        extractionViewContainer.removeAllViews();
-        final SingleExtractionView companyName = new SingleExtractionView(this, "Vorversorger",
-                extractions.getCompanyName());
-        extractionViewContainer.addView(companyName);
+            extractionViewContainer.removeAllViews();
+            final SingleExtractionView companyName = new SingleExtractionView(this, "Vorversorger",
+                    extractions.getCompanyName());
+            extractionViewContainer.addView(companyName);
 
-        final SingleExtractionView counterNumber = new SingleExtractionView(this, "Zählernummer",
-                extractions.getEnergyMeterNumber());
-        extractionViewContainer.addView(counterNumber);
+            final SingleExtractionView counterNumber = new SingleExtractionView(this,
+                    "Zählernummer", extractions.getEnergyMeterNumber());
+            extractionViewContainer.addView(counterNumber);
 
-        findViewById(R.id.button_done).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                final String feedbackCompanyName = companyName.getValue();
-                final String feedbackCounterNumber = counterNumber.getValue();
+            findViewById(R.id.button_done).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    final String feedbackCompanyName = companyName.getValue();
+                    final String feedbackCounterNumber = counterNumber.getValue();
 
-                Extractions feedbackExtractions = Extractions.newBuilder(extractions).companyName(
-                        feedbackCompanyName).energyMeterNumber(feedbackCounterNumber).build();
-                switchSdk.provideFeedback(feedbackExtractions);
-            }
-        });
+                    Extractions feedbackExtractions = Extractions.newBuilder(
+                            extractions).companyName(
+                            feedbackCompanyName).energyMeterNumber(feedbackCounterNumber).build();
+                    switchSdk.provideFeedback(feedbackExtractions);
+                }
+            });
+        }
     }
 
 }

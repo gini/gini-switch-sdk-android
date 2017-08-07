@@ -25,8 +25,6 @@ public class SingleExtractionView extends LinearLayout {
         final View view = inflate(context, R.layout.view_extraction, this);
         setOrientation(VERTICAL);
 
-        final int lineColor = R.color.positiveColor;
-
         mInput = (EditText) view.findViewById(R.id.text_input);
         mInput.setText(value);
         mInput.setHint(title);
@@ -34,13 +32,8 @@ public class SingleExtractionView extends LinearLayout {
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(final Editable s) {
-                if (TextUtils.isEmpty(mInput.getText().toString())) {
-                    mInput.setError(context.getString(R.string.extractions_error_empty_input));
-                    paintLineColor(R.color.negativeColor);
-
-                } else {
-                    paintLineColor(lineColor);
-                }
+                String inputString = mInput.getText().toString();
+                setLineColor(context, inputString);
             }
 
             @Override
@@ -54,10 +47,10 @@ public class SingleExtractionView extends LinearLayout {
             }
         });
 
+        setLineColor(context, value);
+
         final TextView titleTextView = (TextView) view.findViewById(R.id.text_title);
         titleTextView.setText(title);
-
-        paintLineColor(lineColor);
 
     }
 
@@ -71,6 +64,15 @@ public class SingleExtractionView extends LinearLayout {
         DrawableCompat.setTint(wrappedDrawable.mutate(),
                 ContextCompat.getColor(getContext(), color));
         mInput.setBackground(wrappedDrawable);
+    }
+
+    private void setLineColor(final Context context, final String value) {
+        if (TextUtils.isEmpty(value)) {
+            mInput.setError(context.getString(R.string.extractions_error_empty_input));
+            paintLineColor(R.color.negativeColor);
+        } else {
+            paintLineColor(R.color.positiveColor);
+        }
     }
 
 }

@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import net.gini.switchsdk.SwitchSdk;
-import net.gini.switchsdk.network.Extractions;
 
 import okhttp3.OkHttpClient;
 
@@ -21,6 +21,8 @@ public class MainActivity extends BaseActivity {
         if (requestCode == SwitchSdk.REQUEST_CODE) {
             if (resultCode == SwitchSdk.EXTRACTIONS_AVAILABLE) {
                 startActivity(new Intent(this, ExtractionsActivity.class));
+            } else {
+                Toast.makeText(this, R.string.toast_no_extracions, Toast.LENGTH_LONG).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
