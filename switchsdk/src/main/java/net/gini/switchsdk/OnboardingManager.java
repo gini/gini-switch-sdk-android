@@ -11,9 +11,9 @@ import android.support.annotation.VisibleForTesting;
 public class OnboardingManager {
 
     @VisibleForTesting
-    public static final String ONBOARDING_SHARE_PREFERENCES = "ONBOARDING_SHARE_PREFERENCES";
+    public static final String ONBOARDING_KEY_SHOWN = "ONBOARDING_KEY_SHOWN";
     @VisibleForTesting
-    static final String ONBOARDING_KEY_SHOWN = "ONBOARDING_KEY_SHOWN";
+    public static final String ONBOARDING_SHARE_PREFERENCES = "ONBOARDING_SHARE_PREFERENCES";
     private final Context mContext;
 
     public OnboardingManager(final Context context) {
@@ -23,6 +23,7 @@ public class OnboardingManager {
     boolean onBoardingShown() {
         return getPreferences().getBoolean(ONBOARDING_KEY_SHOWN, false);
     }
+
 
     void storeOnboardingShown() {
         getPreferences().edit().putBoolean(ONBOARDING_KEY_SHOWN, true).apply();
