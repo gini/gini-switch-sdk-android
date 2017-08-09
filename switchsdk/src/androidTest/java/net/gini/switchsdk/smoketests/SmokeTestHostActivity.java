@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import net.gini.switchsdk.SwitchSdk;
 import net.gini.switchsdk.TakePictureActivity;
 
+//Needed since TakePictureActivity has to have a parent activity
 public class SmokeTestHostActivity extends Activity {
 
     @Override
