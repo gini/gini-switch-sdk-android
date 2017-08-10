@@ -333,7 +333,6 @@ class SwitchApiImpl implements SwitchApi {
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    //TODO -> when backend defined the answer
                     callback.onSuccess(null);
                 } else {
                     callback.onError(new SwitchException(SEND_FEEDBACK));

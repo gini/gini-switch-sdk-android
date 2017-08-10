@@ -1019,7 +1019,6 @@ public class SwitchApiImplTest {
 
                     @Override
                     public void onSuccess(final Void p) {
-                        //TODO -> when backend defined answer
                         mWaiter.assertNull(p);
                         mWaiter.resume();
                     }

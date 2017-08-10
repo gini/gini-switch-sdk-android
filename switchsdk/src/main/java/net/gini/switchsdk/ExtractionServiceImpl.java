@@ -56,7 +56,6 @@ class ExtractionServiceImpl implements ExtractionService {
         mSwitchApi.sendExtractions(extractions, new NetworkCallback<Void>() {
             @Override
             public void onError(final Exception e) {
-                //TODO
                 Logging.e("Sending extractions to API failed.", e);
             }
 

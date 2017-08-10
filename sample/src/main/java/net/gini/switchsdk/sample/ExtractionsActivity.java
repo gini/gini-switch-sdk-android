@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import net.gini.switchsdk.Extractions;
 import net.gini.switchsdk.SwitchSdk;
@@ -22,12 +23,14 @@ public class ExtractionsActivity extends AppCompatActivity {
         if (extractions != null) {
 
             extractionViewContainer.removeAllViews();
-            final SingleExtractionView companyName = new SingleExtractionView(this, "Vorversorger",
+            final SingleExtractionView companyName = new SingleExtractionView(this,
+                    getString(R.string.extraction_name_company),
                     extractions.getCompanyName());
             extractionViewContainer.addView(companyName);
 
             final SingleExtractionView counterNumber = new SingleExtractionView(this,
-                    "Zählernummer", extractions.getEnergyMeterNumber());
+                    getString(R.string.extraction_name_energy_meter),
+                    extractions.getEnergyMeterNumber());
             extractionViewContainer.addView(counterNumber);
 
             findViewById(R.id.button_done).setOnClickListener(new View.OnClickListener() {
@@ -40,6 +43,9 @@ public class ExtractionsActivity extends AppCompatActivity {
                             extractions).companyName(
                             feedbackCompanyName).energyMeterNumber(feedbackCounterNumber).build();
                     switchSdk.provideFeedback(feedbackExtractions);
+
+                    Toast.makeText(ExtractionsActivity.this, "Awesome", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             });
         }
