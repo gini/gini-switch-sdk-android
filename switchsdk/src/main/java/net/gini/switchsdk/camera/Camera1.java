@@ -9,10 +9,10 @@ import static net.gini.switchsdk.camera.GiniCameraUtil.getLargestSizeWithSimilar
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import net.gini.switchsdk.utils.ExifUtils;
+import net.gini.switchsdk.utils.Logging;
 
 import java.util.List;
 
@@ -106,17 +106,18 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
                 final List<Camera.Size> supportedPreviewSizes =
                         parameters.getSupportedPreviewSizes();
-
                 final List<Camera.Size> supportedPictureSizes =
                         parameters.getSupportedPictureSizes();
-                if (supportedPreviewSizes != null && supportedPictureSizes != null) {
-                    Camera.Size largestSize = getLargestSize(supportedPictureSizes);
+                if (supportedPreviewSizes != null && supportedPictureSizes != null
+                        && !supportedPictureSizes.isEmpty()) {
+                    final Camera.Size largestSize = getLargestSize(supportedPictureSizes);
+                    final Camera.Size pictureSize =
+                            largestSize != null ? largestSize : supportedPictureSizes.get(0);
                     final Camera.Size optimalPreviewSize = getLargestSizeWithSimilarAspectRatio(
-                            supportedPreviewSizes,
-                            largestSize != null ? largestSize : supportedPictureSizes.get(0));
-
-                    parameters.setPictureSize(largestSize.width, largestSize.height);
-                    if (parameters.getSupportedPreviewSizes().contains(optimalPreviewSize)) {
+                            supportedPreviewSizes, pictureSize);
+                    parameters.setPictureSize(pictureSize.width, pictureSize.height);
+                    if (optimalPreviewSize != null
+                            && parameters.getSupportedPreviewSizes().contains(optimalPreviewSize)) {
                         parameters.setPreviewSize(optimalPreviewSize.width,
                                 optimalPreviewSize.height);
                         mCameraPreview.setPreviewSize(optimalPreviewSize);
@@ -135,7 +136,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
             }
 
         } catch (Exception e) {
-            Log.d(TAG, "Error setting camera preview: " + e.getLocalizedMessage());
+            Logging.d("Error setting camera preview: " + e.getLocalizedMessage());
         }
     }
 
@@ -180,7 +181,7 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
         try {
             camera = Camera.open();
         } catch (Exception e) {
-            Log.e(TAG, "Camera not available: " + e.getLocalizedMessage());
+            Logging.e("Camera not available: " + e.getLocalizedMessage());
         }
         return camera;
     }
@@ -196,7 +197,8 @@ public class Camera1 implements GiniCamera, SurfaceHolder.Callback {
 
     private Camera.Parameters setFlashModeOn(final Camera.Parameters parameters) {
         final List<String> supportedFlashModes = parameters.getSupportedFlashModes();
-        if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
+        if (supportedFlashModes != null && supportedFlashModes.contains(
+                Camera.Parameters.FLASH_MODE_ON)) {
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
         }
         return parameters;
