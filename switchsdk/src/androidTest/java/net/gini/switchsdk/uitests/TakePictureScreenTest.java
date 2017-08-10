@@ -1,4 +1,4 @@
-package net.gini.switchsdk.smoketests;
+package net.gini.switchsdk.uitests;
 
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -7,6 +7,8 @@ import static android.support.test.espresso.Espresso.openActionBarOverflowOrOpti
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -16,7 +18,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.allOf;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +27,6 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +34,7 @@ import android.view.ViewParent;
 
 import net.gini.switchsdk.OnboardingManager;
 import net.gini.switchsdk.R;
+import net.gini.switchsdk.ReviewPictureActivity;
 import net.gini.switchsdk.SwitchSdk;
 
 import org.hamcrest.Description;
@@ -47,14 +48,14 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class SmokeTest {
+public class TakePictureScreenTest {
 
     @Rule
-    public ActivityTestRule<SmokeTestHostActivity> mActivityTestRule = new ActivityTestRule
-            <>(SmokeTestHostActivity.class, true, false);
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.CAMERA);
+    public ActivityTestRule<HostActivity> mActivityTestRule = new ActivityTestRule
+            <>(HostActivity.class, true, false);
+    //    @Rule
+//    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
+//            Manifest.permission.CAMERA);
     private Context mTargetContext;
 
     @Test
@@ -65,7 +66,7 @@ public class SmokeTest {
         sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
 
         SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
-        Intent intent = new Intent(mTargetContext, SmokeTestHostActivity.class);
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
 
         intent.putExtras(switchSdk.getSwitchSdkIntent());
         mActivityTestRule.launchActivity(intent);
@@ -96,6 +97,31 @@ public class SmokeTest {
     }
 
     @Test
+    public void cameraScreen_helpShouldDisplayOnboarding() {
+
+        final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
+                OnboardingManager.ONBOARDING_SHARE_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
+
+        SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
+
+        intent.putExtras(switchSdk.getSwitchSdkIntent());
+        mActivityTestRule.launchActivity(intent);
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.title), withText("Hilfe"), isDisplayed()));
+        appCompatTextView.perform(click());
+
+        SystemClock.sleep(1000);
+
+        onView(withId(R.id.onBoardingContainer)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
     public void cameraScreen_shouldContainAllMenus() {
 
         final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
@@ -103,7 +129,7 @@ public class SmokeTest {
         sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
 
         SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
-        Intent intent = new Intent(mTargetContext, SmokeTestHostActivity.class);
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
 
         intent.putExtras(switchSdk.getSwitchSdkIntent());
         mActivityTestRule.launchActivity(intent);
@@ -133,10 +159,32 @@ public class SmokeTest {
     }
 
     @Test
+    public void cameraScreen_takePictureShouldOpenReviewScreen() {
+
+        final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
+                OnboardingManager.ONBOARDING_SHARE_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
+
+        SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
+
+        intent.putExtras(switchSdk.getSwitchSdkIntent());
+        mActivityTestRule.launchActivity(intent);
+
+        SystemClock.sleep(5000);
+        onView(withId(R.id.button_take_picture))
+                .perform(click())
+                .check(matches(isDisplayed()));
+
+        SystemClock.sleep(1000);
+        intended(hasComponent(ReviewPictureActivity.class.getName()));
+    }
+
+    @Test
     public void firstLaunch_shouldShowOnboarding() {
 
         SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
-        Intent intent = new Intent(mTargetContext, SmokeTestHostActivity.class);
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
 
         intent.putExtras(switchSdk.getSwitchSdkIntent());
         mActivityTestRule.launchActivity(intent);

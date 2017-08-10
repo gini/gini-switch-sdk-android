@@ -9,7 +9,7 @@
 
     <application>
         <uses-library android:name="android.test.runner" />
-        <activity android:name="net.gini.switchsdk.smoketests.SmokeTestHostActivity" />
+        <activity android:name="net.gini.switchsdk.uitests.HostActivity" />
 
     </application>
 

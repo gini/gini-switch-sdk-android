@@ -1,4 +1,4 @@
-package net.gini.switchsdk.smoketests;
+package net.gini.switchsdk.uitests;
 
 
 import android.app.Activity;
@@ -10,7 +10,7 @@ import net.gini.switchsdk.SwitchSdk;
 import net.gini.switchsdk.TakePictureActivity;
 
 //Needed since TakePictureActivity has to have a parent activity
-public class SmokeTestHostActivity extends Activity {
+public class HostActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
