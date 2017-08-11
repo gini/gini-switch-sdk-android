@@ -1,6 +1,8 @@
 package net.gini.switchsdk;
 
 
+import static android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -133,6 +135,11 @@ public class SwitchSdk {
         return init(context, clientId, clientPw, domain, okHttpClient);
     }
 
+    @VisibleForTesting(otherwise = PACKAGE_PRIVATE)
+    public void cleanUp() {
+        mDocumentService.cleanup();
+    }
+
     /**
      * <p>
      * Use this to receive the extractions init the SDK.
@@ -212,10 +219,6 @@ public class SwitchSdk {
     public SwitchSdk showLogging(final boolean show) {
         Logging.SHOW_LOGS = show;
         return this;
-    }
-
-    void cleanUp() {
-        mDocumentService.cleanup();
     }
 
     @VisibleForTesting
