@@ -6,7 +6,8 @@ import android.support.annotation.RestrictTo;
 
 /**
  * The Extraction class that is used to get the received extractions from the Gini API. An
- * extraction is one information that has been found on the photographed images that have been
+ * extraction is one piece of information that has been found on the photographed images that
+ * have been
  * taken by the user. The corresponding getters can be used to get the specific extraction.
  * The given extractions are:
  * companyName, represents the wholesale supplier, e.g. "Stadtwerke München"
@@ -50,10 +51,10 @@ public class Extractions {
     }
 
     /**
-     * Returns the found name of the  wholesale supplier as a string. If nothing has been found the
+     * Returns the found name of the wholesale supplier as a string. If nothing has been found the
      * string is empty.
      *
-     * @return the  wholesale supplier as a string, or empty.
+     * @return the wholesale supplier as a string, or an empty string
      */
     @NonNull
     public String getCompanyName() {
@@ -61,10 +62,10 @@ public class Extractions {
     }
 
     /**
-     * Returns the found consumption unit as a string. This usually comes with with {@link
+     * Returns the found consumption unit as a string. This usually comes with {@link
      * Extractions#getConsumptionValue()} together.
      *
-     * @return the consumption unit as a string, or empty.
+     * @return the consumption unit as a string, or an empty string
      */
     @NonNull
     public String getConsumptionUnit() {
@@ -72,7 +73,7 @@ public class Extractions {
     }
 
     /**
-     * Returns the found consumption value as a double. This usually comes with with {@link
+     * Returns the found consumption value as a double. This usually comes with {@link
      * Extractions#getConsumptionUnit()} together.
      *
      * @return the consumption unit as a double, or Double.NaN.
@@ -84,7 +85,7 @@ public class Extractions {
     /**
      * The found energy meter number as a string. If nothing has been found the string is empty.
      *
-     * @return energy meter number as a string, or empty.
+     * @return energy meter number as a string, or an empty string.
      */
     @NonNull
     public String getEnergyMeterNumber() {
