@@ -16,18 +16,26 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -51,11 +59,11 @@ import org.junit.runner.RunWith;
 public class TakePictureScreenTest {
 
     @Rule
-    public ActivityTestRule<HostActivity> mActivityTestRule = new ActivityTestRule
+    public IntentsTestRule<HostActivity> mActivityTestRule = new IntentsTestRule
             <>(HostActivity.class, true, false);
-    //    @Rule
-//    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
-//            Manifest.permission.CAMERA);
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
+            Manifest.permission.CAMERA);
     private Context mTargetContext;
 
     @Test
@@ -97,6 +105,92 @@ public class TakePictureScreenTest {
     }
 
     @Test
+    public void cameraScreen_clickOnEmptyItemShouldShowCameraPreview() {
+
+        final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
+                OnboardingManager.ONBOARDING_SHARE_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
+
+        SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
+
+        intent.putExtras(switchSdk.getSwitchSdkIntent());
+        mActivityTestRule.launchActivity(intent);
+
+        SystemClock.sleep(1000);
+        onView(withId(R.id.button_take_picture))
+                .perform(click());
+
+        SystemClock.sleep(4000);
+
+        onView(withId(R.id.button_keep)).perform(click());
+
+        SystemClock.sleep(1000);
+
+        onView(withId(R.id.image_overview))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        SystemClock.sleep(1000);
+
+        ViewInteraction imageView = onView(allOf(withId(R.id.image_review), childAtPosition(
+                allOf(withId(R.id.image_review), childAtPosition(
+                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class), 1)), 0),
+                isDisplayed()));
+        imageView.check(matches(isDisplayed()));
+
+        onView(withId(R.id.image_overview))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        SystemClock.sleep(1000);
+
+        onView(withId(R.id.camera_frame)).check(matches(isDisplayed()));
+        onView(withId(R.id.container_take_picture_buttons)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_finish)).check(matches(isDisplayed()));
+        onView(withId(R.id.container_take_picture_buttons)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void cameraScreen_clickOnPictureShouldShowIt() {
+
+        final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
+                OnboardingManager.ONBOARDING_SHARE_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
+
+        SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
+
+        intent.putExtras(switchSdk.getSwitchSdkIntent());
+        mActivityTestRule.launchActivity(intent);
+
+        SystemClock.sleep(1000);
+        onView(withId(R.id.button_take_picture))
+                .perform(click());
+
+        SystemClock.sleep(4000);
+
+        onView(withId(R.id.button_keep)).perform(click());
+
+        SystemClock.sleep(1000);
+
+        onView(withId(R.id.image_overview))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        SystemClock.sleep(1000);
+
+        ViewInteraction imageView = onView(allOf(withId(R.id.image_review), childAtPosition(
+                allOf(withId(R.id.image_review), childAtPosition(
+                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class), 1)), 0),
+                isDisplayed()));
+        imageView.check(matches(isDisplayed()));
+
+        onView(withId(R.id.container_preview_buttons)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_delete_image)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_take_new_image)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
     public void cameraScreen_helpShouldDisplayOnboarding() {
 
         final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
@@ -118,6 +212,33 @@ public class TakePictureScreenTest {
         SystemClock.sleep(1000);
 
         onView(withId(R.id.onBoardingContainer)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void cameraScreen_rejectedPictureShouldNotAppearInDocumentBar() {
+
+        final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
+                OnboardingManager.ONBOARDING_SHARE_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
+
+        SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
+
+        intent.putExtras(switchSdk.getSwitchSdkIntent());
+        mActivityTestRule.launchActivity(intent);
+
+        SystemClock.sleep(1000);
+        onView(withId(R.id.button_take_picture))
+                .perform(click());
+
+        SystemClock.sleep(4000);
+
+        onView(withId(R.id.button_discard)).perform(click());
+
+        SystemClock.sleep(1000);
+
+        onView(withId(R.id.image_overview)).check(new RecyclerViewItemCountAssertion(1));
 
     }
 
@@ -171,13 +292,43 @@ public class TakePictureScreenTest {
         intent.putExtras(switchSdk.getSwitchSdkIntent());
         mActivityTestRule.launchActivity(intent);
 
-        SystemClock.sleep(5000);
+        SystemClock.sleep(1000);
         onView(withId(R.id.button_take_picture))
-                .perform(click())
-                .check(matches(isDisplayed()));
+                .perform(click());
+
+        SystemClock.sleep(5000);
+        intended(hasComponent(ReviewPictureActivity.class.getName()));
+    }
+
+    @Test
+    public void cameraScreen_takenPictureShouldAppearInDocumentBar() {
+
+        final SharedPreferences sharedPreferences = mTargetContext.getSharedPreferences(
+                OnboardingManager.ONBOARDING_SHARE_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(OnboardingManager.ONBOARDING_KEY_SHOWN, true).apply();
+
+        SwitchSdk switchSdk = SwitchSdk.init(mTargetContext, "", "", "");
+        Intent intent = new Intent(mTargetContext, HostActivity.class);
+
+        intent.putExtras(switchSdk.getSwitchSdkIntent());
+        mActivityTestRule.launchActivity(intent);
 
         SystemClock.sleep(1000);
-        intended(hasComponent(ReviewPictureActivity.class.getName()));
+        onView(withId(R.id.button_take_picture)).perform(click());
+
+        SystemClock.sleep(4000);
+
+        onView(withId(R.id.button_keep)).perform(click());
+
+        SystemClock.sleep(1000);
+
+        ViewInteraction textView = onView(allOf(withId(R.id.item_label), withText("Foto 1"),
+                childAtPosition(childAtPosition(withId(R.id.image_overview), 0), 1),
+                isDisplayed()));
+        textView.check(matches(withText("Foto 1")));
+
+        onView(withId(R.id.image_overview)).check(new RecyclerViewItemCountAssertion(2));
+
     }
 
     @Test
@@ -222,6 +373,25 @@ public class TakePictureScreenTest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    private class RecyclerViewItemCountAssertion implements ViewAssertion {
+        private final int expectedCount;
+
+        RecyclerViewItemCountAssertion(int expectedCount) {
+            this.expectedCount = expectedCount;
+        }
+
+        @Override
+        public void check(View view, NoMatchingViewException noViewFoundException) {
+            if (noViewFoundException != null) {
+                throw noViewFoundException;
+            }
+
+            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView.Adapter adapter = recyclerView.getAdapter();
+            assertThat(adapter.getItemCount(), is(expectedCount));
+        }
     }
 
 }
