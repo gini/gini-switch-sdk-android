@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import net.gini.switchsdk.SwitchSdk;
-import net.gini.switchsdk.network.Extractions;
 
 import okhttp3.OkHttpClient;
 
@@ -16,17 +15,14 @@ public class MainActivity extends BaseActivity {
 
     private SwitchSdk mSwitchSdk;
 
-    private TextView mTextView;
-
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
         if (requestCode == SwitchSdk.REQUEST_CODE) {
             if (resultCode == SwitchSdk.EXTRACTIONS_AVAILABLE) {
-                Extractions extractions = mSwitchSdk.getExtractions();
-                if (extractions != null) {
-                    mTextView.setText(extractions.toString());
-                }
+                startActivity(new Intent(this, ExtractionsActivity.class));
+            } else {
+                Toast.makeText(this, R.string.toast_no_extracions, Toast.LENGTH_LONG).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -37,10 +33,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = (TextView) findViewById(R.id.textView);
-
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
+
         mSwitchSdk = SwitchSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
                 "gini.net", okHttpClient);
         mSwitchSdk.showLogging(true);
@@ -61,7 +56,7 @@ public class MainActivity extends BaseActivity {
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.custom_positiveColor)
-                        .setNegativeColor(R.color.negativeColor)
+                        .setNegativeColor(R.color.custom_negativeColor)
                         .setAnalyzedText(R.string.analyzedText)
                         .setAnalyzedTextColor(R.color.analyzedTextColor)
                         .setAnalyzedImage(R.drawable.ic_analyzed_image)

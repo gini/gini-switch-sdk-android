@@ -3,6 +3,7 @@ package net.gini.switchsdk.network;
 
 import android.support.annotation.NonNull;
 
+import net.gini.switchsdk.Extractions;
 import net.gini.switchsdk.configuration.models.ClientInformation;
 import net.gini.switchsdk.configuration.models.Configuration;
 
@@ -26,4 +27,7 @@ public interface SwitchApi {
 
     void retrieveExtractions(@NonNull final String orderUrl,
             @NonNull final NetworkCallback<Extractions> callback);
+
+    void sendExtractions(@NonNull final Extractions extractions,
+            @NonNull final NetworkCallback<Void> callback);
 }
