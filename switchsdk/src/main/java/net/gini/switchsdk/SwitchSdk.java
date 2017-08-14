@@ -16,7 +16,6 @@ import net.gini.switchsdk.authentication.AuthenticationService;
 import net.gini.switchsdk.authentication.AuthenticationServiceImpl;
 import net.gini.switchsdk.authentication.models.ClientCredentials;
 import net.gini.switchsdk.authentication.user.UserManager;
-import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
 import net.gini.switchsdk.network.SwitchApi;
 import net.gini.switchsdk.utils.Logging;
@@ -96,12 +95,19 @@ public class SwitchSdk {
 
     }
 
-
-    public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
-            @NonNull final String clientPw, @NonNull final String domain) {
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .build();
-        return init(context, clientId, clientPw, domain, okHttpClient);
+    /**
+     * Returns an instance of the Switch SDK. Be sure that it is initialised before calling this
+     * method.
+     *
+     * @return the SDK instance
+     */
+    @NonNull
+    public static SwitchSdk getSdk() {
+        if (mSingleton == null) {
+            throw new UnsupportedOperationException(
+                    "SDK has not been initialized, call the init method to do so.");
+        }
+        return mSingleton;
     }
 
     public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
@@ -118,6 +124,13 @@ public class SwitchSdk {
         return create(context, new DocumentServiceImpl(context, switchApi),
                 new ExtractionServiceImpl(switchApi),
                 remoteConfigManager);
+    }
+
+    public static SwitchSdk init(@NonNull final Context context, @NonNull final String clientId,
+            @NonNull final String clientPw, @NonNull final String domain) {
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .build();
+        return init(context, clientId, clientPw, domain, okHttpClient);
     }
 
     /**
@@ -149,6 +162,17 @@ public class SwitchSdk {
     public Intent getSwitchSdkIntent() {
 
         return new IntentFactory(this).createSwitchSdkIntent();
+    }
+
+    /**
+     * Call this to provide valuable feedback about the received extractions. The more feedback we
+     * get the more precise the extractions will be in the future. To create an extractions feedback
+     * object use the provided {@link Extractions#newBuilder(Extractions)} method.
+     *
+     * @param extractions the reviewed extractions
+     */
+    public void provideFeedback(@NonNull final Extractions extractions) {
+        mExtractionService.sendExtractions(extractions);
     }
 
     /**
@@ -512,10 +536,6 @@ public class SwitchSdk {
     public SwitchSdk setReviewTitleText(@StringRes final int text) {
         mReviewTitleText = text;
         return this;
-    }
-
-    static SwitchSdk getSdk() {
-        return mSingleton;
     }
 
     int getTheme() {

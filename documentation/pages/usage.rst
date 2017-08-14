@@ -42,3 +42,25 @@ Consumption value           getConsumptionValue      double         Double.NaN
 Consumptions unit           getConsumptionUnit       String         ""
 Energy meter number         getEnergyMeterNumber     String         ""
 ======================      ======================   ============   ==============
+
+
+Providing Feedback
+==================
+
+Depending on your use case your app probably presents the extractions to the user and gives them the opportunity to correct them. Yes, there could be errors. We do our best to prevent them - but it’s more unlikely to happen if your app sends us feedback for the extractions we have delivered. Your app should send feedback only for the extractions the user has seen and accepted. Feedback should be sent for corrected extractions and for correct extractions.
+The Switch SDK's Extraction class offers a Builder that can be used to alter the given extractions.
+You can get an instance of this Builder by calling the method ``Extractions.newBuilder(retrievedExtractions)`` and then use it.
+See the following example code how this is done:
+
+.. code-block:: java
+
+  final SwitchSdk switchSdk = SwitchSdk.getSdk();
+  final Extractions retrievedExtractions = switchSdk.getExtractions();
+
+  //Let the user review and alter the extractions…
+
+  final Extractions feedbackExtractions = Extractions.newBuilder(retrievedExtractions)
+                                      .companyName(feedbackCompanyName)
+                                      .energyMeterNumber(feedbackCounterNumber)
+                                      .build();
+  switchSdk.provideFeedback(feedbackExtractions);
