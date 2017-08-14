@@ -30,7 +30,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
@@ -40,9 +39,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import net.gini.switchsdk.OnboardingManager;
-import net.gini.switchsdk.R;
 import net.gini.switchsdk.ReviewPictureActivity;
 import net.gini.switchsdk.SwitchSdk;
+import net.gini.switchsdk.test.R;
 
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
@@ -64,78 +63,6 @@ public class TakePictureScreenTest {
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
             Manifest.permission.CAMERA);
     private Context mTargetContext;
-
-    @Test
-    public void cameraScreen_clickOnEmptyItemShouldShowCameraPreview() {
-
-        omitOnboarding();
-        startIntent();
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-        onView(withId(R.id.button_take_picture))
-                .perform(click());
-
-        SystemClock.sleep(TIME_TO_WAIT_FOR_ACTIVITY_TO_START);
-
-        onView(withId(R.id.button_keep)).perform(click());
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-
-        onView(withId(R.id.image_overview))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-
-        ViewInteraction imageView = onView(allOf(withId(R.id.image_review), childAtPosition(
-                allOf(withId(R.id.image_review), childAtPosition(
-                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class), 1)), 0),
-                isDisplayed()));
-        imageView.check(matches(isDisplayed()));
-
-        onView(withId(R.id.image_overview))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-
-        onView(withId(R.id.camera_frame)).check(matches(isDisplayed()));
-        onView(withId(R.id.container_take_picture_buttons)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_finish)).check(matches(isDisplayed()));
-        onView(withId(R.id.container_take_picture_buttons)).check(matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void cameraScreen_clickOnPictureShouldShowIt() {
-
-        omitOnboarding();
-        startIntent();
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-        onView(withId(R.id.button_take_picture))
-                .perform(click());
-
-        SystemClock.sleep(TIME_TO_WAIT_FOR_ACTIVITY_TO_START);
-
-        onView(withId(R.id.button_keep)).perform(click());
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-
-        onView(withId(R.id.image_overview))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-
-        ViewInteraction imageView = onView(allOf(withId(R.id.image_review), childAtPosition(
-                allOf(withId(R.id.image_review), childAtPosition(
-                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class), 1)), 0),
-                isDisplayed()));
-        imageView.check(matches(isDisplayed()));
-
-        onView(withId(R.id.container_preview_buttons)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_delete_image)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_take_new_image)).check(matches(isDisplayed()));
-
-    }
 
     @Test
     public void cameraScreen_rejectedPictureShouldNotAppearInDocumentBar() {
@@ -169,30 +96,6 @@ public class TakePictureScreenTest {
 
         SystemClock.sleep(TIME_TO_WAIT_FOR_ACTIVITY_TO_START);
         intended(hasComponent(ReviewPictureActivity.class.getName()));
-    }
-
-    @Test
-    public void cameraScreen_takenPictureShouldAppearInDocumentBar() {
-
-        omitOnboarding();
-        startIntent();
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-        onView(withId(R.id.button_take_picture)).perform(click());
-
-        SystemClock.sleep(TIME_TO_WAIT_FOR_ACTIVITY_TO_START);
-
-        onView(withId(R.id.button_keep)).perform(click());
-
-        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS);
-
-        ViewInteraction textView = onView(allOf(withId(R.id.item_label), withText("Foto 1"),
-                childAtPosition(childAtPosition(withId(R.id.image_overview), 0), 1),
-                isDisplayed()));
-        textView.check(matches(withText("Foto 1")));
-
-        onView(withId(R.id.image_overview)).check(new RecyclerViewItemCountAssertion(2));
-
     }
 
     @Test
