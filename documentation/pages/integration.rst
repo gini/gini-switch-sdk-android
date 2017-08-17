@@ -31,3 +31,29 @@ Hereby a Context, your client id, your client secret and your domain is needed(F
   final SwitchSdk switchSdk = SwitchSdk.init(this, "clientId", "clientPw", "domain");
 
 The generated SwitchSdk instance can now be used to generate the needed Activity and to get the found extractions.
+
+
+Dependencies
+============
+
+The Switch SDK is using the external Http library `okHttp <https://github.com/square/okhttp>`_ version 3.6.0.
+As well as the `Android Support Library <https://developer.android.com/topic/libraries/support-library/index.html>`_ version 26.0.1.
+
+If your project is using a different kind of the support library problems can appear during run- or compile time.
+You have different options to address this problems. The easist solution is probably that you are using the same version as the SDK. If we update the SDK we tend to update the used support library as well to the latest version.
+However if you want to use another support library version you can do so by forcing the same support library version to all your used libraries. This can be done with the following gradle method:
+
+.. code-block:: groovy
+
+  configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion 'dessired-support-lib-version'
+            }
+        }
+    }
+  }
+
+.. note:: We only test the Gini Switch SDK with the support library version which is used in the library. Problems occuring related to forcing another library version might not be solvable by us.
