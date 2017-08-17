@@ -43,7 +43,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TakePictureScreenTest extends CommonUiTests {
+public class TakePictureScreenTest extends BaseUITests {
 
 
     @Rule

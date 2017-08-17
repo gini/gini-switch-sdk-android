@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ReviewPictureScreenTest extends CommonUiTests {
+public class ReviewPictureScreenTest extends BaseUITests {
 
     @Rule
     public ActivityTestRule<HostActivity> mActivityTestRule = new ActivityTestRule

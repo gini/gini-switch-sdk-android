@@ -23,7 +23,7 @@ import net.gini.switchsdk.R;
 
 import org.hamcrest.core.IsInstanceOf;
 
-class CommonUiTests {
+class BaseUITests {
     static final int TIME_TO_WAIT_BETWEEN_STEPS_FAST = 1000;
     static final int TIME_TO_WAIT_BETWEEN_STEPS_MEDIUM = 3000;
     static final int TIME_TO_WAIT_BETWEEN_STEPS_SLOW = 4000;
