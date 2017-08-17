@@ -1,17 +1,19 @@
 package net.gini.switchsdk;
 
 
+import static android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.VisibleForTesting;
 
-class OnboardingManager {
+@VisibleForTesting(otherwise = PACKAGE_PRIVATE)
+public class OnboardingManager {
 
     @VisibleForTesting
-    static final String ONBOARDING_KEY_SHOWN = "ONBOARDING_KEY_SHOWN";
+    public static final String ONBOARDING_KEY_SHOWN = "ONBOARDING_KEY_SHOWN";
     @VisibleForTesting
-    static final String ONBOARDING_SHARE_PREFERENCES = "ONBOARDING_SHARE_PREFERENCES";
-
+    public static final String ONBOARDING_SHARE_PREFERENCES = "ONBOARDING_SHARE_PREFERENCES";
     private final Context mContext;
 
     public OnboardingManager(final Context context) {
@@ -21,6 +23,7 @@ class OnboardingManager {
     boolean onBoardingShown() {
         return getPreferences().getBoolean(ONBOARDING_KEY_SHOWN, false);
     }
+
 
     void storeOnboardingShown() {
         getPreferences().edit().putBoolean(ONBOARDING_KEY_SHOWN, true).apply();
