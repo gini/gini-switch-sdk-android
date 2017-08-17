@@ -15,9 +15,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        //For ATSL 1.0
         maven {
-            url "https://maven.google.com"
+            url 'https://maven.google.com'
         }
     }
     tasks.withType(Javadoc) {
@@ -31,15 +30,15 @@ task clean(type: Delete) {
 }
 
 ext {
-    buildToolsVersion = '25.0.2'
-    compileSdkVersion = 25
+    buildToolsVersion = '26.0.1'
+    compileSdkVersion = 26
     minSdkVersion = 16
-    targetSdkVersion = 25
+    targetSdkVersion = 26
 
     versionCode = 1
     versionName = '0.0.0'
 
-    supportLibraryVersion = '25.2.0'
+    supportLibraryVersion = '26.0.1'
     junitVersion = '4.12'
     okhttpVersion = '3.6.0'
 }

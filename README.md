@@ -27,7 +27,9 @@ Please note that if you are using our SDK together with our API (under a license
 
 
 ### Third party libraries
-[okHttp](http://square.github.io/okhttp/)
+- [okHttp v3.6.0](http://square.github.io/okhttp/)
+- [Android Support Library v26.0.1](https://developer.android.com/topic/libraries/support-library/revisions.html#26-0-1)
+(If you have troubles regarding your support library version and Gini Switch's version you can find different solutions suggested in the [documentation](http://developer.gini.net/gini-switch-sdk-android/pages/integration.html#dependencies).)
 
 ### License
 
