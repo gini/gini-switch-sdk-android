@@ -18,6 +18,11 @@ class ExtractionServiceImpl implements ExtractionService {
     }
 
     @Override
+    public void cleanup() {
+        mExtractionsFromApi = null;
+    }
+
+    @Override
     public boolean extractionsAvailable() {
         return mExtractionsFromApi != null;
     }

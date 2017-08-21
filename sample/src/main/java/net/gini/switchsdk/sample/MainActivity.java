@@ -2,8 +2,8 @@ package net.gini.switchsdk.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import net.gini.switchsdk.SwitchSdk;
@@ -13,7 +13,6 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseActivity {
 
-    private SwitchSdk mSwitchSdk;
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
@@ -33,18 +32,11 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .build();
-
-        mSwitchSdk = SwitchSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
-                "gini.net", okHttpClient);
-        mSwitchSdk.showLogging(true);
-
-        Button viewById = (Button) findViewById(R.id.button_start);
-        viewById.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent switchSdkIntent = mSwitchSdk.getSwitchSdkIntent();
+                final SwitchSdk switchSdk = getSwitchSdk();
+                final Intent switchSdkIntent = switchSdk.getSwitchSdkIntent();
                 startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
@@ -52,7 +44,8 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.button_start_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent switchSdkIntent = mSwitchSdk
+                final SwitchSdk switchSdk = getSwitchSdk();
+                final Intent switchSdkIntent = switchSdk
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.custom_positiveColor)
@@ -75,5 +68,17 @@ public class MainActivity extends BaseActivity {
                 startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
+    }
+
+    @NonNull
+    private SwitchSdk getSwitchSdk() {
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        final SwitchSdk switchSdk = SwitchSdk.init(MainActivity.this, BuildConfig.CLIENT_ID,
+                BuildConfig.CLIENT_SECRET,
+                "gini.net", okHttpClient);
+        switchSdk.showLogging(true);
+
+        return switchSdk;
     }
 }
