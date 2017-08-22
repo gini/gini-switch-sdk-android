@@ -29,8 +29,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -45,7 +43,7 @@ import net.gini.switchsdk.camera.CameraSurfacePreview;
 import net.gini.switchsdk.camera.GiniCamera;
 import net.gini.switchsdk.camera.GiniCameraException;
 import net.gini.switchsdk.onboarding.OnboardingAdapter;
-import net.gini.switchsdk.utils.AutoRotateImageView;
+import net.gini.switchsdk.utils.AutoRotateZoomableImageView;
 import net.gini.switchsdk.utils.CenterItemDecoration;
 import net.gini.switchsdk.utils.CenterLayoutManager;
 import net.gini.switchsdk.utils.CenterSnapHelper;
@@ -73,7 +71,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private GiniCamera mCamera;
     private View mCameraFrame;
     private CameraSurfacePreview mCameraPreview;
-    private AutoRotateImageView mImagePreview;
+    private AutoRotateZoomableImageView mImagePreview;
     private View mImagePreviewContainer;
     private RecyclerView mImageRecyclerView;
     private View mOnboardingContainer;
@@ -252,7 +250,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
 
         mCameraPreview = (CameraSurfacePreview) findViewById(R.id.camera_preview);
         mCameraFrame = findViewById(R.id.camera_frame);
-        mImagePreview = (AutoRotateImageView) findViewById(R.id.image_review);
+        mImagePreview = (AutoRotateZoomableImageView) findViewById(R.id.image_review);
         mImagePreviewContainer = findViewById(R.id.container_image);
         mPreviewTitle = (TextView) findViewById(R.id.analyzed_status_title);
 
@@ -286,23 +284,6 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         });
 
         styleButtons(finishButton, deleteImageButton, retakeImageButton);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        final MenuItem menuItem = menu.add(R.string.menu_entry_help);
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-                if (item.getItemId() == menuItem.getItemId()) {
-                    showOnboarding();
-                    return false;
-                }
-                return true;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
 
     }
 
@@ -411,6 +392,11 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     }
 
     @Override
+    protected void showHelpDialog() {
+        mOnboardingContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showImagePreview(final Image image) {
         mImagePreview.displayImage(image.getUri());
         hideCameraPreview();
@@ -440,10 +426,6 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     @Override
     public void showTakePictureButtons() {
         mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
-    }
-
-    public void showOnboarding() {
-        mOnboardingContainer.setVisibility(View.VISIBLE);
     }
 
     private int getAnalyzeFailedTextFromBundle() {

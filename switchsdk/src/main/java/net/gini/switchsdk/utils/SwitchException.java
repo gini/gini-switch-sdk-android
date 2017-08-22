@@ -36,12 +36,14 @@ public class SwitchException extends Exception {
                 return "Retrieving extractions failed." + mMessage;
             case UPLOAD_IMAGE:
                 return "Uploading image failed." + mMessage;
+            case SEND_FEEDBACK:
+                return "Sending feedback failed." + mMessage;
         }
         return mMessage;
     }
 
     public enum ErrorCode {
         CREATE_USER, REQUEST_CLIENT_TOKEN, REQUEST_USER_TOKEN, CREATE_EXTRACTION_ORDER,
-        REQUEST_CONFIGURATION, GET_ORDER_STATE, RETRIEVE_EXTRACTIONS, UPLOAD_IMAGE
+        REQUEST_CONFIGURATION, GET_ORDER_STATE, RETRIEVE_EXTRACTIONS, UPLOAD_IMAGE, SEND_FEEDBACK
     }
 }

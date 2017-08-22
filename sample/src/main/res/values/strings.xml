@@ -9,4 +9,8 @@
     <string name="custom_review_discard_text">Custom Discard</string>
     <string name="custom_preview_success_text">Custom Success Text</string>
     <string name="custom_preview_failed_text">Custom failed text</string>
+    <string name="title_activity_extractions">ExtractionsActivity</string>
+    <string name="toast_no_extracions">No extractions available</string>
+    <string name="extraction_name_company">Vorversorger</string>
+    <string name="extraction_name_energy_meter">Zählernummer</string>
 </resources>

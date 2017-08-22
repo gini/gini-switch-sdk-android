@@ -20,9 +20,16 @@ compile 'net.gini:switch:${version}'
 ### Documentation
 See [documentation](http://developer.gini.net/gini-switch-sdk-android/index.html) for how to integrate the SDK with your app and customize it's UI.
 
+### Contribution and Individual Changes
+If you discover ways of improving our SDK we would be more than happy if you let us know e.g. by creating an issue here on Github or creating a pull request.
+
+Please note that if you are using our SDK together with our API (under a licensed contract), only our official SDK versions are supported. Unfortunately we cannot support your individual changes.
+
 
 ### Third party libraries
-[okHttp](http://square.github.io/okhttp/)
+- [okHttp v3.6.0](http://square.github.io/okhttp/)
+- [Android Support Library v26.0.1](https://developer.android.com/topic/libraries/support-library/revisions.html#26-0-1)
+(If you have troubles regarding your support library version and Gini Switch's version you can find different solutions suggested in the [documentation](http://developer.gini.net/gini-switch-sdk-android/pages/integration.html#dependencies).)
 
 ### License
 

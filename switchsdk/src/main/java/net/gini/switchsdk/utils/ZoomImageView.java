@@ -26,9 +26,11 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
     public ZoomImageView(Context context) {
         this(context, null);
     }
+
     public ZoomImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     public ZoomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
@@ -42,14 +44,7 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
 
         float width = getMeasuredWidth();
         float height = getMeasuredHeight();
-        float scale = 1;
-
-        // If image is bigger then display fit it to screen.
-        if (width < bmWidth || height < bmHeight) {
-            scale = width > height ? height / bmHeight : width / bmWidth;
-        } else {
-            scale = width > height ? width / bmWidth : height / bmHeight;
-        }
+        float scale = getScale(bmHeight, bmWidth, width, height);
 
         mMatrix.setScale(scale, scale);
         mSaveScale = 1f;
@@ -135,8 +130,9 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
                 mMode = Mode.NONE;
                 int xDiff = (int) Math.abs(currentPoint.x - mStartTouch.x);
                 int yDiff = (int) Math.abs(currentPoint.y - mStartTouch.y);
-                if (xDiff < MAX_DIFF_FOR_CLICK && yDiff < MAX_DIFF_FOR_CLICK)
+                if (xDiff < MAX_DIFF_FOR_CLICK && yDiff < MAX_DIFF_FOR_CLICK) {
                     performClick();
+                }
                 break;
             // second finger is lifted
             case MotionEvent.ACTION_POINTER_UP:
@@ -162,6 +158,25 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
             return drawable.getIntrinsicWidth();
         }
         return 0;
+    }
+
+    private float getScale(final int bmHeight, final int bmWidth, final float width,
+            final float height) {
+        float scale;
+        if (bmWidth > bmHeight) {
+            scale = width / bmWidth;
+        } else {
+            if (bmWidth < width) {
+                if (bmHeight > height) {
+                    scale = height / bmHeight;
+                } else {
+                    scale = bmHeight / height;
+                }
+            } else {
+                scale = height / bmHeight;
+            }
+        }
+        return scale;
     }
 
     private void init(Context context) {

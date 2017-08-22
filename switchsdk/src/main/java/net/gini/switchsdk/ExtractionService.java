@@ -3,9 +3,9 @@ package net.gini.switchsdk;
 
 import android.support.annotation.NonNull;
 
-import net.gini.switchsdk.network.Extractions;
-
 interface ExtractionService {
+
+    void cleanup();
 
     boolean extractionsAvailable();
 
@@ -15,6 +15,8 @@ interface ExtractionService {
     Extractions getExtractions();
 
     int getResultCodeForActivity();
+
+    void sendExtractions(@NonNull final Extractions extractions);
 
     interface ExtractionListener {
         void onExtractionsReceived();

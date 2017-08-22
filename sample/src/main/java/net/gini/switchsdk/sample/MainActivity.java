@@ -2,34 +2,26 @@ package net.gini.switchsdk.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import net.gini.switchsdk.SwitchSdk;
-import net.gini.switchsdk.network.Extractions;
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
 
 import okhttp3.OkHttpClient;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
-    private SwitchSdk mSwitchSdk;
-
-    private TextView mTextView;
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
         if (requestCode == SwitchSdk.REQUEST_CODE) {
             if (resultCode == SwitchSdk.EXTRACTIONS_AVAILABLE) {
-                Extractions extractions = mSwitchSdk.getExtractions();
-                if (extractions != null) {
-                    mTextView.setText(extractions.toString());
-                }
+                startActivity(new Intent(this, ExtractionsActivity.class));
+            } else {
+                Toast.makeText(this, R.string.toast_no_extracions, Toast.LENGTH_LONG).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -40,19 +32,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = (TextView) findViewById(R.id.textView);
-
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .build();
-        mSwitchSdk = SwitchSdk.init(this, BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET,
-                "gini.net", okHttpClient);
-        mSwitchSdk.showLogging(true);
-
-        Button viewById = (Button) findViewById(R.id.button_start);
-        viewById.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent switchSdkIntent = mSwitchSdk.getSwitchSdkIntent();
+                final SwitchSdk switchSdk = getSwitchSdk();
+                final Intent switchSdkIntent = switchSdk.getSwitchSdkIntent();
                 startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
@@ -60,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_start_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent switchSdkIntent = mSwitchSdk
+                final SwitchSdk switchSdk = getSwitchSdk();
+                final Intent switchSdkIntent = switchSdk
                         .setButtonStyleSelector(R.drawable.custom_button)
                         .setButtonTextColor(R.color.white)
                         .setPositiveColor(R.color.custom_positiveColor)
-                        .setNegativeColor(R.color.negativeColor)
+                        .setNegativeColor(R.color.custom_negativeColor)
                         .setAnalyzedText(R.string.analyzedText)
                         .setAnalyzedTextColor(R.color.analyzedTextColor)
                         .setAnalyzedImage(R.drawable.ic_analyzed_image)
@@ -83,36 +68,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
-        checkForUpdates();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterManagers();
-    }
+    @NonNull
+    private SwitchSdk getSwitchSdk() {
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterManagers();
-    }
+        final SwitchSdk switchSdk = SwitchSdk.init(MainActivity.this, BuildConfig.CLIENT_ID,
+                BuildConfig.CLIENT_SECRET,
+                "gini.net", okHttpClient);
+        switchSdk.showLogging(true);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkForCrashes();
-    }
-
-    private void checkForCrashes() {
-        CrashManager.register(this);
-    }
-
-    private void checkForUpdates() {
-        UpdateManager.register(this);
-    }
-
-    private void unregisterManagers() {
-        UpdateManager.unregister();
+        return switchSdk;
     }
 }

@@ -14,14 +14,19 @@ pipeline {
         }
         stage('Instrumentation tests') {
             steps {
+
+                sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
                 sh './gradlew switchsdk::connectedAndroidTest'
             }
+
+
         }
     }
 
     post {
         always {
             deleteDir()
+            sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
         }
     }
 }

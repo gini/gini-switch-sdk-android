@@ -2,6 +2,7 @@ package net.gini.switchsdk.utils;
 
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -15,29 +16,47 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import net.gini.switchsdk.R;
+
 import java.io.IOException;
 
-public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCache.BitmapListener {
+public class AutoRotateZoomableImageView extends FrameLayout implements
+        BitmapMemoryCache.BitmapListener {
 
     private final ImageView mImageView;
     private float mDegrees;
     @Nullable
     private Uri mUri;
 
-    public AutoRotateImageView(final Context context) {
+    public AutoRotateZoomableImageView(final Context context) {
         this(context, null);
     }
 
-    public AutoRotateImageView(final Context context,
+    public AutoRotateZoomableImageView(final Context context,
             @Nullable final AttributeSet attrs) {
         super(context, attrs);
 
-        mImageView = new ImageView(context, attrs);
+
+        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs,
+                R.styleable.AutoRotateZoomableImageView, 0, 0);
+        boolean zoomable = false;
+        try {
+            zoomable = typedArray.getBoolean(R.styleable.AutoRotateZoomableImageView_zoomable,
+                    false);
+        } finally {
+            typedArray.recycle();
+        }
+        if (zoomable) {
+            mImageView = new ZoomImageView(context, attrs);
+        } else {
+            mImageView = new ImageView(context, attrs);
+            mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
+
         LayoutParams paramsImageView = new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
         paramsImageView.gravity = Gravity.CENTER;
         mImageView.setLayoutParams(paramsImageView);
-        mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         addView(mImageView);
         observeViewTree(this);
     }
@@ -47,11 +66,6 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
         mImageView.setImageBitmap(bitmap);
     }
 
-    @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     public void displayImage(@Nullable final Uri uri) {
         mDegrees = getRequiredRotationDegrees(uri);
         mUri = uri;
@@ -59,8 +73,8 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
             //layouting is not done yet, we have to wait
             observeViewTree(this);
         } else {
-            setImageBitmap();
             rotateImage();
+            setImageBitmap();
         }
     }
 
@@ -98,8 +112,8 @@ public class AutoRotateImageView extends FrameLayout implements BitmapMemoryCach
                     @Override
                     public void onGlobalLayout() {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        setImageBitmap();
                         rotateImage();
+                        setImageBitmap();
                     }
                 });
     }

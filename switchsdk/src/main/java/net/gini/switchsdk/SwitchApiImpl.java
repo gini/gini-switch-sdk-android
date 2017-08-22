@@ -5,6 +5,7 @@ import static net.gini.switchsdk.utils.SwitchException.ErrorCode.CREATE_EXTRACTI
 import static net.gini.switchsdk.utils.SwitchException.ErrorCode.GET_ORDER_STATE;
 import static net.gini.switchsdk.utils.SwitchException.ErrorCode.REQUEST_CONFIGURATION;
 import static net.gini.switchsdk.utils.SwitchException.ErrorCode.RETRIEVE_EXTRACTIONS;
+import static net.gini.switchsdk.utils.SwitchException.ErrorCode.SEND_FEEDBACK;
 import static net.gini.switchsdk.utils.SwitchException.ErrorCode.UPLOAD_IMAGE;
 
 import android.support.annotation.NonNull;
@@ -20,9 +21,9 @@ import net.gini.switchsdk.configuration.models.FlashMode;
 import net.gini.switchsdk.network.ExtractionOrder;
 import net.gini.switchsdk.network.ExtractionOrderPage;
 import net.gini.switchsdk.network.ExtractionOrderState;
-import net.gini.switchsdk.network.Extractions;
 import net.gini.switchsdk.network.NetworkCallback;
 import net.gini.switchsdk.network.SwitchApi;
+import net.gini.switchsdk.utils.Logging;
 import net.gini.switchsdk.utils.SwitchException;
 
 import org.json.JSONArray;
@@ -273,9 +274,14 @@ class SwitchApiImpl implements SwitchApi {
                             consumptionValue = consumptionJsonObject.optDouble("value");
                             consumptionUnit = consumptionJsonObject.optString("unit");
                         }
-                        callback.onSuccess(new Extractions(selfUrl, companyName, energyMeterNumber,
-                                consumptionValue,
-                                consumptionUnit));
+                        Extractions extractions = new Extractions.Builder()
+                                .selfLink(selfUrl)
+                                .companyName(companyName)
+                                .energyMeterNumber(energyMeterNumber)
+                                .consumptionUnit(consumptionUnit)
+                                .consumptionValue(consumptionValue)
+                                .build();
+                        callback.onSuccess(extractions);
                     } catch (JSONException e) {
                         callback.onError(new SwitchException(RETRIEVE_EXTRACTIONS, e.getMessage()));
                     }
@@ -292,6 +298,45 @@ class SwitchApiImpl implements SwitchApi {
             private String getEnergyMeterNumber(final JSONObject obj) {
                 JSONObject jsonObject = obj.optJSONObject("energyMeterNumber");
                 return jsonObject != null ? jsonObject.optString("value") : "";
+            }
+        });
+    }
+
+    @Override
+    public void sendExtractions(@NonNull final Extractions extractions,
+            @NonNull final NetworkCallback<Void> callback) {
+        HttpUrl url = HttpUrl.parse(extractions.getSelf());
+        final String extractionsJson;
+        try {
+            extractionsJson = createExtractionsJson(extractions);
+        } catch (SwitchException e) {
+            callback.onError(new SwitchException(SEND_FEEDBACK, e.getMessage()));
+            return;
+        }
+
+        final RequestBody requestBody = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                extractionsJson);
+
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/hal+json")
+                .put(requestBody)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                callback.onError(new SwitchException(SEND_FEEDBACK, e.getMessage()));
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError(new SwitchException(SEND_FEEDBACK));
+                }
             }
         });
     }
@@ -313,6 +358,27 @@ class SwitchApiImpl implements SwitchApi {
                 ExtractionOrderPage.Status.valueOf(jsonPage.getString("status"
                         + ""));
         return new ExtractionOrderPage(self, status);
+    }
+
+    private String createExtractionsJson(final Extractions extractions) throws SwitchException {
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("companyName",
+                    new JSONObject().put("value", extractions.getCompanyName()));
+            jsonObject.put("energyMeterNumber",
+                    new JSONObject().put("value", extractions.getEnergyMeterNumber()));
+            jsonObject.put("consumption", new JSONObject().put("value", new JSONObject()
+                    .put("value", extractions.getConsumptionValue())
+                    .put("unit", extractions.getConsumptionUnit()))
+            );
+            jsonObject.put("_links", new JSONObject().put("self",
+                    new JSONObject().put("href", extractions.getSelf())));
+        } catch (JSONException e) {
+            Logging.e("Could not create credentials.", e);
+            throw new SwitchException(e.getMessage());
+        }
+
+        return jsonObject.toString();
     }
 
     private Request createGetRequest(final HttpUrl url) {

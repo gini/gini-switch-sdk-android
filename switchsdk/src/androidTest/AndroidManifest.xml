@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.gini.switchsdk">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application>
+        <uses-library android:name="android.test.runner" />
+        <activity android:name="net.gini.switchsdk.uitests.HostActivity" />
+
+    </application>
+
+</manifest>
