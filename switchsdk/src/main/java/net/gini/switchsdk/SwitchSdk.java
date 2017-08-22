@@ -138,6 +138,8 @@ public class SwitchSdk {
     @VisibleForTesting(otherwise = PACKAGE_PRIVATE)
     public void cleanUp() {
         mDocumentService.cleanup();
+        mExtractionService.cleanup();
+        mSingleton = null;
     }
 
     /**
@@ -149,8 +151,6 @@ public class SwitchSdk {
      */
     @Nullable
     public Extractions getExtractions() {
-        //TODO
-        cleanUp();
         return mExtractionService.getExtractions();
     }
 
@@ -180,6 +180,7 @@ public class SwitchSdk {
      */
     public void provideFeedback(@NonNull final Extractions extractions) {
         mExtractionService.sendExtractions(extractions);
+        cleanUp();
     }
 
     /**

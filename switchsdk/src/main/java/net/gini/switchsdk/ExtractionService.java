@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 interface ExtractionService {
 
+    void cleanup();
+
     boolean extractionsAvailable();
 
     void fetchExtractions(@NonNull final String extractionsUrl,
