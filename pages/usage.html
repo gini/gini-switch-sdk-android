@@ -84,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="integration.html">Integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="integration.html#add-the-sdk-to-your-project">Add the SDK to your project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration.html#integrating-the-sdk">Integrating the SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration.html#dependencies">Dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
@@ -116,6 +117,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#usage-of-the-sdk">Usage of the SDK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#receiving-extractions">Receiving Extractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#providing-feedback">Providing Feedback</a></li>
 </ul>
 </li>
 </ul>
@@ -213,6 +215,25 @@ The extractions are provided inside the class <code class="docutils literal"><sp
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="providing-feedback">
+<h2>Providing Feedback<a class="headerlink" href="#providing-feedback" title="Permalink to this headline">¶</a></h2>
+<p>Depending on your use case your app probably presents the extractions to the user and gives them the opportunity to correct them. Yes, there could be errors. We do our best to prevent them - but it’s more unlikely to happen if your app sends us feedback for the extractions we have delivered. Your app should send feedback only for the extractions the user has seen and accepted. Feedback should be sent for corrected extractions and for correct extractions.
+The Switch SDK&#8217;s Extraction class offers a Builder that can be used to alter the given extractions.
+You can get an instance of this Builder by calling the method <code class="docutils literal"><span class="pre">Extractions.newBuilder(retrievedExtractions)</span></code> and then use it.
+See the following example code how this is done:</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">SwitchSdk</span> <span class="n">switchSdk</span> <span class="o">=</span> <span class="n">SwitchSdk</span><span class="o">.</span><span class="na">getSdk</span><span class="o">();</span>
+<span class="kd">final</span> <span class="n">Extractions</span> <span class="n">retrievedExtractions</span> <span class="o">=</span> <span class="n">switchSdk</span><span class="o">.</span><span class="na">getExtractions</span><span class="o">();</span>
+
+<span class="c1">//Let the user review and alter the extractions…</span>
+
+<span class="kd">final</span> <span class="n">Extractions</span> <span class="n">feedbackExtractions</span> <span class="o">=</span> <span class="n">Extractions</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">(</span><span class="n">retrievedExtractions</span><span class="o">)</span>
+                                    <span class="o">.</span><span class="na">companyName</span><span class="o">(</span><span class="n">feedbackCompanyName</span><span class="o">)</span>
+                                    <span class="o">.</span><span class="na">energyMeterNumber</span><span class="o">(</span><span class="n">feedbackCounterNumber</span><span class="o">)</span>
+                                    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="n">switchSdk</span><span class="o">.</span><span class="na">provideFeedback</span><span class="o">(</span><span class="n">feedbackExtractions</span><span class="o">);</span>
+</pre></div>
+</div>
 </div>
 </div>
 
