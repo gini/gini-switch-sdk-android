@@ -74,7 +74,7 @@ publish {
     artifactId = 'switch'
     userOrg = 'gini'
     groupId = 'net.gini'
-    publishVersion = '0.9.0'
+    publishVersion = '0.9.1'
     description = "The Gini Switch SDK allows to capture & analyze documents (e.g. electricity bills). The information extracted can then be used to easily switch to a new contract or tariff."
     website = 'https://github.com/gini/gini-switch-sdk-android'
 }
