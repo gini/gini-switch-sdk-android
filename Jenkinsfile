@@ -12,12 +12,12 @@ pipeline {
         junit '**/test-results/**/*.xml'
       }
     }
-    stage('Instrumentation tests') {
+    /*stage('Instrumentation tests') {
       steps {
         sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
         sh './gradlew switchsdk::connectedAndroidTest'
       }
-    }
+    }*/
     stage('Hockeyapp distribute') {
       when {
         branch 'hockeyapp'
@@ -28,8 +28,8 @@ pipeline {
         HOCKEYAPP_ID = credentials('SwitchHockeyappId')
       }
       steps {
-        echo 'Noightmare ${BUILD_NUMBER} ${HOCKEYAPP_ID}'
-        sh './gradlew assembleHockey -PbuildNumber=${BUILD_NUMBER} -PclientId=${CLIENT_ID} -PclientSecret=${CLIENT_SECRET} -PhockeyAppId=${HOCKEYAPP_ID}'
+        echo 'Noightmare $BUILD_NUMBER $HOCKEYAPP_ID'
+        sh './gradlew assembleHockey -PbuildNumber=$BUILD_NUMBER -PclientId=$CLIENT_ID -PclientSecret=$CLIENT_SECRET -PhockeyAppId=$HOCKEYAPP_ID'
         step([$class   : 'HockeyappRecorder', applications:
             [[filePath          : 'sample/build/outputs/apk/sample-hockey-debug.apk',
               downloadAllowed   : true,
