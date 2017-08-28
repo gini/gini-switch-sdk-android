@@ -19,18 +19,12 @@ pipeline {
       }
     }
     stage('Hockeyapp distribute') {
-
       when {
                   branch 'hockeyapp'
-              }
-              steps {
-                sh './gradlew assembleHockey'
-                step([$class: 'HockeyappRecorder',
-                  applications: [[downloadAllowed: true, mandatory: false, 
-                  notifyTeam: false, releaseNotesMethod: [$class: 'NoReleaseNotes'],
-                  uploadMethod: [$class: 'AppCreation', publicPage: false]]],
-                  debugMode: false, failGracefully: false])
-              }
+      }
+      steps {
+        sh './gradlew assembleHockey'
+      }
   }
   post {
     always {
@@ -38,6 +32,5 @@ pipeline {
       sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
 
     }
-
   }
 }
