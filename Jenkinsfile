@@ -28,8 +28,7 @@ pipeline {
         HOCKEYAPP_ID = credentials('SwitchHockeyappId')
       }
       steps {
-        echo 'Noightmare $BUILD_NUMBER $HOCKEYAPP_ID'
-        sh './gradlew assembleHockey -PbuildNumber=$BUILD_NUMBER -PclientId=$CLIENT_ID -PclientSecret=$CLIENT_SECRET -PhockeyAppId=$HOCKEYAPP_ID'
+        sh './gradlew assembleHockey -PbuildNumber=${BUILD_NUMBER} -PclientId=${CLIENT_ID} -PclientSecret=${CLIENT_SECRET} -PhockeyAppId=${HOCKEYAPP_ID}'
         step([$class   : 'HockeyappRecorder', applications:
             [[filePath          : 'sample/build/outputs/apk/sample-hockey-debug.apk',
               downloadAllowed   : true,
@@ -37,7 +36,7 @@ pipeline {
               notifyTeam        : true,
               teams             : buildParams.hockeyAppTeams.join(','),
               releaseNotesMethod: [$class: 'ChangelogReleaseNotes'],
-              uploadMethod      : [$class: 'VersionCreation', appId: HOCKEYAPP_ID]
+              uploadMethod      : [$class: 'VersionCreation', appId: env.HOCKEYAPP_ID]
              ]],
             debugMode: false, failGracefully: true
       ])
