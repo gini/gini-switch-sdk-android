@@ -20,11 +20,17 @@ pipeline {
     }
     stage('Hockeyapp distribute') {
       when {
-                  branch 'hockeyapp'
+        branch 'hockeyapp'
       }
       steps {
         sh './gradlew assembleHockey'
+        step([$class: 'HockeyappRecorder',
+          applications: [[downloadAllowed: true, mandatory: false, 
+          notifyTeam: false, releaseNotesMethod: [$class: 'NoReleaseNotes'],
+          uploadMethod: [$class: 'AppCreation', publicPage: false]]],
+          debugMode: false, failGracefully: false])
       }
+    }
   }
   post {
     always {
