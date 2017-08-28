@@ -22,13 +22,24 @@ pipeline {
       when {
         branch 'hockeyapp'
       }
+      environment {
+        CLIENT_ID = credentials('SwitchSdkClientId')
+        CLIENT_SECRET = credentials('SwitchSdkClientSecret')
+        HOCKEYAPP_ID = credentials('SwitchHockeyappId')
+      }
       steps {
-        sh './gradlew assembleHockey'
-        step([$class: 'HockeyappRecorder',
-          applications: [[downloadAllowed: true, mandatory: false, 
-          notifyTeam: false, releaseNotesMethod: [$class: 'NoReleaseNotes'],
-          uploadMethod: [$class: 'AppCreation', publicPage: false]]],
-          debugMode: false, failGracefully: false])
+        sh './gradlew assembleHockey -PbuildNumber=${BUILD_NUMBER} -PclientId=${CLIENT_ID} -PclientSecret=${CLIENT_SECRET} -PhockeyAppId=${HOCKEYAPP_ID}'
+        step([$class   : 'HockeyappRecorder', applications:
+            [[filePath          : 'sample/build/outputs/apk/sample-hockey-debug.apk',
+              downloadAllowed   : true,
+              mandatory         : false,
+              notifyTeam        : true,
+              teams             : buildParams.hockeyAppTeams.join(','),
+              releaseNotesMethod: [$class: 'ChangelogReleaseNotes'],
+              uploadMethod      : [$class: 'VersionCreation', appId: HOCKEYAPP_ID]
+             ]],
+            debugMode: false, failGracefully: true
+      ])
       }
     }
   }
