@@ -29,7 +29,7 @@ pipeline {
       }
       steps {
         sh './gradlew assembleHockey -PbuildNumber=${BUILD_NUMBER} -PclientId=${CLIENT_ID} -PclientSecret=${CLIENT_SECRET} -PhockeyAppId=${HOCKEYAPP_ID}'
-        step([$class: 'HockeyappRecorder', applications: [[downloadAllowed: true, filePath: 'sample/build/outputs/apk/sample-hockey-debug.apk', mandatory: false, notifyTeam: false, releaseNotesMethod: [$class: 'NoReleaseNotes'], uploadMethod: [$class: 'AppCreation', publicPage: true]]], debugMode: false, failGracefully: false])
+        step([$class: 'HockeyappRecorder', applications: [[downloadAllowed: true, filePath: 'sample/build/outputs/apk/sample-hockey-debug.apk', mandatory: false, notifyTeam: false, releaseNotesMethod: [$class: 'NoReleaseNotes'], uploadMethod: [$class: 'VersionCreation', appId: '${HOCKEYAPP_ID}']]], debugMode: false, failGracefully: false])
       }
     }
   }
