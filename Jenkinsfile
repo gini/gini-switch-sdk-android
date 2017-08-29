@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-  /*  stage('Build') {
+    stage('Build') {
       steps {
         sh './gradlew switchsdk::assembleDebug'
       }
@@ -12,7 +12,7 @@ pipeline {
         junit '**/test-results/**/*.xml'
       }
     }
-    stage('Instrumentation tests') {
+    /*stage('Instrumentation tests') {
       steps {
         sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
         sh './gradlew switchsdk::connectedAndroidTest'
