@@ -77,22 +77,15 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
                 mStartTouch.set(mLastTouch);
                 mMode = Mode.DRAG;
                 break;
-            //when two fingers are touching
-            case MotionEvent.ACTION_POINTER_DOWN:
-                mLastTouch.set(event.getX(), event.getY());
-                mStartTouch.set(mLastTouch);
-                mMode = Mode.ZOOM;
-                break;
-            //when a finger moves
             //If mode is applicable move image
             case MotionEvent.ACTION_MOVE:
 
-                //if the mode is ZOOM or
                 //if the mode is DRAG and already zoomed
-                if (mMode == Mode.ZOOM || (mMode == Mode.DRAG && mSaveScale > MIN_SCALE)) {
+                if (mMode == Mode.DRAG && mSaveScale > MIN_SCALE) {
 
                     float deltaX = currentPoint.x - mLastTouch.x;// x difference
                     float deltaY = currentPoint.y - mLastTouch.y;// y difference
+
                     float scaleWidth = Math.round(
                             mOriginalBitmapWidth * mSaveScale);// width after applying current scale
                     float scaleHeight = Math.round(mOriginalBitmapHeight
@@ -133,10 +126,6 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
                 if (xDiff < MAX_DIFF_FOR_CLICK && yDiff < MAX_DIFF_FOR_CLICK) {
                     performClick();
                 }
-                break;
-            // second finger is lifted
-            case MotionEvent.ACTION_POINTER_UP:
-                mMode = Mode.NONE;
                 break;
         }
         setImageMatrix(mMatrix);
