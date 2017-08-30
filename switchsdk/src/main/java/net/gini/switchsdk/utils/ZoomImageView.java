@@ -178,7 +178,7 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
     }
 
     private enum Mode {
-        NONE, DRAG, ZOOM
+        NONE, DRAG
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -209,7 +209,6 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            mMode = Mode.ZOOM;
             return true;
         }
 
