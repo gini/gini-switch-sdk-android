@@ -12,10 +12,13 @@ pipeline {
             "Unit Tests": {
               sh './gradlew switchsdk::test'
               junit '**/test-results/**/*.xml'
+              publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'switchsdk/build/reports/tests/testDebugUnitTest/', reportFiles: 'index.html', reportName: 'Unit Tests Results', reportTitles: ''])
             },
-            "Instrumentation tests": {
+            "Instrumentation Tests": {
                     sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
                     sh './gradlew switchsdk::connectedAndroidTest'
+                    junit 'build/outputs/androidTest-results/**/*.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'switchsdk/build/reports/androidTests/connected/', reportFiles: 'index.html', reportName: 'Instrumentation Tests Results', reportTitles: ''])
             }
           )
       }
