@@ -17,7 +17,7 @@ pipeline {
             "Instrumentation Tests": {
                     sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
                     sh './gradlew switchsdk::connectedAndroidTest'
-                    junit 'switchsdk/build/outputs/androidTest-results/**/*.xml'
+                    junit '**/androidTest-results/**/*.xml'
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'switchsdk/build/reports/androidTests/connected/', reportFiles: 'index.html', reportName: 'Instrumentation Tests Results', reportTitles: ''])
             }
           )
