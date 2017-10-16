@@ -43,6 +43,13 @@ interface TakePictureContract {
 
         void exitSdk(final int resultCode);
 
+        /**
+         * Exits the SDK without showing the "your document has been analyzed" screen.
+         *
+         * @param resultCode the activity's result code
+         */
+        void exitSdkWithoutAnalyzedScreen(final int resultCode);
+
         boolean hasCameraPermissions();
 
         void hideOnboarding();

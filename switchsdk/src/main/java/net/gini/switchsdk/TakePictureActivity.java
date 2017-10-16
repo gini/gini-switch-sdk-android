@@ -146,6 +146,12 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     }
 
     @Override
+    public void exitSdkWithoutAnalyzedScreen(int resultCode) {
+        setResult(resultCode);
+        finish();
+    }
+
+    @Override
     public boolean hasCameraPermissions() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
