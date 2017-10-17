@@ -69,6 +69,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private static final long ONBOARDING_ANIMATION_DURATION_IN_MS = 500;
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private static final String STATE_KEY_SELECTED_IMAGE = "STATE_KEY_SELECTED_IMAGE";
+    private static final int REQUEST_REVIEW = 1;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private View mCameraFrame;
@@ -198,6 +199,17 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
                 (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mCamera = new Camera1(mCameraPreview);
         mCamera.setPreviewOrientation(windowManager.getDefaultDisplay().getRotation());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_REVIEW) {
+            if (resultCode == ReviewPictureActivity.RESULT_CODE_KEEP) {
+                mPresenter.onPictureKept();
+            }
+        }
     }
 
     @Override
@@ -377,7 +389,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         final IntentFactory switchSdkIntentFactory = new IntentFactory(
                 SwitchSdk.getSdk());
         final Intent intent = switchSdkIntentFactory.createReviewActivity(image.getUri());
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_REVIEW);
     }
 
     @Override

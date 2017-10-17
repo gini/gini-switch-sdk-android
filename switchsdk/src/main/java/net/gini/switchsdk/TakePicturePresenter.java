@@ -94,13 +94,15 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                 new ExtractionService.ExtractionListener() {
                     @Override
                     public void onExtractionsReceived() {
-                        //Check if the user is in the camera screen
-                        if (canExitSdk()) {
-                            int resultCode = SwitchSdk.EXTRACTIONS_AVAILABLE;
-                            exitSdkWithCleanup(resultCode);
-                        }
                     }
                 });
+    }
+
+    @Override
+    public void onPictureKept() {
+        if (mExtractionService.extractionsAvailable()) {
+            exitSdkWithCleanup(SwitchSdk.EXTRACTIONS_AVAILABLE);
+        }
     }
 
     @Override
@@ -116,12 +118,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
             mView.openTakePictureScreen();
             mView.showTakePictureButtons();
             mView.hidePreviewButtons();
-            //if there are extractions available we finish the sdk
-            if (mExtractionService.extractionsAvailable()) {
-                //TODO maybe add delay here
-                int resultCode = SwitchSdk.EXTRACTIONS_AVAILABLE;
-                exitSdkWithCleanup(resultCode);
-            }
         }
     }
 
