@@ -68,6 +68,18 @@ public class MainActivity extends BaseActivity {
                 startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
             }
         });
+
+        findViewById(R.id.button_start_skip_analyzing_completed_screen).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final SwitchSdk switchSdk = getSwitchSdk();
+                        final Intent switchSdkIntent = switchSdk
+                                .skipAnalyzingCompletedScreen()
+                                .getSwitchSdkIntent();
+                        startActivityForResult(switchSdkIntent, SwitchSdk.REQUEST_CODE);
+                    }
+                });
     }
 
     @NonNull
