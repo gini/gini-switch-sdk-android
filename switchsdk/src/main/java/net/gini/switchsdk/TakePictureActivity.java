@@ -63,10 +63,6 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
     static final String BUNDLE_EXTRA_PREVIEW_FAILED_TEXT = "BUNDLE_EXTRA_PREVIEW_FAILED_TEXT";
     static final String BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT = "BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT";
-    /**
-     * Whether the "Analyzing Complete" screen should be skipped (because the customer has its own
-     * screen).
-     */
     static final String BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN =
             "BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN";
     private static final long ONBOARDING_ANIMATION_DELAY_IN_MS = 1500;
