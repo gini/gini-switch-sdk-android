@@ -65,12 +65,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                         public void onExtractionsReceived() {
                             //Check if the user is in the camera screen
                             final int resultCode = mExtractionService.getResultCodeForActivity();
-                            exitSdkWithCleanup(resultCode);
+                            exitSdkWithCleanupAndWithoutAnalyzedScreen(resultCode);
                         }
                     });
         } else {
             int resultCode = SwitchSdk.NO_EXTRACTIONS_AVAILABLE;
-            exitSdkWithCleanup(resultCode);
+            exitSdkWithCleanupAndWithoutAnalyzedScreen(resultCode);
         }
     }
 
@@ -155,8 +155,17 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     private void exitSdkWithCleanup(final int resultCode) {
-        mDocumentService.cleanup();
+        cleanup();
         mView.exitSdk(resultCode);
+    }
+
+    private void exitSdkWithCleanupAndWithoutAnalyzedScreen(final int resultCode) {
+        cleanup();
+        mView.exitSdkWithoutAnalyzedScreen(resultCode);
+    }
+
+    private void cleanup() {
+        mDocumentService.cleanup();
     }
 
     private boolean hasToCheckForPermissions() {

@@ -62,6 +62,7 @@ public class SwitchSdk {
     private int mReviewDiscardText;
     private int mReviewKeepText;
     private int mReviewTitleText;
+    private boolean mSkipAnalyzingScreen = false;
     private int mTheme;
 
     private SwitchSdk(final Context context,
@@ -540,6 +541,28 @@ public class SwitchSdk {
     public SwitchSdk setReviewTitleText(@StringRes final int text) {
         mReviewTitleText = text;
         return this;
+    }
+
+    /**
+     * Skip the "Analyzing Complete" screen (the popup that is shown after all the extractions
+     * have been found). This screen should be only skipped if you have a custom version of this
+     * screen.
+     *
+     * @return the instance of the available SDK
+     */
+    public SwitchSdk skipAnalyzingCompletedScreen() {
+        mSkipAnalyzingScreen = true;
+        return this;
+    }
+
+    /**
+     * Returns whether the "Analyzing Complete" screen (shown after all the extractions have been
+     * found) should be skipped.
+     *
+     * @return whether the analyzing complete screen should be skipped
+     */
+    boolean shouldSkipAnalyzingCompletedScreen() {
+        return mSkipAnalyzingScreen;
     }
 
     int getTheme() {
