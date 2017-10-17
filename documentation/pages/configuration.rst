@@ -193,6 +193,20 @@ The text should be a string resource.
   switchSdk.setPreviewFailedText(R.string.your_failed_text);
 
 
+
+Skip the "Analyzing Completed" Screen
+-------------------------------------
+
+The *Analyzing Completed* screen is shown by default when all extractions are
+retrieved from the photographed document. In case your application has its own
+*completed* screen, you can skip the default screen by calling the method
+``skipAnalyzingCompletedScreen``.
+
+.. code-block:: java
+
+   switchSdk.skipAnalyzingCompletedScreen();
+
+
 Text (Analyze Completed Screen)
 -------------------------------
 

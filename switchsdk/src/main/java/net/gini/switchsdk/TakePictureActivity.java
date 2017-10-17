@@ -63,10 +63,13 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
             "BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE";
     static final String BUNDLE_EXTRA_PREVIEW_FAILED_TEXT = "BUNDLE_EXTRA_PREVIEW_FAILED_TEXT";
     static final String BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT = "BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT";
+    static final String BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN =
+            "BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN";
     private static final long ONBOARDING_ANIMATION_DELAY_IN_MS = 1500;
     private static final long ONBOARDING_ANIMATION_DURATION_IN_MS = 500;
     private static final int PERMISSIONS_REQUEST_CAMERA = 101;
     private static final String STATE_KEY_SELECTED_IMAGE = "STATE_KEY_SELECTED_IMAGE";
+    private static final int REQUEST_REVIEW = 1;
     private ImageAdapter mAdapter;
     private GiniCamera mCamera;
     private View mCameraFrame;
@@ -83,6 +86,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     private ImageButton mTakePictureButton;
     private View mTakePictureButtonsContainer;
     private Toolbar mToolbar;
+    private boolean mSkipAnalyzingCompletedScreen;
 
     @Override
     public void cameraPermissionsDenied() {
@@ -124,25 +128,35 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     public void exitSdk(final int resultCode) {
         setResult(resultCode);
 
-        showAnalyzedCompletedScreen(new ViewPropertyAnimatorListener() {
-            @Override
-            public void onAnimationCancel(final View view) {
-            }
+        if (mSkipAnalyzingCompletedScreen) {
+            finish();
+        } else {
+            showAnalyzedCompletedScreen(new ViewPropertyAnimatorListener() {
+                @Override
+                public void onAnimationCancel(final View view) {
+                }
 
-            @Override
-            public void onAnimationEnd(final View view) {
-                finish();
-            }
+                @Override
+                public void onAnimationEnd(final View view) {
+                    finish();
+                }
 
-            @Override
-            public void onAnimationStart(final View view) {
-                mTakePictureButtonsContainer.setVisibility(View.GONE);
-                mCameraPreview.setVisibility(View.GONE);
-                mCameraFrame.setVisibility(View.GONE);
-                mToolbar.setVisibility(View.GONE);
+                @Override
+                public void onAnimationStart(final View view) {
+                    mTakePictureButtonsContainer.setVisibility(View.GONE);
+                    mCameraPreview.setVisibility(View.GONE);
+                    mCameraFrame.setVisibility(View.GONE);
+                    mToolbar.setVisibility(View.GONE);
 
-            }
-        });
+                }
+            });
+        }
+    }
+
+    @Override
+    public void exitSdkWithoutAnalyzedScreen(int resultCode) {
+        setResult(resultCode);
+        finish();
     }
 
     @Override
@@ -185,6 +199,17 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
                 (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mCamera = new Camera1(mCameraPreview);
         mCamera.setPreviewOrientation(windowManager.getDefaultDisplay().getRotation());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_REVIEW) {
+            if (resultCode == ReviewPictureActivity.RESULT_CODE_KEEP) {
+                mPresenter.onPictureKept();
+            }
+        }
     }
 
     @Override
@@ -257,6 +282,8 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         setUpDocumentBar();
 
         mSplashContainer = findViewById(R.id.container_splash);
+        mSkipAnalyzingCompletedScreen =
+                getWhetherAnalyzingCompleteScreenShouldBeSkippedFromBundle();
         setUpAnalyzedCompletedScreen();
 
         mTakePictureButtonsContainer = findViewById(R.id.container_take_picture_buttons);
@@ -362,7 +389,7 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
         final IntentFactory switchSdkIntentFactory = new IntentFactory(
                 SwitchSdk.getSdk());
         final Intent intent = switchSdkIntentFactory.createReviewActivity(image.getUri());
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_REVIEW);
     }
 
     @Override
@@ -426,6 +453,10 @@ final public class TakePictureActivity extends SwitchSdkBaseActivity implements
     @Override
     public void showTakePictureButtons() {
         mTakePictureButtonsContainer.setVisibility(View.VISIBLE);
+    }
+
+    private boolean getWhetherAnalyzingCompleteScreenShouldBeSkippedFromBundle() {
+        return getIntent().getBooleanExtra(BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN, false);
     }
 
     private int getAnalyzeFailedTextFromBundle() {

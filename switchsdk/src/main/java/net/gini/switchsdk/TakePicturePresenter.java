@@ -65,12 +65,12 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                         public void onExtractionsReceived() {
                             //Check if the user is in the camera screen
                             final int resultCode = mExtractionService.getResultCodeForActivity();
-                            exitSdkWithCleanup(resultCode);
+                            exitSdkWithCleanupAndWithoutAnalyzedScreen(resultCode);
                         }
                     });
         } else {
             int resultCode = SwitchSdk.NO_EXTRACTIONS_AVAILABLE;
-            exitSdkWithCleanup(resultCode);
+            exitSdkWithCleanupAndWithoutAnalyzedScreen(resultCode);
         }
     }
 
@@ -94,13 +94,15 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
                 new ExtractionService.ExtractionListener() {
                     @Override
                     public void onExtractionsReceived() {
-                        //Check if the user is in the camera screen
-                        if (canExitSdk()) {
-                            int resultCode = SwitchSdk.EXTRACTIONS_AVAILABLE;
-                            exitSdkWithCleanup(resultCode);
-                        }
                     }
                 });
+    }
+
+    @Override
+    public void onPictureKept() {
+        if (mExtractionService.extractionsAvailable()) {
+            exitSdkWithCleanup(SwitchSdk.EXTRACTIONS_AVAILABLE);
+        }
     }
 
     @Override
@@ -116,12 +118,6 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
             mView.openTakePictureScreen();
             mView.showTakePictureButtons();
             mView.hidePreviewButtons();
-            //if there are extractions available we finish the sdk
-            if (mExtractionService.extractionsAvailable()) {
-                //TODO maybe add delay here
-                int resultCode = SwitchSdk.EXTRACTIONS_AVAILABLE;
-                exitSdkWithCleanup(resultCode);
-            }
         }
     }
 
@@ -155,8 +151,17 @@ class TakePicturePresenter implements TakePictureContract.Presenter,
     }
 
     private void exitSdkWithCleanup(final int resultCode) {
-        mDocumentService.cleanup();
+        cleanup();
         mView.exitSdk(resultCode);
+    }
+
+    private void exitSdkWithCleanupAndWithoutAnalyzedScreen(final int resultCode) {
+        cleanup();
+        mView.exitSdkWithoutAnalyzedScreen(resultCode);
+    }
+
+    private void cleanup() {
+        mDocumentService.cleanup();
     }
 
     private boolean hasToCheckForPermissions() {

@@ -17,6 +17,7 @@ import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZE
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_SIZE;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_FAILED_TEXT;
 import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT;
+import static net.gini.switchsdk.TakePictureActivity.BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +47,7 @@ final class IntentFactory {
     private final int mReviewDiscardText;
     private final int mReviewKeepText;
     private final int mReviewTitle;
+    private final boolean mSkipAnalyzingCompleteScreen;
     private final int mTheme;
 
     IntentFactory(final SwitchSdk switchSdk) {
@@ -71,6 +73,7 @@ final class IntentFactory {
         mReviewKeepText = switchSdk.getReviewKeepText();
         mPreviewSuccessText = switchSdk.getPreviewSuccessText();
         mPreviewFailedText = switchSdk.getPreviewFailedText();
+        mSkipAnalyzingCompleteScreen = switchSdk.shouldSkipAnalyzingCompletedScreen();
     }
 
     Intent createReviewActivity(final Uri uri) {
@@ -89,6 +92,7 @@ final class IntentFactory {
         intent.putExtra(BUNDLE_EXTRA_PREVIEW_SUCCESS_TEXT, mPreviewSuccessText);
         intent.putExtra(BUNDLE_EXTRA_PREVIEW_FAILED_TEXT, mPreviewFailedText);
 
+        intent.putExtra(BUNDLE_EXTRA_SKIP_ANALYZING_COMPLETED_SCREEN, mSkipAnalyzingCompleteScreen);
         intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT, mAnalyzedText);
         intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_IMAGE, mAnalyzedImage);
         intent.putExtra(BUNDLE_EXTRA_BUTTON_ANALYZED_TEXT_COLOR, mAnalyzedTextColor);

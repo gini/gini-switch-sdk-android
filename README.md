@@ -18,7 +18,7 @@ compile 'net.gini:switch:${version}'
 ```
 
 ### Documentation
-See [documentation](http://developer.gini.net/gini-switch-sdk-android/index.html) for how to integrate the SDK with your app and customize it's UI.
+See [documentation](http://developer.gini.net/gini-switch-sdk-android/index.html) for how to integrate the SDK with your app and customize its UI.
 
 ### Contribution and Individual Changes
 If you discover ways of improving our SDK we would be more than happy if you let us know e.g. by creating an issue here on Github or creating a pull request.

@@ -22,7 +22,7 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
     @Override
     public void discardImage() {
         mDocumentService.deleteImage(mUri);
-        mView.finishReview();
+        mView.discardImageAndFinishReview();
     }
 
     @Override
@@ -42,7 +42,7 @@ class ReviewPicturePresenter implements ReviewPictureContract.Presenter {
         } else {
             mDocumentService.keepImage(mUri);
         }
-        mView.finishReview();
+        mView.keepImageAndFinishReview();
     }
 
     @Override

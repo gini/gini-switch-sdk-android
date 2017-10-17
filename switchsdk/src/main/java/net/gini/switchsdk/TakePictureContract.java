@@ -21,6 +21,8 @@ interface TakePictureContract {
 
         void onImageSelected(final Image image);
 
+        void onPictureKept();
+
         void onPictureTaken(@NonNull final byte[] data, final int orientation);
 
         void onTakePictureSelected();
@@ -42,6 +44,13 @@ interface TakePictureContract {
         void displayImageProcessingState(Image image);
 
         void exitSdk(final int resultCode);
+
+        /**
+         * Exits the SDK without showing the "your document has been analyzed" screen.
+         *
+         * @param resultCode the activity's result code
+         */
+        void exitSdkWithoutAnalyzedScreen(final int resultCode);
 
         boolean hasCameraPermissions();
 

@@ -7,9 +7,11 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -20,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -74,6 +77,30 @@ public class TakePictureScreenTest extends BaseUITests {
         omitOnboarding();
         startIntent();
         super.menu_shouldContainAllItems();
+    }
+
+    @Test
+    public void backButton_shouldDisplayDialog() {
+        omitOnboarding();
+        startIntent();
+
+        Espresso.pressBack();
+
+        SystemClock.sleep(TIME_TO_WAIT_BETWEEN_STEPS_FAST);
+
+        onView(withText(net.gini.switchsdk.R.string.exit_dialog_text))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
+
+        onView(withId(android.R.id.button1))
+                .inRoot(isDialog())
+                .check(matches(withText(net.gini.switchsdk.R.string.confirm)))
+                .check(matches(isDisplayed()));
+
+        onView(withId(android.R.id.button2))
+                .inRoot(isDialog())
+                .check(matches(withText(net.gini.switchsdk.R.string.cancel)))
+                .check(matches(isDisplayed()));
     }
 
     @Test
