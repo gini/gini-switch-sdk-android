@@ -39,7 +39,7 @@ public class ReviewPicturePresenterTest {
                 mMockDocumentService, mMockUri);
         presenter.discardImage();
 
-        verify(mMockView).finishReview();
+        verify(mMockView).discardImageAndFinishReview();
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ReviewPicturePresenterTest {
                 mMockDocumentService, mMockUri);
         presenter.keepImage();
 
-        verify(mMockView).finishReview();
+        verify(mMockView).keepImageAndFinishReview();
     }
 
     @Before

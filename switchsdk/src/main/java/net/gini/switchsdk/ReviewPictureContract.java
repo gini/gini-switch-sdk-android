@@ -18,7 +18,9 @@ interface ReviewPictureContract {
 
     interface View {
 
-        void finishReview();
+        void discardImageAndFinishReview();
+
+        void keepImageAndFinishReview();
 
         void rotateViewAnimated();
 

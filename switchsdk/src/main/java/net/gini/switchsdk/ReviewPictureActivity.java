@@ -31,6 +31,8 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
     static final String BUNDLE_EXTRA_BUTTON_KEEP = "BUNDLE_EXTRA_BUTTON_KEEP";
     static final String BUNDLE_EXTRA_IMAGE_URI = "BUNDLE_EXTRA_IMAGE_URI";
     static final String BUNDLE_EXTRA_TITLE = "BUNDLE_EXTRA_TITLE";
+    static final int RESULT_CODE_KEEP = 1;
+    static final int RESULT_CODE_DISCARD = 2;
     private static final String STATE_KEY_ROTATION = "STATE_KEY_ROTATION";
     private static final String STATE_KEY_VIEW_ROTATION = "STATE_KEY_VIEW_ROTATION";
     private View mHelpContainer;
@@ -41,7 +43,14 @@ final public class ReviewPictureActivity extends SwitchSdkBaseActivity implement
     private float mViewRotationInDegrees;
 
     @Override
-    public void finishReview() {
+    public void discardImageAndFinishReview() {
+        setResult(RESULT_CODE_DISCARD);
+        finish();
+    }
+
+    @Override
+    public void keepImageAndFinishReview() {
+        setResult(RESULT_CODE_KEEP);
         finish();
     }
 
