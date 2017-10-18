@@ -34,7 +34,7 @@ pipeline {
         HOCKEYAPP_API_KEY = credentials('SwitchHockeyappAPIKey')
       }
       steps {
-        sh './gradlew assembleHockey -PbuildNumber=${BUILD_NUMBER} -PclientId=${CLIENT_ID} -PclientSecret=${CLIENT_SECRET} -PhockeyAppId=${HOCKEYAPP_ID}'
+        sh "./gradlew assembleHockey -PbuildNumber=${BUILD_NUMBER} -PclientId=${CLIENT_ID} -PclientSecret=${CLIENT_SECRET} -PhockeyAppId=${HOCKEYAPP_ID}"
 
         step([$class: 'HockeyappRecorder', applications: [[apiToken: env.HOCKEYAPP_API_KEY, downloadAllowed: true, filePath: 'sample/build/outputs/apk/sample-hockey-debug.apk', mandatory: false, notifyTeam: false, releaseNotesMethod: [$class: 'NoReleaseNotes'], uploadMethod: [$class: 'VersionCreation', appId: env.HOCKEYAPP_ID]]], debugMode: false, failGracefully: false])
       }
@@ -51,7 +51,7 @@ pipeline {
              env.BINTRAY_KEY = bintrayCredentials['BINTRAY_KEY']
 
           }
-          sh './gradlew clean build bintrayUpload -PbintrayUser=${env.BINTRAY_USERNAME} -PbintrayKey=${env.BINTRAY_KEY} -PdryRun=false'
+          sh "./gradlew clean build bintrayUpload -PbintrayUser=${env.BINTRAY_USERNAME} -PbintrayKey=${env.BINTRAY_KEY} -PdryRun=false"
       }
     }
   }
