@@ -106,6 +106,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#keep-button-text-review-screen">Keep Button Text (Review Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#title-success-text-preview-screen">Title Success Text (Preview Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#title-failed-text-preview-screen">Title Failed Text (Preview Screen)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skip-the-analyzing-completed-screen">Skip the &#8220;Analyzing Completed&#8221; Screen</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#text-analyze-completed-screen">Text (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#text-color-analyze-completed-screen">Text Color (Analyze Completed Screen)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#image-analyze-completed-screen">Image (Analyze Completed Screen)</a></li>
@@ -300,6 +301,16 @@ The text should be a string resource.</p>
 <p>To set the failed title in the preview screen use the <code class="docutils literal"><span class="pre">setPreviewFailedText()</span></code> method. This text is shown in the preview screen as a title and should say that the analyzing of the image failed.
 The text should be a string resource.</p>
 <div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">switchSdk</span><span class="o">.</span><span class="na">setPreviewFailedText</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">your_failed_text</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="skip-the-analyzing-completed-screen">
+<h3>Skip the &#8220;Analyzing Completed&#8221; Screen<a class="headerlink" href="#skip-the-analyzing-completed-screen" title="Permalink to this headline">¶</a></h3>
+<p>The <em>Analyzing Completed</em> screen is shown by default when all extractions are
+retrieved from the photographed document. In case your application has its own
+<em>completed</em> screen, you can skip the default screen by calling the method
+<code class="docutils literal"><span class="pre">skipAnalyzingCompletedScreen</span></code>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">switchSdk</span><span class="o">.</span><span class="na">skipAnalyzingCompletedScreen</span><span class="o">();</span>
 </pre></div>
 </div>
 </div>
