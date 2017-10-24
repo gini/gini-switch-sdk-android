@@ -72,7 +72,11 @@ public class MainActivity extends BaseActivity {
 
     @NonNull
     private SwitchSdk getSwitchSdk() {
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(interceptor)
+                .build();
 
         final SwitchSdk switchSdk = SwitchSdk.init(MainActivity.this, BuildConfig.CLIENT_ID,
                 BuildConfig.CLIENT_SECRET,
