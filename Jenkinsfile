@@ -58,6 +58,9 @@ pipeline {
       }
     }
     stage('Publish Documentation') {
+        when {
+            branch 'master'
+        }
         steps {
             withEnv(["PATH+=/usr/local/bin"]) {
                 sh 'sh documentation/install_sphynx.sh'
