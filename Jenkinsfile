@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    GIT = credentials('github')
+  }
   stages {
     stage('Build') {
       steps {
@@ -54,12 +57,22 @@ pipeline {
           sh "./gradlew clean build bintrayUpload -PbintrayUser=${env.BINTRAY_USERNAME} -PbintrayKey=${env.BINTRAY_KEY} -PdryRun=false"
       }
     }
+    stage('Publish Documentation') {
+        when {
+            branch 'master'
+        }
+        steps {
+            withEnv(["PATH+=/usr/local/bin"]) {
+                sh 'sh documentation/install_sphynx.sh'
+            }
+            sh 'sh documentation/create_documentation.sh $GIT_USR $GIT_PSW'
+        }
+    }
   }
   post {
     always {
       deleteDir()
       sh '$ANDROID_HOME/platform-tools/adb shell input keyevent KEYCODE_POWER'
-
     }
   }
 }
