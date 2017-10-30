@@ -32,7 +32,7 @@ Hereby a Context, your client id, your client secret and your domain is needed(F
 
 The generated SwitchSdk instance can now be used to generate the needed Activity and to get the found extractions.
 
-.. note:: The SDK only works correct if the ``init`` method has been called.
+.. note:: The SDK only works correctly if the ``init`` method has been called.
 
 Dependencies
 ============

@@ -43,7 +43,7 @@ Consumptions unit           getConsumptionUnit       String         ""
 Energy meter number         getEnergyMeterNumber     String         ""
 ======================      ======================   ============   ==============
 
-.. note:: Depending on your client id(corresponding contract) it might be possible that you only receive a subset of the extractions, therefore the other ones are initialized with their default values and can be ignored.
+.. note:: Depending on your client id (corresponding contract) it might be possible that you only receive a subset of the extractions, therefore the other ones are initialized with their default values and can be ignored.
 
 
 Providing Feedback
