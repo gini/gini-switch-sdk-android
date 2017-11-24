@@ -43,6 +43,8 @@ Consumptions unit           getConsumptionUnit       String         ""
 Energy meter number         getEnergyMeterNumber     String         ""
 ======================      ======================   ============   ==============
 
+.. note:: Depending on your client id (corresponding contract) it might be possible that you only receive a subset of the extractions, therefore the other ones are initialized with their default values and can be ignored.
+
 
 Providing Feedback
 ==================
@@ -64,3 +66,5 @@ See the following example code how this is done:
                                       .energyMeterNumber(feedbackCounterNumber)
                                       .build();
   switchSdk.provideFeedback(feedbackExtractions);
+
+.. note:: You only should set the extractions that have been altered by the user.
