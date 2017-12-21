@@ -51,7 +51,7 @@ However if you want to use another support library version you can do so by forc
         def requested = details.requested
         if (requested.group == 'com.android.support') {
             if (!requested.name.startsWith("multidex")) {
-                details.useVersion 'dessired-support-lib-version'
+                details.useVersion 'desired-support-lib-version'
             }
         }
     }
